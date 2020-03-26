@@ -12,7 +12,7 @@ import java.util.List;
  * @Author haoao
  * @Date 2020-03-24
  */
-@Mapper
+//@Mapper
 public interface GoodsSortDao {
     /**
      * 新增商品分类
@@ -25,7 +25,7 @@ public interface GoodsSortDao {
      * 查询商品分类列表
      * @return
      */
-    List<GoodsSort> listGoodsSort(GoodsSort goodsSort);
+    List<GoodsSort> listGoodsSort();
 
     /**
      * 修改商品分类
@@ -44,10 +44,10 @@ public interface GoodsSortDao {
     /**
      * 删除商品分类
      * @param listCode 选中用户编号集合
-     * @param cateCode 更新人
+     * @param userCode 更新人
      * @return
      */
-    int deleteGoodsSort(List<String> listCode,@Param("cateCode") String cateCode);
+    int deleteGoodsSort(@Param("listCode") List<String> listCode,@Param("userCode") String userCode);
 
     /**
      * 商品分类数量
@@ -55,4 +55,17 @@ public interface GoodsSortDao {
      * @return 相同数量
      */
     int countGoodsSort(GoodsSort goodsSort);
+
+    /**
+     * 一级商品分类列表
+     * @return
+     */
+    List<GoodsSort> listClassifyOne();
+
+    /**
+     * 二级商品分类列表
+     * @Param careCode
+     * @return
+     */
+    List<GoodsSort> listClassifyTwo(@Param("cateCode") String cateCode);
 }

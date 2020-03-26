@@ -18,7 +18,7 @@
     </resultMap>
 
     <!--统计用户账号数量-->
-    <select id="countGoodsSort" parameterType="com.neusoft.demo.goodsSort.dao.GoodsSortDao" resultType="int">
+    <select id="countGoodsSort" parameterType="com.neusoft.demo.goodsSort.entity.GoodsSort" resultType="int">
         select count(cate_name)
         from goods_sort
         where is_delete = 0
@@ -26,7 +26,7 @@
     </select>
 
     <!--新增商品分类-->
-    <insert id="addGoodsSort" parameterType="com.neusoft.demo.goodsSort.dao.GoodsSortDao">
+    <insert id="addGoodsSort" parameterType="com.neusoft.demo.goodsSort.entity.GoodsSort">
         insert into goods_sort
         (cate_code,
          cate_name,
@@ -68,6 +68,7 @@
         from goods_sort g
         left join goods_sort g2
         on g.cate_code = g2.cate_code_parent
+        and g2.is_delete = 0
         where g.level = '1'
         and g.is_delete = 0
         -- and g2.is_delete = 0
@@ -93,7 +94,8 @@
     <select id="selectGoodsSortById" parameterType="java.lang.String"
             resultType="com.neusoft.demo.goodsSort.entity.GoodsSort">
         select
-            cateName,
+            cate_code cateCode,
+            cate_name cateName,
             remark,
             version
         from goods_sort
@@ -105,13 +107,35 @@
     <update id="deleteGoodsSort" parameterType="com.neusoft.demo.goodsSort.entity.GoodsSort">
         update goods_sort
         set
-        is_deleted = 1,
+        is_delete = 1,
         gmt_modfied = now(),
-        last_modfied_by = #{lastModfiedBy},
+        last_modfied_by = #{userCode},
         version = version + 1
         where cate_code in
         <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
+
+    <!--查询一级分类列表-->
+    <select id="listClassifyOne" resultType="com.neusoft.demo.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName
+        from goods_sort
+        where level = '1'
+        and   is_delete = 0
+        order by create_time desc
+    </select>
+
+    <!--查询二级分类列表-->
+    <select id="listClassifyTwo" parameterType="java.lang.String" resultType="com.neusoft.demo.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName
+        from goods_sort
+        where cate_code_parent = #{cateCode}
+        and   is_delete = 0
+        order by create_time desc
+    </select>
 </mapper>
