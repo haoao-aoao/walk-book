@@ -1,5 +1,7 @@
 package com.neusoft.demo.goodsMessage.entity;
 
+import com.neusoft.demo.goodsSort.entity.GoodsSort;
+
 import java.util.Date;
 
 public class GoodsMessage {
@@ -107,6 +109,31 @@ public class GoodsMessage {
      * 版本号
      */
     private String version;
+    /**
+     * 商品1分类
+     */
+    private GoodsSort goodsSortOne;
+
+    /**
+     * 商品2分类
+     */
+    private GoodsSort goodsSortTwo;
+
+    public GoodsSort getGoodsSortOne() {
+        return goodsSortOne;
+    }
+
+    public void setGoodsSortOne(GoodsSort goodsSortOne) {
+        this.goodsSortOne = goodsSortOne;
+    }
+
+    public GoodsSort getGoodsSortTwo() {
+        return goodsSortTwo;
+    }
+
+    public void setGoodsSortTwo(GoodsSort goodsSortTwo) {
+        this.goodsSortTwo = goodsSortTwo;
+    }
 
     public int getPageSize() {
         return pageSize;

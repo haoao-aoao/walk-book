@@ -23,19 +23,6 @@ public interface GoodsMessageDao {
     int addGoods(GoodsMessage goodsMessage);
 
     /**
-     * 商品一级分类列表
-     * @return
-     */
-    List<GoodsSort> classifyOne();
-
-    /**
-     * 商品二级分类列表
-     * @param cateCode
-     * @return
-     */
-    List<GoodsSort> classifyTwo(@Param("cateCode") String cateCode);
-
-    /**
      * 修改商品信息
      * @param goodsMessage
      * @return

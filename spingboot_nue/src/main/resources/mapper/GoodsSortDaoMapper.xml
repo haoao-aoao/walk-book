@@ -9,7 +9,7 @@
         <result property="isDelete" column="gDelete"></result>
         <!--配置user对象中的accounts集合的映射-->
         <collection property="goodsClassifyTwo" javaType="list" ofType="com.neusoft.demo.goodsSort.entity.GoodsSort">
-            <id property="cateCode" column="goodsClassifyTwoCode"></id>
+            <id property="cateCode"  column="goodsClassifyTwoCode"></id>
             <result property="cateName" column="goodsClassifyTwoName"></result>
             <result property="level" column="plevel"></result>
             <result property="cateCodeParent" column="cateCodeParent"></result>
@@ -132,7 +132,8 @@
     <select id="listClassifyTwo" parameterType="java.lang.String" resultType="com.neusoft.demo.goodsSort.entity.GoodsSort">
         select
             cate_code cateCode,
-            cate_name cateName
+            cate_name cateName,
+            cate_code_parent cateCodeParent
         from goods_sort
         where cate_code_parent = #{cateCode}
         and   is_delete = 0
