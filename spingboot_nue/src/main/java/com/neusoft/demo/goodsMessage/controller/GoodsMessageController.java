@@ -149,4 +149,23 @@ public class GoodsMessageController {
             throw e;
         }
     }
+
+    /**
+     * demo 商品选择列表（分页）
+     * @param goodsMessage
+     * @return
+     * @author haoao
+     * @date 2020-03-25
+     */
+    @RequestMapping(value = "goodsChoseList")
+    public AppResponse goodsChoseList(GoodsMessage goodsMessage){
+        try{
+            AppResponse appResponse = goodsMessageService.goodsChoseList(goodsMessage);
+            return appResponse;
+        }catch (Exception e){
+            logger.error("查询商品列表异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
 }

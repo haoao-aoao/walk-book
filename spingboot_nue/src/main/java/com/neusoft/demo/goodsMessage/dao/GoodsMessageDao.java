@@ -58,4 +58,10 @@ public interface GoodsMessageDao {
      */
     int updateGoodsState(@Param("listCode") List<String> listCode,@Param("goodsState") int goodsState,@Param("lastModfiedBy") String lastModfiedBy);
 
+    /**
+     * 查询商品选择列表
+     * @param goodsMessage
+     * @return
+     */
+    List<GoodsMessage> goodsChoseList(GoodsMessage goodsMessage);
 }

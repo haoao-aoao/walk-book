@@ -1,0 +1,38 @@
+package com.neusoft.demo.banner.dao;
+
+import com.neusoft.demo.banner.entity.Banner;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+public interface BannerDao {
+    /**
+     * 新增轮播图
+     * @param banner
+     * @return
+     */
+    int addBanner(Banner banner);
+
+    /**
+     * 查询轮播图列表
+     * @param banner
+     * @return
+     */
+    List<Banner> listBanner(Banner banner);
+
+    /**
+     * 删除轮播图
+     * @param listCode
+     * @param userCode
+     * @return
+     */
+    int deleteBanner(@Param("listCode") List<String> listCode,@Param("userCode") String userCode);
+
+    /**
+     * 修改轮播图状态
+     * @param listCode
+     * @param state
+     * @return
+     */
+    int updateBannerState(@Param("listCode") List<String> listCode,@Param("state") int state,@Param("userCode") String userCode);
+}

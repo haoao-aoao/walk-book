@@ -129,4 +129,19 @@ public class GoodsMessageService {
         }
         return appResponse;
     }
+
+    /**
+     * demo 商品选择列表（分页）
+     * @param goodsMessage
+     * @return
+     * @Author haoao
+     * @Date 2020-03-25
+     */
+    public AppResponse goodsChoseList(GoodsMessage goodsMessage){
+        PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
+        List<GoodsMessage> goodsMessages = goodsMessageDao.goodsChoseList(goodsMessage);
+        //包装Page对象
+        PageInfo<GoodsMessage> pageDate = new PageInfo<GoodsMessage>(goodsMessages);
+        return AppResponse.success("查询成功！",pageDate);
+    }
 }

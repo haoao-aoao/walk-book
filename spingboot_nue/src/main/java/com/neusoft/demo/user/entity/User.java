@@ -18,7 +18,7 @@ public class User {
     /**
      * 用户名称
      */
-    private String userName;
+    private String name;
     /**
      * 用户登录名
      */
@@ -46,19 +46,11 @@ public class User {
     /**
      * 角色 0管理员，1店长
      */
-    private int role;
-    /**
-     * 备注
-     */
-    private String remark;
+    private Integer role;
     /**
      * 作废标记 0为存在，1为作废
      */
     private int isDelete;
-    /**
-     * 序号
-     */
-    private int sortNo;
     /**
      * 创建时间
      */
@@ -74,11 +66,19 @@ public class User {
     /**
      * 更新者
      */
-    private String lastModifiedBy;
+    private String lastModfiedBy;
     /**
      * 版本号
      */
     private String version;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getPageSize() {
         return pageSize;
@@ -104,13 +104,7 @@ public class User {
         this.userCode = userCode;
     }
 
-    public String getUserName() {
-        return userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getUserAcct() {
         return userAcct;
@@ -160,20 +154,12 @@ public class User {
         this.mail = mail;
     }
 
-    public int getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Integer role) {
         this.role = role;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public int getIsDelete() {
@@ -182,14 +168,6 @@ public class User {
 
     public void setIsDelete(int isDelete) {
         this.isDelete = isDelete;
-    }
-
-    public int getSortNo() {
-        return sortNo;
-    }
-
-    public void setSortNo(int sortNo) {
-        this.sortNo = sortNo;
     }
 
     public Date getCreateTime() {
@@ -216,12 +194,12 @@ public class User {
         this.gmtModified = gmtModified;
     }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
+    public String getLastModfiedBy() {
+        return lastModfiedBy;
     }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
+    public void setLastModfiedBy(String lastModfiedBy) {
+        this.lastModfiedBy = lastModfiedBy;
     }
 
     public String getVersion() {

@@ -12,6 +12,7 @@
         <result property="salesVolume" column="salesVolume"></result>
         <result property="goodsStock" column="goodsStock"></result>
         <result property="goodsNo" column="goodsNo"></result>
+        <result property="goodsState" column="goodsState"></result>
         <result property="goodsSketch" column="goodsSketch"></result>
         <result property="goodsAuthor" column="goodsAuthor"></result>
         <result property="goodsPress" column="goods_press"></result>
@@ -239,4 +240,27 @@
             #{item}
         </foreach>
     </update>
+
+    <!--查询商品选择列表-->
+    <select id="goodsChoseList" resultMap="goodsMessageMap">
+        select
+        a.goods_code          goodsCode,
+        a.goods_name          goodsName,
+        a.goods_state         goodsState,
+        b.cate_name           acateName,
+        c.cate_name           bcateName
+        from t_goods_message a
+        left join goods_sort b
+        on a.classify_one_Code = b.cate_code
+        left join goods_sort c
+        on a.classify_two_Code = c.cate_code
+        where a.is_delete = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and a.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        order by a.create_time desc
+    </select>
 </mapper>

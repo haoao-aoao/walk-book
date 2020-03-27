@@ -14,6 +14,15 @@ import java.util.List;
  */
 @Mapper
 public interface UserDao {
+
+    /**
+     * 管理端登录
+     * @param userAcct
+     * @param userPassword
+     * @return
+     */
+    User sysLogin(@Param("userAcct") String userAcct,@Param("userPassword") String userPassword);
+
     /**
      * 统计用户账号数量
      * @param user 用户信息
@@ -38,10 +47,10 @@ public interface UserDao {
     /**
      * 删除用户信息
      * @param listCode 选中的用户编号集合
-     * @param userCode 更新人
+     * @param lastModfiedBy 更新人
      * @return
      */
-    int deleteUser(List<String> listCode,@Param("userCode") String userCode);
+    int deleteUser(@Param("listCode") List<String> listCode,@Param("lastModfiedBy") String lastModfiedBy);
 
     /**
      * 修改用户信息

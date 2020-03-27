@@ -6,48 +6,55 @@
     <select id="countUserAcct" parameterType="com.neusoft.demo.user.dao.UserDao" resultType="int">
         select count(user_acct)
         from t_sys_user
-        where is_deleted = 0
+        where is_delete = 0
         and user_acct = #{userAcct}
-        <if test="userCode != null and userCode != ''">
-            and user_code != #{userCode}
-        </if>
+    </select>
+
+    <!--登录-->
+    <select id="sysLogin" parameterType="String" resultType="com.neusoft.demo.user.entity.User">
+        select
+              role
+        from
+              t_sys_user
+        where
+              is_delete = 0
+              and user_acct = #{userAcct}
+              and user_password = #{userPassword}
     </select>
 
     <!--新增用户-->
     <insert id="saveUser" parameterType="com.neusoft.demo.user.dao.UserDao">
         insert into t_sys_user
         (user_code,
-         user_name,
+         name,
          user_acct,
-         user_pwd,
-         id_card,
+         user_password,
+         idcard,
          sex,
          phone,
-         email,
-         remark,
+         mail,
+         role,
          is_delete,
-         sort_no,
-         gmt_create,
-         create_by,
-         gmt_modified,
-         last_modified_by,
+         create_time,
+         create_user,
+         gmt_modfied,
+         last_modfied_by,
          version)
         values
            (#{userCode},
             #{userName},
             #{userAcct},
-            #{userPwd},
+            #{userPassword},
             #{idCard},
             #{sex},
             #{phone},
-            #{email},
-            #{remark},
-            #{isDeleted},
+            #{mail},
+            #{role},
             0,
             now(),
-            #{createBy},
+            #{createUser},
             now(),
-            #{lastModifiedBy},
+            #{lastModfiedBy},
             0)
     </insert>
 
@@ -55,39 +62,36 @@
     <select id="listUsersByPage" parameterType="com.neusoft.demo.user.dao.UserDao" resultType="com.neusoft.demo.user.entity.User">
         select
         a.user_code userCode,
-        a.user_name userName,
+        a.name,
         a.user_acct userAcct,
-        a.user_pwd userPwd,
-        a.id_card idCard,
-        a.sex sex,
+        a.user_password userPassword,
+        a.idcard,
+        a.sex,
         a.phone,
-        a.email,
-        a.remark,
-        a.is_deleted,
-        a.sort_no,
-        a.gmt_create,
-        a.create_by,
-        a.gmt_modified,
-        a.last_modified_by,
+        a.mail,
+        a.role,
         a.version
         from t_sys_user a
-        where a.is_deleted = 0
+        where a.is_delete = 0
         <if test="userAcct != null and userAcct != ''">
             and a.user_acct like concat('%', #{userAcct}, '%')
         </if>
-        <if test="userName != null and userName != ''">
-            and a.user_name like concat('%', #{userName}, '%')
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
         </if>
-        order by gmt_create desc
+        <if test="role != null and role != ''">
+            and a.role like concat('%', #{role}, '%')
+        </if>
+        order by create_time desc
     </select>
 
     <!--删除用户-->
     <update id="deleteUser" parameterType="com.neusoft.demo.user.entity.User">
         update t_sys_user
         set
-            is_deleted = 1,
-            gmt_modified = now(),
-            last_modified_by   = #{userId},
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by   = #{lastModfiedBy},
             version = version + 1
         where user_code in
         <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
@@ -99,15 +103,15 @@
     <update id="updateUser" parameterType="com.neusoft.demo.user.entity.User">
         update t_sys_user
         set
-            user_name    = #{userName},
+            name         = #{name},
             user_acct    = #{userAcct},
-            id_card      = #{idCard},
+            user_password= #{userPassword},
+            idcard       = #{idCard},
             sex          = #{sex},
             phone        = #{phone},
-            email        = #{email},
-            remark       = #{remark},
-            gmt_modified = now(),
-            last_modified_by   = #{lastModifiedBy},
+            mail         = #{mail},
+            gmt_modfied = now(),
+            last_modfied_by   = #{lastModfiedBy},
             version      = version + 1
         where user_code = #{userCode}
           and version = #{version}
@@ -124,6 +128,7 @@
             sex,
             phone,
             mail,
+            role,
             version
         from t_sys_user
         where user_code = #{userCode}
