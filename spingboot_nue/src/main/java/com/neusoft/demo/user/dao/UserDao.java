@@ -1,6 +1,8 @@
 package com.neusoft.demo.user.dao;
 
 import com.neusoft.demo.user.entity.User;
+import com.neusoft.demo.user.entity.UserClient;
+import com.neusoft.demo.user.entity.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,7 +44,7 @@ public interface UserDao {
      * @param user 用户信息
      * @return 所有用户信息
      */
-    List<User> listUsersByPage(User user);
+    List<UserVo> listUsersByPage(User user);
 
     /**
      * 删除用户信息
@@ -62,7 +64,14 @@ public interface UserDao {
     /**
      * 查询用户信息
      * @param userCode 用户编号
-     * @return 修改结果
+     * @return
      */
-    User getUserByUserCode(@Param("userCode") String userCode);
+    UserVo getUserByUserCode(@Param("userCode") String userCode);
+
+    /**
+     * 获取客户信息
+     * @param user 用户信息
+     * @return 所有用户信息
+     */
+    List<UserClient> listClientByPage(User user);
 }

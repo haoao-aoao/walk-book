@@ -59,7 +59,7 @@
     </insert>
 
     <!--用户列表-->
-    <select id="listUsersByPage" parameterType="com.neusoft.demo.user.dao.UserDao" resultType="com.neusoft.demo.user.entity.User">
+    <select id="listUsersByPage" parameterType="com.neusoft.demo.user.entity.User" resultType="com.neusoft.demo.user.entity.UserVo">
         select
         a.user_code userCode,
         a.name,
@@ -118,10 +118,10 @@
     </update>
 
     <!--获取用户信息-->
-    <select id="getUserByUserCode" parameterType="java.lang.String" resultType="com.neusoft.demo.user.entity.User">
+    <select id="getUserByUserCode" parameterType="java.lang.String" resultType="com.neusoft.demo.user.entity.UserVo">
         select
             user_code userCode,
-            name userName,
+            name ,
             user_acct userAcct,
             user_password userPassword,
             idcard idCard,
@@ -133,5 +133,26 @@
         from t_sys_user
         where user_code = #{userCode}
         and is_delete = 0
+    </select>
+
+    <!--查询客户列表-->
+    <select id="listClientByPage" parameterType="com.neusoft.demo.user.entity.User" resultType="com.neusoft.demo.user.entity.UserClient">
+        select
+        a.name,
+        a.user_acct userAcct,
+        a.idcard,
+        a.sex,
+        a.phone,
+        a.mail
+        from t_sys_user a
+        where a.is_delete = 0
+        <if test="userAcct != null and userAcct != ''">
+            and a.user_acct like concat('%', #{userAcct}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
+        </if>
+        and a.role = 3
+        order by create_time desc
     </select>
 </mapper>

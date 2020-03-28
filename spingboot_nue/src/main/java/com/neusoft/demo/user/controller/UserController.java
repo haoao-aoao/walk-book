@@ -1,6 +1,7 @@
 package com.neusoft.demo.user.controller;
 
 import com.neusoft.demo.user.entity.User;
+import com.neusoft.demo.user.entity.UserVo;
 import com.neusoft.demo.user.service.UserService;
 import com.neusoft.demo.util.AppResponse;
 import org.slf4j.Logger;
@@ -127,6 +128,24 @@ public class UserController {
             return userService.deleteUser(userCode,lastModfiedBy);
         }catch (Exception e){
             logger.error("删除用户异常", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * demo 查询客户信息（分页）
+     * @param user
+     * @return
+     * @Author haoao
+     * @Date 2020-03-27
+     */
+    @RequestMapping(value = "listClientByPage")
+    public AppResponse listClientByPage(User user){
+        try{
+            return userService.listClientByPage(user);
+        }catch (Exception e){
+            logger.error("客户列表查询错误", e);
             System.out.println(e.toString());
             throw e;
         }
