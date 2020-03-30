@@ -8,11 +8,11 @@ public class GoodsMessage {
     /**
      * 页码
      */
-    private int pageSize;
+    private Integer pageSize;
     /**
      * 页数
      */
-    private int pageNum;
+    private Integer pageNum;
     /**
      * 商品编号
      */
@@ -135,19 +135,19 @@ public class GoodsMessage {
         this.goodsSortTwo = goodsSortTwo;
     }
 
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public int getPageNum() {
+    public Integer getPageNum() {
         return pageNum;
     }
 
-    public void setPageNum(int pageNum) {
+    public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
     }
 

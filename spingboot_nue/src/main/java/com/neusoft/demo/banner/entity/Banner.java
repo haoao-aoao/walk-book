@@ -1,9 +1,11 @@
 package com.neusoft.demo.banner.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
 
 import java.util.Date;
 import java.util.List;
+
 
 public class Banner {
     /**
@@ -37,11 +39,14 @@ public class Banner {
     /**
      * 有效期起
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startTime;
 
     /**
      * 有效期止
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+
     private Date endTime;
 
     /**
@@ -67,6 +72,7 @@ public class Banner {
     /**
      * 创建时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**
@@ -77,6 +83,7 @@ public class Banner {
     /**
      * 更新时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtModfied;
 
     /**

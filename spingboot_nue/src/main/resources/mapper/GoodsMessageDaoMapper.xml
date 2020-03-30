@@ -124,7 +124,7 @@
         <!--</if>-->
         <!--order by create_time desc-->
     <!--</select>-->
-    <select id="listGoods"  resultMap="goodsMessageMap">
+    <select id="listGoods" resultMap="goodsMessageMap">
         select
         a.goods_code          goodsCode,
         a.goods_name          goodsName,

@@ -4,7 +4,7 @@
 
 
 
-    <!--新增轮播图-->
+    <!--新增图片-->
     <insert id="addImage" parameterType="string">
         insert into t_image
         (img_id,

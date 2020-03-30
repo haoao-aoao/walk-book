@@ -2,9 +2,11 @@ package com.neusoft.demo.order.dao;
 
 import com.neusoft.demo.order.entity.Order;
 import com.neusoft.demo.order.entity.OrderDetailed;
+import com.neusoft.demo.user.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderDao {

@@ -1,6 +1,9 @@
 package com.neusoft.demo.order.entity;
 
+import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单详情实体类
@@ -60,6 +63,47 @@ public class OrderDetailed {
      * 版本号
      */
     private Integer version;
+
+    private List<GoodsMessage> goodsMessageList;
+
+
+    private String goodsName;
+
+    private String goodsPricing;
+
+    private String goodsPrice;
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public String getGoodsPricing() {
+        return goodsPricing;
+    }
+
+    public void setGoodsPricing(String goodsPricing) {
+        this.goodsPricing = goodsPricing;
+    }
+
+    public String getGoodsPrice() {
+        return goodsPrice;
+    }
+
+    public void setGoodsPrice(String goodsPrice) {
+        this.goodsPrice = goodsPrice;
+    }
+
+    public List<GoodsMessage> getGoodsMessageList() {
+        return goodsMessageList;
+    }
+
+    public void setGoodsMessageList(List<GoodsMessage> goodsMessageList) {
+        this.goodsMessageList = goodsMessageList;
+    }
 
     public String getOrderDetCode() {
         return orderDetCode;

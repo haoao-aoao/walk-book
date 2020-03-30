@@ -1,6 +1,10 @@
 package com.neusoft.demo.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.neusoft.demo.user.entity.User;
+
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     /**
@@ -29,6 +33,7 @@ public class Order {
     /**
      * 付款时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date payTime;
 
     /**
@@ -90,6 +95,71 @@ public class Order {
      * 版本号
      */
     private Integer version;
+
+
+    private String payTimeS;
+
+
+    private String payTimeE;
+
+    private String name;
+
+    private String phone;
+
+
+    private User user;
+
+    private List<OrderDetailed> orderDetList;
+
+    public List<OrderDetailed> getOrderDetList() {
+        return orderDetList;
+    }
+
+    public void setOrderDetList(List<OrderDetailed> orderDetList) {
+        this.orderDetList = orderDetList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getPayTimeS() {
+        return payTimeS;
+    }
+
+    public void setPayTimeS(String payTimeS) {
+        this.payTimeS = payTimeS;
+    }
+
+    public String getPayTimeE() {
+        return payTimeE;
+    }
+
+    public void setPayTimeE(String payTimeE) {
+        this.payTimeE = payTimeE;
+    }
+
 
     public int getPageSize() {
         return pageSize;

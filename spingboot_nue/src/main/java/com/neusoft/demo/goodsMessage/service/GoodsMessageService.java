@@ -1,11 +1,11 @@
 package com.neusoft.demo.goodsMessage.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neusoft.demo.goodsMessage.dao.GoodsMessageDao;
 import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
-import com.neusoft.demo.util.AppResponse;
-import com.neusoft.demo.util.StringUtil;
+import com.neusoft.demo.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.security.util.ArrayUtil;
@@ -24,6 +24,8 @@ public class GoodsMessageService {
 
     @Resource
     private GoodsMessageDao goodsMessageDao;
+    @Resource
+    private RedisOperator redisOperator;
 
     /**
      * 新增商品
@@ -103,11 +105,41 @@ public class GoodsMessageService {
      * @Date 2020-03-25
      */
     public AppResponse listGoods(GoodsMessage goodsMessage){
-        PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
-        List<GoodsMessage> goodsMessages = goodsMessageDao.listGoods(goodsMessage);
-        //包装Page对象
-        PageInfo<GoodsMessage> pageDate = new PageInfo<GoodsMessage>(goodsMessages);
-        return AppResponse.success("查询成功！",pageDate);
+
+        //创建key值
+        String listGoodsKey =    goodsMessage.getGoodsName()
+                                +goodsMessage.getGoodsState()
+                                +goodsMessage.getGoodsPress()
+                                +goodsMessage.getGoodsAuthor()
+                                +goodsMessage.getPageNum()
+                                +goodsMessage.getPageSize();
+        //判断redis里是否有数据
+        if (redisOperator.ttl(listGoodsKey) > 0){
+            //Json字符串转列表
+            List<GoodsMessage> goodsMessages = JSON.parseArray(redisOperator.get(listGoodsKey), GoodsMessage.class);
+            //包装Page对象
+            PageInfo<GoodsMessage> pageDate = new PageInfo<GoodsMessage>(goodsMessages);
+            return AppResponse.success("从radis查询成功",pageDate);
+        }else{
+            PageInfo<GoodsMessage> pageDate = null;
+            //页码和条数不为空
+            if(goodsMessage.getPageSize() != null && goodsMessage.getPageNum() != null){
+                PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
+                //查询数据库
+                List<GoodsMessage> goodsMessages = goodsMessageDao.listGoods(goodsMessage);
+                //list转json
+                String toJson = JSON.toJSONString(goodsMessages);
+                //存入redis,存活时间为5分钟
+                redisOperator.set(listGoodsKey,toJson,300);
+                //包装Page对象
+                pageDate = new PageInfo<GoodsMessage>(goodsMessages);
+            }
+            if (pageDate == null){
+                return AppResponse.bizError("查询错误，PageSize与PageNum为null");
+            }else{
+                return AppResponse.success("从数据库查询成功！",pageDate);
+            }
+        }
     }
 
     /**
