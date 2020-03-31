@@ -7,6 +7,12 @@ import java.util.List;
 
 public interface BannerDao {
     /**
+     * 查询轮播图序号数量
+     * @param sotrNo
+     * @return
+     */
+    int selectBannerSortNo(int sotrNo);
+    /**
      * 新增轮播图
      * @param banner
      * @return

@@ -1,5 +1,7 @@
 package com.neusoft.demo.goodsSort.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +37,8 @@ public class GoodsSort {
     /**
      * 创建时间
      */
-    private Date createTime;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String createTime;
     /**
      * 创建者
      */
@@ -43,7 +46,8 @@ public class GoodsSort {
     /**
      * 更新时间
      */
-    private Date gmtModfied;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String gmtModfied;
     /**
      * 更新者
      */
@@ -119,11 +123,11 @@ public class GoodsSort {
         this.isDelete = isDelete;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -135,11 +139,11 @@ public class GoodsSort {
         this.createUser = createUser;
     }
 
-    public Date getGmtModfied() {
+    public String getGmtModfied() {
         return gmtModfied;
     }
 
-    public void setGmtModfied(Date gmtModfied) {
+    public void setGmtModfied(String gmtModfied) {
         this.gmtModfied = gmtModfied;
     }
 

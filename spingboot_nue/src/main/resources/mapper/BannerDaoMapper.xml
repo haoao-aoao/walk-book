@@ -19,6 +19,15 @@
         <result column="version" property="version" />
     </resultMap>
 
+    <!--校验轮播图序号是否为一-->
+    <select id="selectBannerSortNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*)
+        from t_app_banner
+        where is_delete = 0
+        <if test="sortNo != null and sortNo != ''">
+            and sort_no = #{sortNo}
+        </if>
+    </select>
     <!--新增轮播图-->
     <insert id="addBanner" parameterType="com.neusoft.demo.banner.entity.Banner">
         insert into t_app_banner

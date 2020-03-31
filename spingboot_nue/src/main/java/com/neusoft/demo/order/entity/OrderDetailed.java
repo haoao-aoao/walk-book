@@ -69,9 +69,9 @@ public class OrderDetailed {
 
     private String goodsName;
 
-    private String goodsPricing;
+    private double goodsPricing;
 
-    private String goodsPrice;
+    private double goodsPrice;
 
     public String getGoodsName() {
         return goodsName;
@@ -81,19 +81,19 @@ public class OrderDetailed {
         this.goodsName = goodsName;
     }
 
-    public String getGoodsPricing() {
+    public double getGoodsPricing() {
         return goodsPricing;
     }
 
-    public void setGoodsPricing(String goodsPricing) {
+    public void setGoodsPricing(double goodsPricing) {
         this.goodsPricing = goodsPricing;
     }
 
-    public String getGoodsPrice() {
+    public double getGoodsPrice() {
         return goodsPrice;
     }
 
-    public void setGoodsPrice(String goodsPrice) {
+    public void setGoodsPrice(double goodsPrice) {
         this.goodsPrice = goodsPrice;
     }
 

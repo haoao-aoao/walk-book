@@ -52,7 +52,7 @@
         <result column="create_time" property="createTime" />
         <result column="last_modfied_by" property="lastModfiedBy" />
         <result column="gmt_modfied" property="gmtModfied" />
-        <result column="version" property="version" />
+        <result column="aversion" property="version" />
         <association property="user" javaType="com.neusoft.demo.user.entity.User">
             <id property="userCode" column="user_code"></id>
             <result column="name" property="name"></result>
@@ -130,7 +130,7 @@
             values
                 (#{orderDetCode},
                  #{orderCode},
-                 #{goods_code},
+                 #{goodsCode},
                  #{goodsCnt},
                  #{goodsAllPrice},
                  0,
@@ -167,7 +167,8 @@
             t1.store_code,
             t1.order_price,
             t2.name,
-            t2.phone
+            t2.phone,
+            t1.version aversion
         from t_order t1,t_sys_user t2
         where t1.is_delete = 0
         and t1.user_code = t2.user_code
@@ -202,7 +203,8 @@
             b.goods_all_price,
             c.goods_name,
             c.goods_pricing,
-            c.goods_price
+            c.goods_price,
+            a.version
         from t_order a,t_order_detailed b,t_goods_message c
         where
             a.order_code = b.order_code

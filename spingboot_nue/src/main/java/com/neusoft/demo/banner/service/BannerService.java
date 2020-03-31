@@ -28,6 +28,11 @@ public class BannerService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addBanner(Banner banner){
+        //校验轮播图序号是否唯一
+        int count = bannerDao.selectBannerSortNo(banner.getSortNo());
+        if (count == 1){
+            return AppResponse.bizError("新增错误,序号重复");
+        }
         //设置轮播图ID
         banner.setId(StringUtil.getCommonCode(2));
 

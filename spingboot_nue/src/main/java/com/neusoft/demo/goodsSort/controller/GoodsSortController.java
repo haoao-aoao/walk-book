@@ -5,11 +5,16 @@ import com.neusoft.demo.goodsSort.service.GoodsSortService;
 import com.neusoft.demo.util.AppResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.jms.Destination;
+import javax.jms.Queue;
+import javax.jms.Topic;
 
 /**
  * @description增删改查DEMO
@@ -25,6 +30,8 @@ public class GoodsSortController {
     @Resource
     private GoodsSortService goodsSortService;
 
+
+
     /**
      * demo 新增商品分类
      * @param goodsSort
@@ -36,6 +43,7 @@ public class GoodsSortController {
     public AppResponse addGoodsSoft(GoodsSort goodsSort){
         try{
             goodsSort.setCreateUser("admin");
+            //sendMessage(this.queue,goodsSort);
             AppResponse appResponse = goodsSortService.addGoodsSoft(goodsSort);
             return appResponse;
         }catch (Exception e) {

@@ -1,14 +1,21 @@
 package com.neusoft.demo.goodsSort.service;
 
+import com.alibaba.fastjson.JSON;
 import com.neusoft.demo.goodsSort.dao.GoodsSortDao;
 import com.neusoft.demo.goodsSort.entity.GoodsSort;
 import com.neusoft.demo.util.AppResponse;
 import com.neusoft.demo.util.StringUtil;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.jms.Destination;
+import javax.jms.Queue;
+import javax.jms.Topic;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +29,20 @@ public class GoodsSortService {
 
     @Resource
     private GoodsSortDao goodsSortDao;
+
+    @Autowired
+    private JmsMessagingTemplate jmsMessagingTemplate;
+
+    @Autowired
+    private Queue queue;
+
+    @Autowired
+    private Topic topic;
+
+    // 发送消息，destination是发送到的队列，message是待发送的消息
+    private void sendMessage(Destination destination, String goodsSort){
+        jmsMessagingTemplate.convertAndSend(destination, goodsSort);
+    }
 
     /**
      * 新增商品分类
@@ -50,6 +71,10 @@ public class GoodsSortService {
         if(0 == cnt) {
             return AppResponse.bizError("新增失败，请重试！");
         }
+        //生产者传消息
+        String goodsSortJson = JSON.toJSONString(goodsSort);
+        sendMessage(this.queue,goodsSortJson);
+        System.out.println("成功发送新增的商品实体类");
         return AppResponse.success("新增成功！");
     }
 
