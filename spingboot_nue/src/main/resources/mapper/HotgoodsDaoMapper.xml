@@ -24,7 +24,7 @@
             <result column="goods_name" property="goodsName"/>
             <result column="goods_price" property="goodsPrice"/>
             <result column="goods_sketch" property="goodsSketch"/>
-            <result column="goods_img_code" property="goodsImg"/>
+            <result column="goods_img" property="goodsImg"/>
         </association>
     </resultMap>
 
@@ -77,12 +77,12 @@
         from t_app_hotgoods t1,
              t_goods_message t2
         where t1.is_delete = 0
-        and t1.good_code = t2.goods_code
+        and t1.goods_code = t2.goods_code
         <if test="goodsName != null and goodsName != ''">
-            and t2.goods_name like concat('%', #{param2}, '%')
+            and t2.goods_name like concat('%', #{goodsName}, '%')
         </if>
         <if test="goodsCode != null and goodsCode != ''">
-            and t2.goods_code like concat('%', #{param1}, '%')
+            and t2.goods_code like concat('%', #{goodsCode}, '%')
         </if>
         order by t1.sort_no
     </select>

@@ -27,7 +27,7 @@ public interface HotGoodsDao {
      * @param goodsName
      * @return
      */
-    List<HotGoods> listHotGoods(String goodsCode,String goodsName);
+    List<HotGoods> listHotGoods(@Param("goodsCode") String goodsCode,@Param("goodsName") String goodsName);
 
     /**
      * 修改热门位商品信息

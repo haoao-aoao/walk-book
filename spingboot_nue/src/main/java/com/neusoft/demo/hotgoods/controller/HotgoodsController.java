@@ -1,5 +1,6 @@
 package com.neusoft.demo.hotgoods.controller;
 
+import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
 import com.neusoft.demo.hotgoods.entity.HotGoods;
 import com.neusoft.demo.hotgoods.service.HotgoodsService;
 import com.neusoft.demo.util.AppResponse;
@@ -32,6 +33,22 @@ public class HotgoodsController {
             return hotgoodsService.addHotGoods(hotGoods);
         }catch (Exception e){
             logger.error("新增热门位商品异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 查询热门位商品列表
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "listHotGoods")
+    public AppResponse listHotGoods(String goodsCode,String goodsName,HotGoods hotGoods){
+        try{
+            return hotgoodsService.listHotGoods(goodsCode,goodsName,hotGoods);
+        }catch (Exception e){
+            logger.error("查询热门位商品异常",e);
             System.out.println(e.toString());
             throw e;
         }

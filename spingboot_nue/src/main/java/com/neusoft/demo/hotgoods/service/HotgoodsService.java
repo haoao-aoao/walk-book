@@ -1,5 +1,8 @@
 package com.neusoft.demo.hotgoods.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
 import com.neusoft.demo.hotgoods.dao.HotGoodsDao;
 import com.neusoft.demo.hotgoods.entity.HotGoods;
 import com.neusoft.demo.util.AppResponse;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class HotgoodsService {
@@ -33,5 +37,19 @@ public class HotgoodsService {
             return AppResponse.bizError("新增失败,请重试");
         }
         return AppResponse.success("新增成功！");
+    }
+
+    /**
+     * 查询热门位商品列表
+     * @param
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public AppResponse listHotGoods(String goodsCode,String goodsName,HotGoods hotGoods){
+        PageHelper.startPage(hotGoods.getPageNum(),hotGoods.getPageSize());
+        List<HotGoods> hotGoodsList = hotGoodsDao.listHotGoods(goodsCode,goodsName);
+        //分页包装
+        PageInfo<HotGoods> hotGoodsPageInfo = new PageInfo<>(hotGoodsList);
+        return AppResponse.success("查询成功！",hotGoodsPageInfo);
     }
 }
