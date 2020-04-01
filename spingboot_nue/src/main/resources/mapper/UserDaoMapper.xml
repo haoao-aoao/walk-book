@@ -23,7 +23,7 @@
     </select>
 
     <!--新增用户-->
-    <insert id="saveUser" parameterType="com.neusoft.demo.user.dao.UserDao">
+    <insert id="saveUser" parameterType="com.neusoft.demo.user.entity.User">
         insert into t_sys_user
         (user_code,
          name,
@@ -42,7 +42,7 @@
          version)
         values
            (#{userCode},
-            #{userName},
+            #{name},
             #{userAcct},
             #{userPassword},
             #{idCard},

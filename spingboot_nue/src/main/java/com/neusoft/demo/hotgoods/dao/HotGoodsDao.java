@@ -46,8 +46,21 @@ public interface HotGoodsDao {
 
     /**
      * 设置展示热门位商品数量
-     * @param ShowNum
+     * @param showNum
      * @return
      */
-    int setHotGoodsShowNum(int ShowNum);
+    List<HotGoods> setHotGoodsShowNum(@Param("showNum") int showNum);
+
+    /**
+     * 查询热门位商品详情
+     * @param hotgoodsCode
+     * @return
+     */
+    HotGoods selectHotGoods(@Param("hotgoodsCode") String hotgoodsCode);
+
+    /**
+     * 查询热门位商品有效条数
+     * @return
+     */
+    Integer selectCount();
 }

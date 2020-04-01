@@ -71,6 +71,7 @@
             t1.hotgoods_code,
             t1.sort_no,
             t1.goods_code,
+            t1.version,
             t2.goods_name,
             t2.goods_price,
             t2.goods_sketch
@@ -124,7 +125,28 @@
         from t_app_hotgoods t1,
              t_goods_message t2
         where t1.is_delete = 0
+        and t1.goods_code = t2.goods_code
         order by t1.sort_no
-        limit #{ShowNum}
+        limit #{showNum}
+    </select>
+
+    <!--查询热门位商品详情-->
+    <select id="selectHotGoods" parameterType="String" resultMap="HotGoodsResultMap">
+        select
+            hotgoods_code,
+            goods_code,
+            sort_no
+        from t_app_hotgoods
+        where
+            is_delete = 0
+            and hotgoods_code = #{hotgoodsCode}
+    </select>
+
+    <!--查询热门位商品条数-->
+    <select id="selectCount" resultType="Integer">
+        select count(hotgoods_code)
+        from t_app_hotgoods
+        where
+            is_delete = 0
     </select>
 </mapper>

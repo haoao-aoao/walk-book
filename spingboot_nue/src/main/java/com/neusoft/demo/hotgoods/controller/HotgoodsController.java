@@ -53,4 +53,69 @@ public class HotgoodsController {
             throw e;
         }
     }
+
+    /**
+     * 修改热门位商品
+     * @param hotGoods
+     * @return
+     */
+    @PostMapping("updateHotGoodsById")
+    public AppResponse updateHotGoodsById(HotGoods hotGoods){
+        try{
+            return hotgoodsService.updateHotGoodsById(hotGoods);
+        }catch (Exception e){
+            logger.error("修改热门位商品异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 删除热门位商品
+     * @param hotgoodsCode
+     * @param userCode
+     * @return
+     */
+    @PostMapping("deleteHotGoods")
+    public AppResponse deleteHotGoods(String hotgoodsCode,String userCode){
+        try{
+            return hotgoodsService.deleteHotGoods(hotgoodsCode,userCode);
+        }catch (Exception e){
+            logger.error("修改热门位商品异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 查询热门位商品详情
+     * @param hotgoodsCode
+     * @return
+     */
+    @RequestMapping(value = "selectHotGoods")
+    public AppResponse selectHotGoods(String hotgoodsCode){
+        try{
+            return hotgoodsService.selectHotGoods(hotgoodsCode);
+        }catch (Exception e){
+            logger.error("查询热门位商品详情异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 查询设置展示热门位商品
+     * @param showNum
+     * @return
+     */
+    @RequestMapping(value = "setHotGoodsShowNum")
+    public AppResponse setHotGoodsShowNum(int showNum){
+        try{
+            return hotgoodsService.setHotGoodsShowNum(showNum);
+        }catch (Exception e){
+            logger.error("设置异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
 }
