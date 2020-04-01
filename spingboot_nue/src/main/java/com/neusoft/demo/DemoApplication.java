@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.neusoft.demo.*.dao")
 @EnableTransactionManagement
 @SpringBootApplication
-@EnableJms //启动消息队列
+//@EnableJms //启动消息队列
 public class DemoApplication {
 
     public static void main(String[] args) {

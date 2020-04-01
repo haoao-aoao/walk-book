@@ -30,6 +30,7 @@ public class GoodsSortService {
     @Resource
     private GoodsSortDao goodsSortDao;
 
+    /*消息队列配置
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
 
@@ -42,7 +43,7 @@ public class GoodsSortService {
     // 发送消息，destination是发送到的队列，message是待发送的消息
     private void sendMessage(Destination destination, String goodsSort){
         jmsMessagingTemplate.convertAndSend(destination, goodsSort);
-    }
+    }*/
 
     /**
      * 新增商品分类
@@ -73,7 +74,7 @@ public class GoodsSortService {
         }
         //生产者传消息
         String goodsSortJson = JSON.toJSONString(goodsSort);
-        sendMessage(this.queue,goodsSortJson);
+        //sendMessage(this.queue,goodsSortJson);
         System.out.println("成功发送新增的商品实体类");
         return AppResponse.success("新增成功！");
     }

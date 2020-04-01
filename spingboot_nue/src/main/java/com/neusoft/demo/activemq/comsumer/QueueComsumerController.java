@@ -1,5 +1,5 @@
 package com.neusoft.demo.activemq.comsumer;
-
+/*
 import com.neusoft.demo.activemq.dao.ActiveMQDao;
 import com.neusoft.demo.goodsSort.entity.GoodsSort;
 import com.neusoft.demo.util.StringUtil;
@@ -22,3 +22,4 @@ public class QueueComsumerController {
         System.out.println("[queue]客户接受到：" + goodsSortJson);
     }
 }
+*/

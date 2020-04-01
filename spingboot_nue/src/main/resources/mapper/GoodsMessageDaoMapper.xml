@@ -16,7 +16,7 @@
         <result property="goodsSketch" column="goodsSketch"></result>
         <result property="goodsAuthor" column="goodsAuthor"></result>
         <result property="goodsPress" column="goods_press"></result>
-        <result property="goodsImgCode" column="goodsImgCode"></result>
+        <result property="goodsImg" column="goodsImg"></result>
         <result property="goodsView" column="goodsView"></result>
         <result property="vendorName" column="vendorName"></result>
         <result property="upTime" column="upTime"></result>
@@ -46,7 +46,7 @@
          goods_sketch,
          goods_author,
          goods_press,
-         goods_img_code,
+         goods_img,
          sales_volume,
          goods_view,
          goods_star,
@@ -71,7 +71,7 @@
              #{goodsSketch},
              #{goodsAuthor},
              #{goodsPress},
-             #{goodsImgCode},
+             #{goodsImg},
              #{salesVolume},
              #{goodsView},
              #{goodsStar},
@@ -85,45 +85,6 @@
              0)
     </insert>
 
-    <!--查询商品信息列表-->
-    <!--<select id="listGoods" parameterType="com.neusoft.demo.goodsMessage.entity.GoodsMessage" resultType="com.neusoft.demo.goodsMessage.entity.GoodsMessage">-->
-        <!--select-->
-            <!--goods_code          goodsCode,-->
-            <!--goods_name          goodsName,-->
-            <!--classify_one_Code   classifyOneCode,-->
-            <!--classify_two_Code   classifyTwoCode,-->
-            <!--goods_pricing       goodsPricing,-->
-            <!--goods_price         goodsPrice,-->
-            <!--sales_volume        salesVolume,-->
-            <!--goods_stock         goodsStock,-->
-            <!--goods_no            goodsNo,-->
-            <!--goods_sketch        goodsSketch,-->
-            <!--goods_state         goodsState,-->
-            <!--goods_author        goodsAuthor,-->
-            <!--goods_press         goodsPress,-->
-            <!--goods_img_code      goodsImgCode,-->
-            <!--vendor_name         vendorName,-->
-            <!--goods_view          goodsView,-->
-            <!--goods_star          goodsStar,-->
-            <!--vendor_name         vendorName,-->
-            <!--up_time             upTime,-->
-            <!--version-->
-        <!--from t_goods_message-->
-        <!--where is_delete = 0-->
-        <!--<if test="goodsName != null and goodsName != ''">-->
-            <!--and goods_name like concat('%', #{goodsName}, '%')-->
-        <!--</if>-->
-        <!--<if test="goodsState != null and goodsState != ''">-->
-            <!--and goods_state like concat('%', #{goodsState}, '%')-->
-        <!--</if>-->
-        <!--<if test="goodsAuthor != null and goodsAuthor != ''">-->
-            <!--and goods_author like concat('%', #{goodsAuthor}, '%')-->
-        <!--</if>-->
-        <!--<if test="goodsPress != null and goodsPress != ''">-->
-            <!--and goods_press like concat('%', #{goodsPress}, '%')-->
-        <!--</if>-->
-        <!--order by create_time desc-->
-    <!--</select>-->
     <select id="listGoods" resultMap="goodsMessageMap">
         select
         a.goods_code          goodsCode,
@@ -139,7 +100,7 @@
         a.goods_state         goodsState,
         a.goods_author        goodsAuthor,
         a.goods_press         goodsPress,
-        a.goods_img_code      goodsImgCode,
+        a.goods_img           goodsImg,
         a.vendor_name         vendorName,
         a.goods_view          goodsView,
         a.goods_star          goodsStar,
@@ -201,7 +162,7 @@
             goods_sketch        goodsSketch,
             goods_author        goodsAuthor,
             goods_press         goodsPress,
-            goods_img_code      goodsImgCode,
+            goods_img           goodsImg,
             vendor_name         vendorName,
             t_goods_message.version
         from t_goods_message

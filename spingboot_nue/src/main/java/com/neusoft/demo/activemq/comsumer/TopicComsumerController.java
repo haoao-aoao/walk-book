@@ -1,5 +1,5 @@
 package com.neusoft.demo.activemq.comsumer;
-
+/*
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
@@ -11,3 +11,4 @@ public class TopicComsumerController {
         System.out.println("topic接受到：" + message);
     }
 }
+*/

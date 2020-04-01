@@ -48,7 +48,7 @@ public class GoodsMessage {
     /**
      * 商品图片编码
      */
-    private String goodsImgCode;
+    private String goodsImg;
     /**
      * 商品浏览量
      */
@@ -215,12 +215,12 @@ public class GoodsMessage {
         this.goodsStock = goodsStock;
     }
 
-    public String getGoodsImgCode() {
-        return goodsImgCode;
+    public String getGoodsImg() {
+        return goodsImg;
     }
 
-    public void setGoodsImgCode(String goodsImgCode) {
-        this.goodsImgCode = goodsImgCode;
+    public void setGoodsImg(String goodsImg) {
+        this.goodsImg = goodsImg;
     }
 
     public int getGoodsView() {

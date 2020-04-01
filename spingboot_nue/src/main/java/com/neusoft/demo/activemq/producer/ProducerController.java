@@ -1,5 +1,5 @@
 package com.neusoft.demo.activemq.producer;
-
+/*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,3 +40,4 @@ public class ProducerController {
         jmsMessagingTemplate.convertAndSend(destination, message);
     }
 }
+*/

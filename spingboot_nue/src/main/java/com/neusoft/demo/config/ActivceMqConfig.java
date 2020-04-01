@@ -1,3 +1,4 @@
+
 package com.neusoft.demo.config;
 
 import com.neusoft.demo.goodsSort.entity.GoodsSort;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 
 /**
  * acticemq配置类
- */
+
 @Configuration
 public class ActivceMqConfig {
     @Value("${spring.activemq.broker-url}")
@@ -79,3 +80,4 @@ public class ActivceMqConfig {
         return factory;
     }
 }
+*/
