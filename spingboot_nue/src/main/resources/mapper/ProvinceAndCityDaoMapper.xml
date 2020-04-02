@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neusoft.demo.provinceandcity.dao.ProvinceAndCityDao">
+
+    <!--省列表查询-->
+    <select id="listProvince" resultType="com.neusoft.demo.provinceandcity.entity.ProvinceVo">
+        select
+            province_code provinceCode,
+            province_name province
+        from  t_province
+    </select>
+
+    <!--市列表查询-->
+    <select id="listCity" parameterType="String" resultType="com.neusoft.demo.provinceandcity.entity.CityVo">
+        select
+            city_code cityCode,
+            city_name city
+        from  t_city t1
+        left join t_province t2
+        on t2.province_code = #{provinceCode}
+    </select>
+
+    <!--区列表查询-->
+    <select id="listArea" parameterType="String" resultType="com.neusoft.demo.provinceandcity.entity.AreaVo">
+        select
+            area_code areaCode,
+            area_name area
+        from  t_area t1
+        left join t_city t2
+        on t2.city_code = #{cityCode}
+    </select>
+</mapper>
