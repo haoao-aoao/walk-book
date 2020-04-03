@@ -33,12 +33,12 @@ public interface StoreDao {
      * @param userCode
      * @return
      */
-    int deleteStore(@Param("listCode") String listCode,@Param("userCode") String userCode);
+    int deleteStore(@Param("listCode") List<String> listCode,@Param("userCode") String userCode);
 
     /**
      * 查询门店信息列表
      * @param store
      * @return
      */
-    List<Store> listHotGoods(Store store);
+    List<Store> listStore(Store store);
 }

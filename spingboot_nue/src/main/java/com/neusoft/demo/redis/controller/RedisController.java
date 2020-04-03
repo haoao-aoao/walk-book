@@ -1,3 +1,4 @@
+/*
 package com.neusoft.demo.redis.controller;
 
 import com.neusoft.demo.redis.service.RedisService;
@@ -32,3 +33,4 @@ public class RedisController {
         }
     }
 }
+*/

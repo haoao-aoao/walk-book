@@ -18,11 +18,11 @@ public interface ProvinceAndCityDao {
      * 市列表
      * @return
      */
-    List<CityVo> listCity(@Param("province_code") String provinceCode);
+    List<CityVo> listCity(@Param("provinceCode") String provinceCode);
 
     /**a
      * 区列表
      * @return
      */
-    List<AreaVo> listArea(@Param("city_code") String cityCode);
+    List<AreaVo> listArea(@Param("cityCode") String cityCode);
 }

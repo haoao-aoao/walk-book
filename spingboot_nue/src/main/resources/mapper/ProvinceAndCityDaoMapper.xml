@@ -12,21 +12,21 @@
 
     <!--市列表查询-->
     <select id="listCity" parameterType="String" resultType="com.neusoft.demo.provinceandcity.entity.CityVo">
-        select
+        select DISTINCT
             city_code cityCode,
             city_name city
-        from  t_city t1
-        left join t_province t2
-        on t2.province_code = #{provinceCode}
+        from  t_city t1,
+             t_province t2
+        where t1.province_code = #{provinceCode}
     </select>
 
     <!--区列表查询-->
     <select id="listArea" parameterType="String" resultType="com.neusoft.demo.provinceandcity.entity.AreaVo">
-        select
+        select  DISTINCT
             area_code areaCode,
             area_name area
-        from  t_area t1
-        left join t_city t2
-        on t2.city_code = #{cityCode}
+        from  t_area t1,
+              t_city t2
+        where t1.city_code = #{cityCode}
     </select>
 </mapper>
