@@ -178,11 +178,11 @@
     <update id="deleteGoods" parameterType="com.neusoft.demo.goodsMessage.entity.GoodsMessage">
         update t_goods_message
         set
-        is_delete = 1,
-        gmt_modfied = now(),
-        last_modfied_by = #{userCode},
-        version = version + 1
-        where goods_code in
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+            where goods_code in
         <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
             #{item}
         </foreach>
