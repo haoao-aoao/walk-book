@@ -1,5 +1,6 @@
 package com.neusoft.demo.goodsMessage.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neusoft.demo.goodsSort.entity.GoodsSort;
 
 import java.util.Date;
@@ -29,6 +30,14 @@ public class GoodsMessage {
      * 商品二级分类编码
      */
     private String classifyTwoCode;
+    /**
+     * 商品一级分类名称
+     */
+    private String classifyOne;
+    /**
+     * 商品二级分类名称
+     */
+    private String classifyTwo;
     /**
      * 商品定价
      */
@@ -60,6 +69,7 @@ public class GoodsMessage {
     /**
      * 上架时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date upTime;
     /**
      * 商品状态 0在售 1已下架 2未发布
@@ -118,6 +128,22 @@ public class GoodsMessage {
      * 商品2分类
      */
     private GoodsSort goodsSortTwo;
+
+    public String getClassifyOne() {
+        return classifyOne;
+    }
+
+    public void setClassifyOne(String classifyOne) {
+        this.classifyOne = classifyOne;
+    }
+
+    public String getClassifyTwo() {
+        return classifyTwo;
+    }
+
+    public void setClassifyTwo(String classifyTwo) {
+        this.classifyTwo = classifyTwo;
+    }
 
     public GoodsSort getGoodsSortOne() {
         return goodsSortOne;

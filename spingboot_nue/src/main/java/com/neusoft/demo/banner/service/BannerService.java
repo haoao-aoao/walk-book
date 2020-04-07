@@ -85,9 +85,10 @@ public class BannerService {
      * @date 2020-03-26
      */
     @Transactional(rollbackFor = Exception.class)
-    public AppResponse updateBannerState(String id,int state,String userCode){
+    public AppResponse updateBannerState(String id,int state,String userCode,String version){
         List<String> listCode = Arrays.asList(id.split(","));
-        int cnt = bannerDao.updateBannerState(listCode,state,userCode);
+        List<String> listVersion = Arrays.asList(version.split(","));
+        int cnt = bannerDao.updateBannerState(listCode,state,userCode,listVersion);
         if(0 == cnt) {
             return AppResponse.bizError("修改失败，请重试！");
         }

@@ -11,8 +11,8 @@ security:
 spring:
   redis:
     database: 9
-    host: 47.92.101.6
-    password: dnc.2009
+    host: 127.0.0.1
+    port: 6379
 zuul:
   routes:
     uaa:

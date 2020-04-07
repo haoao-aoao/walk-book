@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.goodsMessage.dao.GoodsMessageDao">
+
+    <!--<resultMap id="goodsMessageMap" type="com.neusoft.demo.goodsMessage.entity.GoodsMessage">-->
+        <!--<id property="goodsCode" column="goodsCode"></id>-->
+        <!--<result property="goodsName" column="goodsName"></result>-->
+        <!--<result property="classifyOneCode" column="classifyOneCode"></result>-->
+        <!--<result property="classifyTwoCode" column="classifyTwoCode"></result>-->
+        <!--<result property="goodsPricing" column="goodsPricing"></result>-->
+        <!--<result property="goodsPrice" column="goodsPrice"></result>-->
+        <!--<result property="salesVolume" column="salesVolume"></result>-->
+        <!--<result property="goodsStock" column="goodsStock"></result>-->
+        <!--<result property="goodsNo" column="goodsNo"></result>-->
+        <!--<result property="goodsState" column="goodsState"></result>-->
+        <!--<result property="goodsSketch" column="goodsSketch"></result>-->
+        <!--<result property="goodsAuthor" column="goodsAuthor"></result>-->
+        <!--<result property="goodsPress" column="goods_press"></result>-->
+        <!--<result property="goodsImg" column="goodsImg"></result>-->
+        <!--<result property="goodsView" column="goodsView"></result>-->
+        <!--<result property="vendorName" column="vendorName"></result>-->
+        <!--<result property="upTime" column="upTime"></result>-->
+        <!--&lt;!&ndash;配置集合的映射&ndash;&gt;-->
+        <!--<association property="goodsSortOne" javaType="com.neusoft.demo.goodsSort.entity.GoodsSort">-->
+            <!--<id property="cateCode" column="cateCode"></id>-->
+            <!--<result property="cateName" column="acateName"></result>-->
+        <!--</association>-->
+        <!--<association property="goodsSortTwo" javaType="com.neusoft.demo.goodsSort.entity.GoodsSort">-->
+            <!--<id property="cateCode" column="cateCode"></id>-->
+            <!--<result property="cateName" column="bcateName"></result>-->
+        <!--</association>-->
+    <!--</resultMap>-->
+
+
+
+    <!--新增商品-->
+    <insert id="addGoods" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage">
+        insert into t_goods_message
+        (goods_code,
+         goods_name,
+         classify_one_Code,
+         classify_two_Code,
+         classify_one,
+         classify_two,
+         goods_pricing,
+         goods_price,
+         goods_stock,
+         goods_no,
+         goods_state,
+         goods_sketch,
+         goods_author,
+         goods_press,
+         goods_img,
+         sales_volume,
+         goods_view,
+         goods_star,
+         vendor_name,
+         up_time,
+         is_delete,
+         create_time,
+         create_user,
+         gmt_modfied,
+         last_modfied_by,
+         version)
+        values
+            (#{goodsCode},
+             #{goodsName},
+             #{classifyOneCode},
+             #{classifyTwoCode},
+             #{classifyOne},
+             #{classifyTwo},
+             #{goodsPricing},
+             #{goodsPrice},
+             #{goodsStock},
+             #{goodsNo},
+             2,
+             #{goodsSketch},
+             #{goodsAuthor},
+             #{goodsPress},
+             #{goodsImg},
+             #{salesVolume},
+             #{goodsView},
+             #{goodsStar},
+             #{vendorName},
+             now(),
+             0,
+             now(),
+             #{createUser},
+             now(),
+             #{lastModfiedBy},
+             0)
+    </insert>
+
+    <!--商品信息列表-->
+    <select id="listGoods" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.pc.goodsMessage.entity.GoodsMessageVo">
+        select
+        a.goods_code          goodsCode,
+        a.goods_name          goodsName,
+        a.classify_one        classifyOne,
+        a.classify_two        classifyTwo,
+        a.goods_pricing       goodsPricing,
+        a.goods_price         goodsPrice,
+        a.sales_volume        salesVolume,
+        a.goods_stock         goodsStock,
+        a.goods_no            goodsNo,
+        a.goods_sketch        goodsSketch,
+        a.goods_state         goodsState,
+        a.goods_author        goodsAuthor,
+        a.goods_press         goodsPress,
+        a.goods_img           goodsImg,
+        a.vendor_name         vendorName,
+        a.goods_view          goodsView,
+        a.goods_star          goodsStar,
+        a.vendor_name         vendorName,
+        a.up_time             upTime,
+        a.version
+        from t_goods_message a
+        where a.is_delete = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsState != null">
+            and a.goods_state = #{goodsState}
+        </if>
+        <if test="goodsAuthor != null and goodsAuthor != ''">
+            and a.goods_author like concat('%', #{goodsAuthor}, '%')
+        </if>
+        <if test="goodsPress != null and goodsPress != ''">
+            and a.goods_press like concat('%', #{goodsPress}, '%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!--修改商品信息-->
+    <update id="updateGoodsById" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage">
+        update t_goods_message
+        set
+            goods_name        =  #{goodsName},
+            classify_one_Code =  #{classifyOneCode},
+            classify_two_Code =  #{classifyTwoCode},
+            classify_one      =  #{classifyOne},
+            classify_two      =  #{classifyTwo},
+            goods_pricing     =  #{goodsPricing},
+            goods_price       =  #{goodsPrice},
+            goods_stock       =  #{goodsStock},
+            goods_no          =  #{goodsNo},
+            goods_sketch      =  #{goodsSketch},
+            goods_author      =  #{goodsAuthor},
+            goods_press       =  #{goodsPress},
+            good_img          =  #{goodImg},
+            gmt_modfied =        now(),
+            last_modfied_by   =  #{lastModfiedBy},
+            version      =       version + 1
+        where
+            goods_code = #{goodsCode}
+            and version = #{version}
+    </update>
+
+    <!--查询商品信息详情-->
+    <select id="findGoodsById" parameterType="java.lang.String" resultType="com.xzsd.pc.goodsMessage.entity.GoodsMessageVo">
+        select
+            goods_name          goodsName,
+            classify_one        classifyOne,
+            classify_two        classifyTwo,
+            goods_pricing       goodsPricing,
+            goods_price         goodsPrice,
+            goods_stock         goodsStock,
+            goods_no            goodsNo,
+            goods_sketch        goodsSketch,
+            goods_author        goodsAuthor,
+            goods_press         goodsPress,
+            goods_img           goodsImg,
+            vendor_name         vendorName
+        from t_goods_message
+        where goods_code = #{goodsCode}
+        and is_delete = 0
+    </select>
+
+    <!--删除商品信息-->
+    <update id="deleteGoods" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage">
+        update t_goods_message
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+            where goods_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改商品状态-->
+    <update id="updateGoodsState" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage">
+        update t_goods_message
+        set
+        gmt_modfied = now(),
+        last_modfied_by = #{lastModfiedBy},
+        goods_state = #{goodsState},
+        version = version + 1
+        where goods_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--查询商品选择列表-->
+    <select id="goodsChoseList" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.pc.goodsMessage.entity.GoodsMessageVo">
+        select
+        a.goods_code          goodsCode,
+        a.goods_name          goodsName,
+        a.goods_state         goodsState,
+        classify_one          classifyOne,
+        classify_two          classifyTwo
+        from t_goods_message a
+        where a.is_delete = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and a.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        order by a.create_time desc
+    </select>
+</mapper>

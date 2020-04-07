@@ -87,9 +87,9 @@ public class BannerController {
      * @date 2020-03-26
      */
     @PostMapping("updateBannerState")
-    public AppResponse updateBannerState(String id,int state,String userCode){
+    public AppResponse updateBannerState(String id,int state,String userCode,String version){
         try{
-            return bannerService.updateBannerState(id,state,userCode);
+            return bannerService.updateBannerState(id,state,userCode,version);
         }catch (Exception e){
             logger.error("删除轮播图异常",e);
             System.out.println(e.toString());

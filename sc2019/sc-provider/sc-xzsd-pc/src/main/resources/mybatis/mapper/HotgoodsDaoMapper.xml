@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.hotgoods.dao.HotGoodsDao">
+
+    <resultMap id="HotGoodsResultMap" type="com.xzsd.pc.hotgoods.entity.HotGoods" >
+        <result column="hotgoods_code" property="hotgoodsCode" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="sort_no" property="sortNo" />
+        <result column="is_show" property="isShow" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="HotGoodsAndGoodsMsg" type="com.xzsd.pc.hotgoods.entity.HotGoods">
+        <result column="hotgoods_code" property="hotgoodsCode" />
+        <result column="sort_no" property="sortNo" />
+        <result column="version" property="version" />
+        <result column="goods_code" property="goodsCode" />
+        <association property="goodsMessage" javaType="com.xzsd.pc.goodsMessage.entity.GoodsMessage">
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_sketch" property="goodsSketch"/>
+            <result column="goods_img" property="goodsImg"/>
+        </association>
+    </resultMap>
+
+
+    <!--校验轮播图序号是否为一-->
+    <select id="selectHotGoodsSortNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*)
+        from t_app_hotgoods
+        where is_delete = 0
+        <if test="sortNo != null and sortNo != ''">
+            and sort_no = #{sortNo}
+        </if>
+    </select>
+
+    <!--新增热门位商品-->
+    <insert id="addHotGoods" parameterType="com.xzsd.pc.hotgoods.entity.HotGoods">
+        insert into t_app_hotgoods
+            (hotgoods_code,
+                goods_code,
+                sort_no,
+                is_show,
+                is_delete,
+                create_time,
+                create_user,
+                gmt_modfied,
+                last_modfied_by,
+                version)
+                values
+                (#{hotgoodsCode},
+                 #{goodsCode},
+                 #{sortNo},
+                 0,
+                 0,
+                 now(),
+                 #{createUser},
+                 now(),
+                 #{lastModfiedBy},
+                 0)
+    </insert>
+
+    <!--热门位列表查询-->
+    <select id="listHotGoods" parameterType="com.xzsd.pc.goodsMessage.entity.GoodsMessage" resultMap="HotGoodsAndGoodsMsg">
+        select
+            t1.hotgoods_code,
+            t1.sort_no,
+            t1.goods_code,
+            t1.version,
+            t2.goods_name,
+            t2.goods_price,
+            t2.goods_sketch
+        from t_app_hotgoods t1,
+             t_goods_message t2
+        where t1.is_delete = 0
+        and t1.goods_code = t2.goods_code
+        <if test="goodsName != null and goodsName != ''">
+            and t2.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and t2.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        order by t1.sort_no
+    </select>
+
+    <!--修改热门位商品信息-->
+    <update id="updateHotGoodsById" parameterType="com.xzsd.pc.hotgoods.entity.HotGoods">
+        update t_app_hotgoods
+        set
+            sort_no       =#{sortNo},
+            goods_code    =#{goodsCode}
+        where
+            hotgoods_code =#{hotgoodsCode}
+            and version   =#{version}
+    </update>
+
+    <!--删除热门位商品-->
+    <update id="deleteHotGoods" parameterType="String">
+        update t_app_hotgoods
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+        where hotgoods_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--设置热门位展示数量-->
+    <select id="setHotGoodsShowNum" parameterType="int" resultMap="HotGoodsAndGoodsMsg">
+        select
+            t1.hotgoods_code,
+            t1.sort_no,
+            t1.goods_code,
+            t2.goods_name,
+            t2.goods_price,
+            t2.goods_img
+        from t_app_hotgoods t1,
+             t_goods_message t2
+        where t1.is_delete = 0
+        and t1.goods_code = t2.goods_code
+        order by t1.sort_no
+        limit #{showNum}
+    </select>
+
+    <!--查询热门位商品详情-->
+    <select id="selectHotGoods" parameterType="String" resultMap="HotGoodsResultMap">
+        select
+            hotgoods_code,
+            goods_code,
+            sort_no
+        from t_app_hotgoods
+        where
+            is_delete = 0
+            and hotgoods_code = #{hotgoodsCode}
+    </select>
+
+    <!--查询热门位商品条数-->
+    <select id="selectCount" resultType="Integer">
+        select count(hotgoods_code)
+        from t_app_hotgoods
+        where
+            is_delete = 0
+    </select>
+</mapper>

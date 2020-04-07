@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.goodsSort.dao.GoodsSortDao">
+
+    <resultMap id="GoodsSortMap" type="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        <id property="cateCode" column="gcateCode"></id>
+        <result property="cateName" column="gcateName"></result>
+        <result property="level" column="glevel"></result>
+        <result property="isDelete" column="gDelete"></result>
+        <result property="version" column="aversion"/>
+        <!--配置user对象中的accounts集合的映射-->
+        <collection property="goodsClassifyTwo" javaType="list" ofType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+            <id property="cateCode"  column="goodsClassifyTwoCode"></id>
+            <result property="cateName" column="goodsClassifyTwoName"></result>
+            <result property="level" column="plevel"></result>
+            <result property="cateCodeParent" column="cateCodeParent"></result>
+            <result property="isDelete" column="pDelete"></result>
+            <result property="version" column="bversion"/>
+        </collection>
+    </resultMap>
+
+    <!--统计分类名数量-->
+    <select id="countGoodsSort" parameterType="com.xzsd.pc.goodsSort.entity.GoodsSort" resultType="int">
+        select count(cate_name)
+        from goods_sort
+        where is_delete = 0
+        and cate_name = #{cateName}
+    </select>
+
+    <!--新增商品分类-->
+    <insert id="addGoodsSort" parameterType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        insert into goods_sort
+        (cate_code,
+         cate_name,
+         cate_code_parent,
+         level,
+         remark,
+         sort_no,
+         is_delete,
+         create_time,
+         create_user,
+         gmt_modfied,
+         last_modfied_by,
+         version)
+        values
+            (#{cateCode},
+             #{cateName},
+             #{cateCodeParent},
+             #{level},
+             #{remark},
+             0,
+             #{isDelete},
+             now(),
+             #{createUser},
+             now(),
+             #{lastModfiedBy},
+             0)
+    </insert>
+
+    <!--查询商品分类列表-->
+    <select id="listGoodsSort" resultMap="GoodsSortMap">
+        select
+          g.cate_code gcateCode,
+          g.cate_name gcateName,
+          g.level glevel,
+          g.version aversion,
+          g2.cate_code goodsClassifyTwoCode,
+          g2.cate_code_parent cateCodeParent,
+          g2.level plevel,
+          g2.cate_name goodsClassifyTwoName,
+          g2.version bversion
+        from goods_sort g
+        left join goods_sort g2
+        on g.cate_code = g2.cate_code_parent
+        and g2.is_delete = 0
+        where g.level = '1'
+        and g.is_delete = 0
+        -- and g2.is_delete = 0
+        order by g.create_time desc
+    </select>
+
+    <!--修改商品分类信息-->
+    <update id="updateGoodsSort" parameterType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        update goods_sort
+        set
+            cate_name = #{cateName},
+            cate_code_parent = #{cateCodeParent},
+            remark = #{remark},
+            gmt_modfied = now(),
+            last_modfied_by   = #{lastModfiedBy},
+            version      = version + 1
+        where
+            cate_code = #{cateCode}
+            and version = #{version}
+    </update>
+
+    <!--查询商品分类详情-->
+    <select id="selectGoodsSortById" parameterType="java.lang.String"
+            resultType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName,
+            remark,
+            version
+        from goods_sort
+        where cate_code = #{cateCode}
+        and is_delete = 0
+    </select>
+
+    <!--删除商品分类-->
+    <update id="deleteGoodsSort" parameterType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        update goods_sort
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+        where cate_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--查询一级分类列表-->
+    <select id="listClassifyOne" resultType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName
+        from goods_sort
+        where level = '1'
+        and   is_delete = 0
+        order by create_time desc
+    </select>
+
+    <!--查询二级分类列表-->
+    <select id="listClassifyTwo" parameterType="java.lang.String" resultType="com.xzsd.pc.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName,
+            cate_code_parent cateCodeParent
+        from goods_sort
+        where cate_code_parent = #{cateCode}
+        and   is_delete = 0
+        order by create_time desc
+    </select>
+</mapper>

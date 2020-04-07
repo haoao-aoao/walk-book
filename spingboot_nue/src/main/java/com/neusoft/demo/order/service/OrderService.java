@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neusoft.demo.goodsMessage.dao.GoodsMessageDao;
 import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
+import com.neusoft.demo.goodsMessage.entity.GoodsMessageVo;
 import com.neusoft.demo.order.dao.OrderDao;
 import com.neusoft.demo.order.entity.Order;
 import com.neusoft.demo.order.entity.OrderDetailed;
@@ -68,7 +69,7 @@ public class OrderService {
         order.setPayState(1);
         //计算支付金额
         //根据商品编号查询商品详情
-        GoodsMessage goodsById = goodsMessageDao.findGoodsById(orderDetailed.getGoodsCode());
+        GoodsMessageVo goodsById = goodsMessageDao.findGoodsById(orderDetailed.getGoodsCode());
         double payPrice = (orderDetailed.getGoodsCnt() * goodsById.getGoodsPrice());
         order.setPaymentMoney(payPrice);
         order.setOrderPrice(payPrice);

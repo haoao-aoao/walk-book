@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.banner.dao.BannerDao">
+
+    <resultMap id="BaseBannerResultMap" type="com.xzsd.pc.banner.entity.Banner" >
+        <result column="image_url" property="imageUrl" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="title" property="title" />
+        <result column="state" property="state" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="id" property="id" />
+        <result column="sort_no" property="sortNo" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <!--校验轮播图序号是否为一-->
+    <select id="selectBannerSortNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*)
+        from t_app_banner
+        where is_delete = 0
+        <if test="sortNo != null and sortNo != ''">
+            and sort_no = #{sortNo}
+        </if>
+    </select>
+    <!--新增轮播图-->
+    <insert id="addBanner" parameterType="com.xzsd.pc.banner.entity.Banner">
+        insert into t_app_banner
+        (id,
+         image_url,
+         goods_code,
+         title,
+         state,
+         start_time,
+         end_time,
+         sort_no,
+         is_delete,
+         create_time,
+         create_user,
+         gmt_modfied,
+         last_modfied_by,
+         version)
+         values
+         (#{id},
+          #{imageUrl},
+          #{goodsCode},
+          #{title},
+          0,
+          #{startTime},
+          #{endTime},
+          #{sortNo},
+          0,
+          now(),
+          #{createUser},
+          now(),
+          #{lastModfiedBy},
+          0)
+    </insert>
+
+    <!--查询轮播图信息列表-->
+    <select id="listBanner" parameterType="com.xzsd.pc.banner.entity.Banner" resultMap="BaseBannerResultMap">
+        select
+            id,
+            sort_no,
+            image_url,
+            state,
+            start_time,
+            end_time
+        from t_app_banner
+        where is_delete = 0
+        <if test="state != null and state != ''">
+            and state like concat('%', #{state}, '%')
+        </if>
+        order by sort_no
+    </select>
+
+    <!--删除轮播图-->
+    <update id="deleteBanner" parameterType="com.xzsd.pc.banner.entity.Banner" >
+        update  t_app_banner
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+        where id in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改轮播图状态-->
+    <update id="updateBannerState" parameterType="com.xzsd.pc.banner.entity.Banner">
+        update  t_app_banner
+        set
+        state = #{state},
+        gmt_modfied = now(),
+        last_modfied_by = #{userCode},
+        version = version + 1
+        where id in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and version in
+        <foreach item="item" index="index" collection="listVersion" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and is_delete = 0
+    </update>
+</mapper>

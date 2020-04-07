@@ -65,17 +65,18 @@
     <!--查询轮播图信息列表-->
     <select id="listBanner" parameterType="com.neusoft.demo.banner.entity.Banner" resultMap="BaseBannerResultMap">
         select
+            id,
+            sort_no,
             image_url,
             state,
             start_time,
-            end_time,
-            sort_no
+            end_time
         from t_app_banner
         where is_delete = 0
         <if test="state != null and state != ''">
             and state like concat('%', #{state}, '%')
         </if>
-        order by create_time desc
+        order by sort_no
     </select>
 
     <!--删除轮播图-->
@@ -102,6 +103,10 @@
         version = version + 1
         where id in
         <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and version in
+        <foreach item="item" index="index" collection="listVersion" open="(" separator="," close=")">
             #{item}
         </foreach>
         and is_delete = 0

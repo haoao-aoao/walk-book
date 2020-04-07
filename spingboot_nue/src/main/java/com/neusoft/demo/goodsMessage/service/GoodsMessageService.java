@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neusoft.demo.goodsMessage.dao.GoodsMessageDao;
 import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
+import com.neusoft.demo.goodsMessage.entity.GoodsMessageVo;
 import com.neusoft.demo.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,7 @@ public class GoodsMessageService {
      * @date 2020-03-25
      */
     public AppResponse findGoodsById(String goodsCode){
-        GoodsMessage goodsById = goodsMessageDao.findGoodsById(goodsCode);
+        GoodsMessageVo goodsById = goodsMessageDao.findGoodsById(goodsCode);
         if(goodsById == null){
             return AppResponse.notFound("没有对应的商品");
         }
@@ -104,6 +105,7 @@ public class GoodsMessageService {
      * @Author haoao
      * @Date 2020-03-25
      */
+    /*
     public AppResponse listGoods(GoodsMessage goodsMessage){
 
         //创建key值
@@ -140,6 +142,14 @@ public class GoodsMessageService {
                 return AppResponse.success("从数据库查询成功！",pageDate);
             }
         }
+    }*/
+    public AppResponse listGoods(GoodsMessage goodsMessage){
+        PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
+        //查询数据库
+        List<GoodsMessageVo> goodsMessages = goodsMessageDao.listGoods(goodsMessage);
+        //包装Page对象
+        PageInfo<GoodsMessageVo> goodsMessagePageInfo = new PageInfo<>(goodsMessages);
+        return AppResponse.success("查询成功！",goodsMessagePageInfo);
     }
 
     /**
@@ -171,9 +181,9 @@ public class GoodsMessageService {
      */
     public AppResponse goodsChoseList(GoodsMessage goodsMessage){
         PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
-        List<GoodsMessage> goodsMessages = goodsMessageDao.goodsChoseList(goodsMessage);
+        List<GoodsMessageVo> goodsMessages = goodsMessageDao.goodsChoseList(goodsMessage);
         //包装Page对象
-        PageInfo<GoodsMessage> pageDate = new PageInfo<GoodsMessage>(goodsMessages);
+        PageInfo<GoodsMessageVo> pageDate = new PageInfo<>(goodsMessages);
         return AppResponse.success("查询成功！",pageDate);
     }
 }

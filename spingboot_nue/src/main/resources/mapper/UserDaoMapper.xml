@@ -138,12 +138,12 @@
     <!--查询客户列表-->
     <select id="listClientByPage" parameterType="com.neusoft.demo.user.entity.User" resultType="com.neusoft.demo.user.entity.UserClient">
         select
-        a.name,
-        a.user_acct userAcct,
-        a.idcard,
-        a.sex,
-        a.phone,
-        a.mail
+            a.name,
+            a.user_acct userAcct,
+            a.idcard,
+            a.sex,
+            a.phone,
+            a.mail
         from t_sys_user a
         where a.is_delete = 0
         <if test="userAcct != null and userAcct != ''">
@@ -152,7 +152,7 @@
         <if test="name != null and name != ''">
             and a.name like concat('%', #{name}, '%')
         </if>
-        and a.role = 3
+        and a.role = 2
         order by create_time desc
     </select>
 </mapper>

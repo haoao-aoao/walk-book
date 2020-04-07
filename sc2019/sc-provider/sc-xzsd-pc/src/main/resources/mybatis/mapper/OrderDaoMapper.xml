@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.order.dao.OrderDao">
+
+    <resultMap id="OrderMap" type="com.xzsd.pc.order.entity.Order" >
+        <result column="order_code" property="orderCode" />
+        <result column="order_state" property="orderState" />
+        <result column="pay_state" property="payState" />
+        <result column="pay_time" property="payTime" />
+        <result column="receive_time" property="receiveTime" />
+        <result column="user_code" property="userCode" />
+        <result column="store_code" property="storeCode" />
+        <result column="order_price" property="orderPrice" />
+        <result column="payment_money" property="paymentMoney" />
+        <result column="remarks" property="remarks" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="OrderDetailedMap" type="com.xzsd.pc.order.entity.OrderDetailed" >
+        <result column="order_det_code" property="orderDetCode" />
+        <result column="order_code" property="orderCode" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="goods_cnt" property="goodsCnt" />
+        <result column="goods_all_price" property="goodsAllPrice" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="OrderAndUser" type="com.xzsd.pc.order.entity.Order">
+        <id property="orderCode" column="order_code" ></id>
+        <result column="order_code" property="orderCode" />
+        <result column="order_state" property="orderState" />
+        <result column="pay_state" property="payState" />
+        <result column="pay_time" property="payTime" />
+        <result column="receive_time" property="receiveTime" />
+        <result column="user_code" property="userCode" />
+        <result column="store_code" property="storeCode" />
+        <result column="order_price" property="orderPrice" />
+        <result column="payment_money" property="paymentMoney" />
+        <result column="remarks" property="remarks" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="aversion" property="version" />
+        <association property="user" javaType="com.xzsd.pc.user.entity.User">
+            <id property="userCode" column="user_code"></id>
+            <result column="name" property="name"></result>
+            <result column="phone" property="phone"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="OrderAndOrderDetAndGoods" type="com.xzsd.pc.order.entity.Order" >
+        <id property="orderCode" column="AorderCode" ></id>
+        <result property="userCode" column="user_code"></result>
+        <collection property= "orderDetList" ofType="com.xzsd.pc.order.entity.OrderDetailed">
+            <result property="orderCode" column="BorderCode"></result>
+            <result property="goodsCode" column="goods_code"></result>
+            <result property="goodsCnt" column="goods_cnt"></result>
+            <result property="goodsAllPrice" column="goods_all_price"></result>
+            <result property="goodsName" column="goods_name"></result>
+            <result property="goodsPrice" column="goods_price"></result>
+            <result property="goodsPricing" column="goods_pricing"></result>
+        </collection>
+
+    </resultMap>
+
+    <!--新增订单-->
+    <insert id="addOrder" parameterType="com.xzsd.pc.order.entity.Order">
+        insert into t_order
+           (order_code,
+            order_state,
+            pay_state,
+            pay_time,
+            receive_time,
+            user_code,
+            store_code,
+            order_price,
+            payment_money,
+            remarks,
+            is_delete,
+            create_user,
+            create_time,
+            last_modfied_by,
+            gmt_modfied,
+            version)
+           values
+           (#{orderCode},
+            #{orderState},
+            #{payState},
+            #{payTime},
+            #{receiveTime},
+            #{userCode},
+            #{storeCode},
+            #{orderPrice},
+            #{paymentMoney},
+            #{remarks},
+            0,
+            #{createUser},
+            now(),
+            #{lastModfiedBy},
+            #{gmtModfied},
+            0)
+    </insert>
+
+    <!--新增订单详情-->
+    <insert id="addOrderDetailed" parameterType="com.xzsd.pc.order.entity.OrderDetailed">
+        insert into t_order_detailed
+            (order_det_code,
+                order_code,
+                goods_code,
+                goods_cnt,
+                goods_all_price,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+            values
+                (#{orderDetCode},
+                 #{orderCode},
+                 #{goodsCode},
+                 #{goodsCnt},
+                 #{goodsAllPrice},
+                 0,
+                 #{createUser},
+                 now(),
+                 #{lastModfiedBy},
+                 now(),
+                 0)
+    </insert>
+    
+    <!--修改订单状态-->
+    <update id="updateOrderState" parameterType="com.xzsd.pc.order.entity.Order">
+        update t_order
+        set
+        order_state = #{orderState},
+        gmt_modfied = now(),
+        last_modfied_by   = #{lastModfiedBy},
+        version = version + 1
+        where order_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and is_delete = 0
+        and version = #{version}
+    </update>
+
+    <!--查询订单列表-->
+    <select id="listsOrder" parameterType="com.xzsd.pc.order.entity.Order" resultMap="OrderAndUser">
+        select
+            t1.order_code,
+            t1.order_state,
+            t1.pay_state,
+            t1.pay_time,
+            t1.store_code,
+            t1.order_price,
+            t2.name,
+            t2.phone,
+            t1.version aversion
+        from t_order t1,t_sys_user t2
+        where t1.is_delete = 0
+        and t1.user_code = t2.user_code
+        <if test="name != null and name != ''">
+            and t2.name like concat('%', #{name}, '%')
+        </if>
+        <if test="orderCode != null and orderCode != ''">
+            and t1.order_code like concat('%', #{orderCode}, '%')
+        </if>
+        <if test="payTimeS != null and payTimeS != ''">
+            and t1.pay_time &gt;= #{payTimeS}
+        </if>
+        <if test="payTimeE != null and payTimeE != ''">
+            and t1.pay_time &lt;= #{payTimeE}
+        </if>
+        <if test="phone != null and phone != ''">
+            and t2.phone like concat('%', #{phone}, '%')
+        </if>
+        <if test="orderState != null and orderState != ''">
+            and t1.order_state = #{orderState}
+        </if>
+        order by t1.create_time desc
+    </select>
+
+    <!--查询订单详情列表-->
+    <select id="listOrderDetById" parameterType="String" resultMap="OrderAndOrderDetAndGoods">
+        select
+            a.user_code,
+            a.order_code AorderCode,
+            b.goods_code,
+            b.goods_cnt,
+            b.goods_all_price,
+            c.goods_name,
+            c.goods_pricing,
+            c.goods_price,
+            a.version
+        from t_order a,t_order_detailed b,t_goods_message c
+        where
+            a.order_code = b.order_code
+            and b.goods_code = c.goods_code
+            and a.order_code = #{orderCode}
+        order by a.create_time desc
+    </select>
+</mapper>

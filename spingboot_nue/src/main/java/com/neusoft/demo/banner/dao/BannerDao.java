@@ -40,5 +40,5 @@ public interface BannerDao {
      * @param state
      * @return
      */
-    int updateBannerState(@Param("listCode") List<String> listCode,@Param("state") int state,@Param("userCode") String userCode);
+    int updateBannerState(@Param("listCode") List<String> listCode,@Param("state") int state,@Param("userCode") String userCode,@Param("listVersion") List<String> listVersion);
 }

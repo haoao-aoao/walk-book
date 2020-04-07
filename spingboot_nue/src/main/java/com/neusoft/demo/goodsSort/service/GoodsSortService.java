@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,9 +74,9 @@ public class GoodsSortService {
             return AppResponse.bizError("新增失败，请重试！");
         }
         //生产者传消息
-        String goodsSortJson = JSON.toJSONString(goodsSort);
+        //String goodsSortJson = JSON.toJSONString(goodsSort);
         //sendMessage(this.queue,goodsSortJson);
-        System.out.println("成功发送新增的商品实体类");
+        //System.out.println("成功发送新增的商品实体类");
         return AppResponse.success("新增成功！");
     }
 
@@ -140,6 +141,8 @@ public class GoodsSortService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteGoodsSort(String cateCode,String userCode){
+        //List<GoodsSort> goodsSorts = goodsSortDao.listClassifyTwo(cateCode);
+
         List<String> listCode = Arrays.asList(cateCode.split(","));
         AppResponse appResponse = AppResponse.success("删除成功");
         //删除商品分类

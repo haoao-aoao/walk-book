@@ -1,6 +1,7 @@
 package com.neusoft.demo.goodsMessage.dao;
 
 import com.neusoft.demo.goodsMessage.entity.GoodsMessage;
+import com.neusoft.demo.goodsMessage.entity.GoodsMessageVo;
 import com.neusoft.demo.goodsSort.entity.GoodsSort;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,13 +43,13 @@ public interface GoodsMessageDao {
      * @param goodsCode
      * @return
      */
-    GoodsMessage findGoodsById(@Param("goodsCode") String goodsCode);
+    GoodsMessageVo findGoodsById(@Param("goodsCode") String goodsCode);
 
     /**
      * 查询商品列表
      * @return
      */
-    List<GoodsMessage> listGoods(GoodsMessage goodsMessage);
+    List<GoodsMessageVo> listGoods(GoodsMessage goodsMessage);
 
     /**
      * 修改商品状态
@@ -63,5 +64,5 @@ public interface GoodsMessageDao {
      * @param goodsMessage
      * @return
      */
-    List<GoodsMessage> goodsChoseList(GoodsMessage goodsMessage);
+    List<GoodsMessageVo> goodsChoseList(GoodsMessage goodsMessage);
 }

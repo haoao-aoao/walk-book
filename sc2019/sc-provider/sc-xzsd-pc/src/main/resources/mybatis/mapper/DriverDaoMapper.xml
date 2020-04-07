@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.driver.dao.DriverDao">
+    <resultMap id="BaseResultMap" type="com.xzsd.pc.driver.entity.Driver">
+        <result column="driver_code" property="driverCode" />
+        <result column="user_code" property="userCode" />
+        <result column="city_code" property="cityCode" />
+        <result column="city_name" property="cityName" />
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+        <result column="province_code" property="provinceCode" />
+        <result column="province_name" property="provinceName" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="DriverAndUser" type="com.xzsd.pc.driver.entity.DriverVo">
+        <result column="driver_code" property="driverCode"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city_name" property="cityName"/>
+        <result column="area_name" property="areaName"/>
+        <association property="userInfo" javaType="com.xzsd.pc.user.entity.UserVo">
+            <result column="user_code" property="userCode"/>
+            <result column="user_acct" property="userAcct"/>
+            <result column="name" property="name"/>
+            <result column="sex" property="sex"/>
+            <result column="phone" property="phone"/>
+            <result column="mail" property="mail"/>
+            <result column="idcard" property="idCard"/>
+            <result column="user_password" property="userPassword"/>
+            <result column="role" property="role"/>
+        </association>
+    </resultMap>
+    
+    <!--新增司机信息-->
+    <insert id="addDriver" parameterType="com.xzsd.pc.driver.entity.Driver">
+        insert into t_driver
+            (driver_code,
+                user_code,
+                city_code,
+                city_name,
+                area_code,
+                area_name,
+                province_code,
+                province_name,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+            values
+            (#{driverCode},
+                #{userCode},
+                #{cityCode},
+                #{cityName},
+                #{areaCode},
+                #{areaName},
+                #{provinceCode},
+                #{provinceName},
+                0,
+                #{createUser},
+                now(),
+                #{lastModfiedBy},
+                now(),
+                0)
+    </insert>
+    
+    <!--查询司机详情接口-->
+    <select id="findDriverById" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
+        select
+            t1.driver_code,
+            t2.user_acct,
+            t2.name,
+            t2.sex,
+            t2.phone,
+            t2.mail,
+            t2.idcard,
+            t2.user_password,
+            t2.role,
+            t1.province_name,
+            t1.city_name,
+            t1.area_name
+        from t_driver t1,
+             t_sys_user t2
+        where t1.is_delete = 0
+        and t2.role = 3
+        and t1.user_code = t2.user_code
+    </select>
+
+    <!--修改司机信息-->
+    <update id="updateDriver" parameterType="com.xzsd.pc.driver.entity.Driver">
+        update t_driver
+        set
+            <if test ='null != cityCode'>city_code = #{cityCode},</if>
+            <if test ='null != cityName'>city_name = #{cityName},</if>
+            <if test ='null != areaCode'>area_code = #{areaCode},</if>
+            <if test ='null != areaName'>area_name = #{areaName},</if>
+            <if test ='null != provinceCode'>province_code = #{provinceCode},</if>
+            <if test ='null != provinceName'>province_name = #{provinceName},</if>
+            <if test ='null != lastModfiedBy'>last_modfied_by = #{lastModfiedBy},</if>
+            gmt_modfied = now(),
+            version = version + 1
+        where
+            driver_code = #{driverCode}
+            and version = #{version}
+    </update>
+
+    <!--删除司机信息-->
+    <update id="deleteDriver" parameterType="String">
+        update t_driver
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{lastModfiedBy},
+            version = version + 1
+        where user_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--查询司机信息列表-->
+    <select id="listDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
+        select
+            t1.driver_code,
+            t2.user_code,
+            t2.name,
+            t2.phone,
+            t2.idcard,
+            t2.user_acct
+        from t_driver t1,
+             t_sys_user t2
+        where
+            t1.is_delete = 0
+            and t1.user_code = t2.user_code
+            <if test="driverCode != null and driverCode != ''">
+                and t1.driver_code like concat('%', #{driverCode}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                and t2.name like concat('%', #{name}, '%')
+            </if>
+            <if test="provinceName != null and provinceName != ''">
+                and t1.province_name like concat('%', #{provinceName}, '%')
+            </if>
+            <if test="cityName != null and cityName != ''">
+                and t1.city_name like concat('%', #{cityName}, '%')
+            </if>
+            <if test="areaName != null and areaName != ''">
+                and t1.area_name like concat('%', #{areaName}, '%')
+            </if>
+    </select>
+</mapper>

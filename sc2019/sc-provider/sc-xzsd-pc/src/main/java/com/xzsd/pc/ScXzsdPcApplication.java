@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 @EnableResourceServer
 @EnableSwagger2
 @EnableTransactionManagement
-@MapperScan("com.xzsd.pc")
+@MapperScan("com.xzsd.pc.*.dao")
 @EnableRedisHttpSession
 public class ScXzsdPcApplication {
 
