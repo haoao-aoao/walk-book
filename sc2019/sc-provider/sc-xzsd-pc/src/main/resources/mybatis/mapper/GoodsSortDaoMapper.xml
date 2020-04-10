@@ -8,7 +8,7 @@
         <result property="level" column="glevel"></result>
         <result property="isDelete" column="gDelete"></result>
         <result property="version" column="aversion"/>
-        <!--配置user对象中的accounts集合的映射-->
+        <!--配置GoodsSort对象中的集合的映射-->
         <collection property="goodsClassifyTwo" javaType="list" ofType="com.xzsd.pc.goodsSort.entity.GoodsSort">
             <id property="cateCode"  column="goodsClassifyTwoCode"></id>
             <result property="cateName" column="goodsClassifyTwoName"></result>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.goodsSort.dao.GoodsSortDao">
+
+    <resultMap id="GoodsSortMap" type="com.xzsd.app.goodsSort.entity.GoodsSort">
+        <id property="cateCode" column="gcateCode"></id>
+        <result property="cateName" column="gcateName"></result>
+        <result property="level" column="glevel"></result>
+        <result property="isDelete" column="gDelete"></result>
+        <result property="version" column="aversion"/>
+        <!--配置user对象中的accounts集合的映射-->
+        <collection property="goodsClassifyTwo" javaType="list" ofType="com.xzsd.app.goodsSort.entity.GoodsSort">
+            <id property="cateCode"  column="goodsClassifyTwoCode"></id>
+            <result property="cateName" column="goodsClassifyTwoName"></result>
+            <result property="level" column="plevel"></result>
+            <result property="cateCodeParent" column="cateCodeParent"></result>
+            <result property="isDelete" column="pDelete"></result>
+            <result property="version" column="bversion"/>
+        </collection>
+    </resultMap>
+    
+    <resultMap id="GoodsSortAndGoodsMsg" type="com.xzsd.app.goodsSort.entity.GoodsSortVo">
+        <result property="goodsClassifyTwoCode" column="cate_code"/>
+        <result property="goodsClassifyTwoName" column="cate_name"/>
+        <collection property="goodsMessage" ofType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
+            <id property="goodsCode" column="goods_code"/>
+            <result property="goodsPrice" column="goods_price"/>
+            <result property="goodsPricing" column="goods_pricing"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="goodsImg" column="goods_img"/>
+        </collection>
+    </resultMap>
+
+    <!--查询商品分类列表-->
+    <select id="listGoodsSort" resultMap="GoodsSortMap">
+        select
+          g.cate_code gcateCode,
+          g.cate_name gcateName,
+          g.level glevel,
+          g.version aversion,
+          g2.cate_code goodsClassifyTwoCode,
+          g2.cate_code_parent cateCodeParent,
+          g2.level plevel,
+          g2.cate_name goodsClassifyTwoName,
+          g2.version bversion
+        from goods_sort g
+        left join goods_sort g2
+        on g.cate_code = g2.cate_code_parent
+        and g2.is_delete = 0
+        where g.level = '1'
+        and g.is_delete = 0
+        -- and g2.is_delete = 0
+        order by g.create_time desc
+    </select>
+
+    <!--查询一级分类列表-->
+    <select id="listClassifyOne" resultType="com.xzsd.app.goodsSort.entity.GoodsSort">
+        select
+            cate_code cateCode,
+            cate_name cateName
+        from goods_sort
+        where level = '1'
+        and   is_delete = 0
+        order by create_time desc
+    </select>
+
+    <!--查询二级分类列表-->
+    <select id="listClassifyTwo" parameterType="java.lang.String" resultMap="GoodsSortAndGoodsMsg">
+        SELECT
+            t1.cate_code,
+            t1.cate_name,
+            t2.goods_code,
+            t2.goods_name,
+            t2.goods_pricing,
+            t2.goods_price,
+            t2.goods_img
+        FROM  t_goods_message t2
+        LEFT JOIN goods_sort t1
+        ON    t1.cate_code = t2.classify_two_Code
+        AND   t2.is_delete = 0
+        WHERE t2.classify_one_Code = #{cateCode}
+        AND   t1.is_delete = 0
+        ORDER BY t1.create_time DESC;
+    </select>
+</mapper>

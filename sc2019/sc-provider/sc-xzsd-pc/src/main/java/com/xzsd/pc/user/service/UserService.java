@@ -2,6 +2,9 @@ package com.xzsd.pc.user.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.neusoft.security.client.utils.SecurityUtils;
+import com.xzsd.pc.store.dao.StoreDao;
+import com.xzsd.pc.store.entity.Store;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.User;
 import com.xzsd.pc.user.entity.UserClient;
@@ -25,6 +28,9 @@ public class UserService {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private StoreDao storeDao;
 
     /**
      * demo 管理端登录
@@ -137,9 +143,21 @@ public class UserService {
      * @Date 2020-03-24
      */
     public AppResponse listClientByPage(User user){
-        PageHelper.startPage(user.getPageNum(),user.getPageSize());
-        List<UserClient> users = userDao.listClientByPage(user);
-        PageInfo<UserClient> userPageInfo = new PageInfo<>(users);
-        return AppResponse.success("客户信息列表查询成功",userPageInfo);
+//        PageHelper.startPage(user.getPageNum(),user.getPageSize());
+//        List<UserClient> users = userDao.listClientByPage(user);
+//        PageInfo<UserClient> userPageInfo = new PageInfo<>(users);
+//        return AppResponse.success("客户信息列表查询成功",userPageInfo);
+        //获取当前登录人id
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        UserVo iuser = userDao.getUserByUserCode(currentUserId);
+        Integer role = iuser.getRole();
+        if (role == 0){
+            return AppResponse.success("管理员显示全部客户",userDao.listClientByPage(user));
+        }
+        //获取当前人门店邀请码
+        Store store = storeDao.selectInviteCode(currentUserId);
+        String invitationCode = store.getInvitationCode();
+        user.setInvitationCode(invitationCode);
+        return AppResponse.success("店长对应的客户",userDao.listStoreClientByPage(user));
     }
 }

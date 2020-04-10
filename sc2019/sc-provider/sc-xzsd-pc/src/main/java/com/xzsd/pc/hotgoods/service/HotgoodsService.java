@@ -100,18 +100,18 @@ public class HotgoodsService {
     }
 
     /**
-     * 查询设置展示热门位商品
+     * 设置展示热门位商品
      * @param showNum
      * @return
      */
-    public AppResponse setHotGoodsShowNum(int showNum){
+    @Transactional(rollbackFor = Exception.class)
+    public AppResponse setHotGoodsShowNum(Integer showNum){
         Integer count = hotGoodsDao.selectCount();
-        List<HotGoods> hotGoodsList;
         if (showNum <= count){
-            hotGoodsList = hotGoodsDao.setHotGoodsShowNum(showNum);
+            boolean index = hotGoodsDao.setHotGoodsShowNum(showNum);
+            return AppResponse.success("设置成功",index);
         }else {
             return AppResponse.bizError("展示数目大于有效数目");
         }
-        return AppResponse.success("设置成功",hotGoodsList);
     }
 }

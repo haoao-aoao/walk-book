@@ -148,4 +148,15 @@
         </if>
         order by t1.create_time desc
     </select>
+    
+    <!--店长编号查门店邀请码-->
+    <select id="selectInviteCode" parameterType="String" resultType="com.xzsd.pc.store.entity.Store">
+        select
+            invitation_code
+        from
+            t_store_manage
+        where
+            is_delete = 0
+            and user_code = #{userCode}
+    </select>
 </mapper>

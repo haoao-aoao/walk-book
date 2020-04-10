@@ -169,9 +169,10 @@
             t2.name,
             t2.phone,
             t1.version aversion
-        from t_order t1,t_sys_user t2
+        from t_order t1,t_sys_user t2,t_client t3
         where t1.is_delete = 0
         and t1.user_code = t2.user_code
+        and t1.user_code = t3.user_code
         <if test="name != null and name != ''">
             and t2.name like concat('%', #{name}, '%')
         </if>
@@ -189,6 +190,9 @@
         </if>
         <if test="orderState != null and orderState != ''">
             and t1.order_state = #{orderState}
+        </if>
+        <if test="invitationCode != null and invitationCode != ''">
+            and t3.invitation_code = #{invitationCode}
         </if>
         order by t1.create_time desc
     </select>

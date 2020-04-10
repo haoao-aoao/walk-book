@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.menu.dao.MenuDao">
+    <resultMap id="BaseResultMap" type="com.xzsd.pc.menu.entity.Menu" >
+        <result column="menu_code" property="menuCode" />
+        <result column="menu_parent_code" property="menuParentCode" />
+        <result column="is_menu" property="isMenu" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_route" property="menuRoute" />
+        <result column="menu_comment" property="menuComment" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <insert id="addMenu" parameterType="com.xzsd.pc.menu.entity.Menu">
+        insert into t_sys_menu
+            (menu_code,
+                menu_parent_code,
+                is_menu,
+                menu_name,
+                menu_route,
+                menu_comment,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+            values
+            (#{menuCode},
+             #{menuParentCode},
+             #{isMenu},
+             #{menuName},
+             #{menuRoute},
+             #{menuComment},
+             0,
+             #{createUser},
+             now(),
+             #{lastModfiedBy},
+             now(),
+             0)
+    </insert>
+
+    <update id="updateMenuById" parameterType="com.xzsd.pc.menu.entity.Menu">
+        update t_sys_menu
+        set
+            menu_name   =   #{menuName},
+            is_menu     =   #{isMenu},
+            menu_route  =   #{menuRoute},
+            menu_comment=   #{menuComment},
+            last_modfied_by = #{lastModfiedBy},
+            version = version + 1
+        where menu_code = #{menuCode}
+        and version = #{version}
+    </update>
+
+    <select id="findAllMenu" resultType="com.xzsd.pc.menu.entity.MenuVo">
+        select
+            menu_code menuCode,
+            menu_name menuName,
+            version
+        from t_sys_menu
+        where is_delete = 0
+        order by create_time desc
+    </select>
+
+    <update id="deleteMenu" parameterType="String">
+        update t_sys_menu
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+        where menu_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="findMenuById" parameterType="String" resultMap="BaseResultMap">
+        select
+            menu_name,
+            is_menu,
+            menu_route,
+            menu_comment
+        from t_sys_menu
+        where is_delete = 0
+        and menu_code = #{meunCode}
+        order by create_time desc
+    </select>
+
+    <select id="findLeftMenu" resultType="com.xzsd.pc.menu.entity.MenuVo">
+        select
+            menu_code menuCode,
+            menu_name menuName
+        from t_sys_menu
+        where is_delete = 0
+        and menu_comment = '1'
+        order by create_time desc
+    </select>
+</mapper>

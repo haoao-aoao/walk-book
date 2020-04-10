@@ -121,7 +121,7 @@
     <select id="getUserByUserCode" parameterType="java.lang.String" resultType="com.xzsd.pc.user.entity.UserVo">
         select
             user_code userCode,
-            name ,
+            name,
             user_acct userAcct,
             user_password userPassword,
             idcard idCard,
@@ -154,5 +154,27 @@
         </if>
         and a.role = 2
         order by create_time desc
+    </select>
+
+    <select id="listStoreClientByPage" parameterType="com.xzsd.pc.user.entity.User" resultType="com.xzsd.pc.user.entity.UserClient">
+        select
+        a.name,
+        a.user_acct userAcct,
+        a.idcard,
+        a.sex,
+        a.phone,
+        a.mail
+        from t_sys_user a,
+             t_client b
+        where a.is_delete = 0
+        <if test="userAcct != null and userAcct != ''">
+            and a.user_acct like concat('%', #{userAcct}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
+        </if>
+        and b.user_code = a.user_code
+        and b.invitation_code = #{invitationCode}
+        order by a.create_time desc
     </select>
 </mapper>

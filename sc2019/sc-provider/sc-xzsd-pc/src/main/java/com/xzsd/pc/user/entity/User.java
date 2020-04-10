@@ -72,6 +72,19 @@ public class User {
      */
     private String version;
 
+    /**
+     * 门店邀请码
+     */
+    private String invitationCode;
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
+
     public String getName() {
         return name;
     }

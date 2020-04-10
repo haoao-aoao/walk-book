@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.hotgoods.dao.HotGoodsDao">
+
+    <resultMap id="HotGoodsResultMap" type="com.xzsd.app.hotgoods.entity.HotGoods" >
+        <result column="hotgoods_code" property="hotgoodsCode" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="sort_no" property="sortNo" />
+        <result column="is_show" property="isShow" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="HotGoodsAndGoodsMsg" type="com.xzsd.app.hotgoods.entity.HotGoods">
+        <result column="hotgoods_code" property="hotgoodsCode" />
+        <result column="sort_no" property="sortNo" />
+        <result column="version" property="version" />
+        <result column="goods_code" property="goodsCode" />
+        <association property="goodsMessage" javaType="com.xzsd.app.goodsMessage.entity.GoodsMessage">
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_sketch" property="goodsSketch"/>
+            <result column="goods_img" property="goodsImg"/>
+        </association>
+    </resultMap>
+
+
+    <!--热门位商品列表-->
+    <select id="listHotGoodsByPage" parameterType="int" resultMap="HotGoodsAndGoodsMsg">
+        select
+            t1.hotgoods_code,
+            t1.sort_no,
+            t1.goods_code,
+            t2.goods_name,
+            t2.goods_price,
+            t2.goods_img
+        from t_app_hotgoods t1,
+             t_goods_message t2
+        where t1.is_delete = 0
+        and t1.goods_code = t2.goods_code
+        order by t1.sort_no
+        limit #{showNum}
+    </select>
+
+    <!--查询字典表里的热门商品展示数量-->
+    <select id="selectCount" resultType="String">
+        select
+            dict_value
+        from  sys_dictionaries
+        where id = '1'
+    </select>
+</mapper>

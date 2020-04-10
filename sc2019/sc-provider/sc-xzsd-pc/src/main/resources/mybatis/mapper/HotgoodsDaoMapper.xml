@@ -114,21 +114,11 @@
     </update>
 
     <!--设置热门位展示数量-->
-    <select id="setHotGoodsShowNum" parameterType="int" resultMap="HotGoodsAndGoodsMsg">
-        select
-            t1.hotgoods_code,
-            t1.sort_no,
-            t1.goods_code,
-            t2.goods_name,
-            t2.goods_price,
-            t2.goods_img
-        from t_app_hotgoods t1,
-             t_goods_message t2
-        where t1.is_delete = 0
-        and t1.goods_code = t2.goods_code
-        order by t1.sort_no
-        limit #{showNum}
-    </select>
+    <update id="setHotGoodsShowNum" parameterType="Integer">
+        update sys_dictionaries
+        set dict_value = #{showNum}
+        where id = '1'
+    </update>
 
     <!--查询热门位商品详情-->
     <select id="selectHotGoods" parameterType="String" resultMap="HotGoodsResultMap">

@@ -74,4 +74,11 @@ public interface UserDao {
      * @return 所有用户信息
      */
     List<UserClient> listClientByPage(User user);
+
+    /**
+     * 对应门店邀请码获取客户信息
+     * @param user 用户信息
+     * @return 所有用户信息
+     */
+    List<UserClient> listStoreClientByPage(User user);
 }

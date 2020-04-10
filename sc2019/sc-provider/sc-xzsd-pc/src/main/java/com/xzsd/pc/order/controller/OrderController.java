@@ -31,7 +31,7 @@ public class OrderController {
     @RequestMapping(value = "listsOrder")
     public AppResponse listsOrder(Order order){
         try {
-            return orderService.listsOrder(order);
+            return orderService.listsOrderByPage(order);
         }catch (Exception e){
             logger.error("查询异常",e);
             System.out.println(e.toString());

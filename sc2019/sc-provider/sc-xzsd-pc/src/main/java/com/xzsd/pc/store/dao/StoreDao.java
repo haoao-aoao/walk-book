@@ -41,4 +41,6 @@ public interface StoreDao {
      * @return
      */
     List<Store> listStore(Store store);
+
+    Store selectInviteCode(@Param("userCode") String userCode);
 }

@@ -2,11 +2,16 @@ package com.xzsd.pc.order.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.goodsMessage.dao.GoodsMessageDao;
 import com.xzsd.pc.goodsMessage.entity.GoodsMessageVo;
 import com.xzsd.pc.order.dao.OrderDao;
 import com.xzsd.pc.order.entity.Order;
 import com.xzsd.pc.order.entity.OrderDetailed;
+import com.xzsd.pc.store.dao.StoreDao;
+import com.xzsd.pc.store.entity.Store;
+import com.xzsd.pc.user.dao.UserDao;
+import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,12 @@ public class OrderService {
     @Resource
     private GoodsMessageDao goodsMessageDao;
 
+    @Resource
+    private StoreDao storeDao;
+
+    @Resource
+    private UserDao userDao;
+
     /**
      * demo 查询订单列表
      * @param order
@@ -32,11 +43,25 @@ public class OrderService {
      * @author haoao
      * @date 2020-03-30
      */
-    public AppResponse listsOrder(Order order){
-        PageHelper.startPage(order.getPageNum(),order.getPageSize());
+    public AppResponse listsOrderByPage(Order order){
+//        PageHelper.startPage(order.getPageNum(),order.getPageSize());
+//        List<Order> orderList = orderDao.listsOrder(order);
+//        PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);
+//        return AppResponse.success("查询成功",orderPageInfo);
+        //获取当前登录人id
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        UserVo iuser = userDao.getUserByUserCode(currentUserId);
+        Integer role = iuser.getRole();
         List<Order> orderList = orderDao.listsOrder(order);
-        PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);
-        return AppResponse.success("查询成功",orderPageInfo);
+        if (role == 0){
+            return AppResponse.success("管理员显示全部订单",orderList);
+        }
+        //获取当前人门店邀请码
+        Store store = storeDao.selectInviteCode(currentUserId);
+        String invitationCode = store.getInvitationCode();
+        order.setInvitationCode(invitationCode);
+        List<Order> orderList1 = orderDao.listsOrder(order);
+        return AppResponse.success("店长订单",orderList1);
     }
 
     /**

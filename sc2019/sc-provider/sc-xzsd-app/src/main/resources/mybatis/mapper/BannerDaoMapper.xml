@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.banner.dao.BannerDao">
+
+    <resultMap id="BaseBannerResultMap" type="com.xzsd.app.banner.entity.Banner" >
+        <result column="image_url" property="imageUrl" />
+        <result column="id" property="id" />
+        <result column="sort_no" property="sortNo" />
+    </resultMap>
+
+    <!--查询轮播图信息列表-->
+    <select id="listBanner" resultMap="BaseBannerResultMap">
+        select
+            id,
+            sort_no,
+            image_url
+        from t_app_banner
+        where is_delete = 0
+        and state = 0
+        order by sort_no
+    </select>
+</mapper>

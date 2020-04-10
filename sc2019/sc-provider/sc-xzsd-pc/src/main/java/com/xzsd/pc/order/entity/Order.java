@@ -112,6 +112,19 @@ public class Order {
 
     private List<OrderDetailed> orderDetList;
 
+    /**
+     * 门店邀请码
+     */
+    private String invitationCode;
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
+
     public List<OrderDetailed> getOrderDetList() {
         return orderDetList;
     }

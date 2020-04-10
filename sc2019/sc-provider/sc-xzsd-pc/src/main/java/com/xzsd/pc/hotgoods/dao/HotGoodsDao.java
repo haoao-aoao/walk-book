@@ -49,7 +49,7 @@ public interface HotGoodsDao {
      * @param showNum
      * @return
      */
-    List<HotGoods> setHotGoodsShowNum(@Param("showNum") int showNum);
+    boolean setHotGoodsShowNum(@Param("showNum") int showNum);
 
     /**
      * 查询热门位商品详情

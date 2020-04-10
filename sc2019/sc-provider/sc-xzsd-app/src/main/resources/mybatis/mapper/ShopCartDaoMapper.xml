@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.shopcart.dao.ShopCartDao">
+
+    <resultMap id="BaseResultMap" type="com.xzsd.app.shopcart.entity.ShopCart" >
+        <result column="shopcart_code" property="shopcartCode" />
+        <result column="user_code" property="userCode" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="buy_count" property="buyCount" />
+        <result column="allmoney" property="allmoney" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="ShopCartAndGoodsMsg" type="com.xzsd.app.shopcart.entity.ShopCartVo">
+        <result column="shopcart_code" property="shopcartCode" />
+        <result column="goods_code" property="goodsCode" />
+        <result column="buy_count" property="buyCount" />
+        <result column="allmoney" property="allmoney" />
+        <association property="goodsMessage" javaType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
+            <id property="goodsCode" column="goods_code"/>
+            <result property="goodsPrice" column="goods_price"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="goodsImg" column="goods_img"/>
+        </association>
+    </resultMap>
+    
+    <!--新增购物车商品-->
+    <insert id="addShopCart" parameterType="com.xzsd.app.shopcart.entity.ShopCart">
+        insert into t_app_shopcart
+            (shopcart_code,
+                user_code,
+                goods_code,
+                buy_count,
+                allmoney,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+            values
+            (#{shopcartCode},
+             #{userCode},
+             #{goodsCode},
+             #{buyCount},
+             #{allmoney},
+             0,
+             #{createUser},
+             now(),
+             #{lastModfiedBy},
+             now(),
+             0)
+    </insert>
+
+    <!--修改购物车商品数量-->
+    <update id="updateShopCartBuyCount" parameterType="com.xzsd.app.shopcart.entity.ShopCart">
+        update t_app_shopcart
+        set
+            buy_count   =   #{buyCount},
+            last_modfied_by = #{lastModfiedBy},
+            gmt_modfied   =   now(),
+            version   =   version + 1
+        where
+            is_delete = 0
+            and shopcart_code   =   #{shopcartCode}
+    </update>
+
+    <!--删除购物车商品信息-->
+    <update id="deleteShopCartById" parameterType="String">
+        update t_app_shopcart
+        set
+            is_delete = 1,
+            gmt_modfied = now(),
+            last_modfied_by = #{userCode},
+            version = version + 1
+        where shopcart_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
+    <!--查询购物车列表-->
+    <select id="listShopCartByPage" parameterType="String" resultMap="ShopCartAndGoodsMsg">
+        select
+            t1.shopcart_code,
+            t1.goods_code,
+            t1.buy_count,
+            t1.allmoney,
+            t2.goods_code,
+            t2.goods_price,
+            t2.goods_name,
+            t2.goods_img
+        from t_app_shopcart t1
+        left join t_goods_message t2
+        on t1.goods_code = t2.goods_code
+        where
+            t1.is_delete = 0
+        and t1.user_code = #{userCode}
+        order by t1.create_time
+    </select>
+
+    <!--查询商品数量-->
+    <select id="selectgoods" parameterType="String" resultType="Integer">
+        select
+            count(*)
+        from  t_app_shopcart
+        where is_delete = 0
+        and goods_code = #{goodsCode}
+    </select>
+</mapper>

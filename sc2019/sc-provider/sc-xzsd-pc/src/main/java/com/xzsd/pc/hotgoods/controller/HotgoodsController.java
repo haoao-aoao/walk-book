@@ -104,12 +104,12 @@ public class HotgoodsController {
     }
 
     /**
-     * 查询设置展示热门位商品
+     * 设置展示热门位商品
      * @param showNum
      * @return
      */
-    @RequestMapping(value = "setHotGoodsShowNum")
-    public AppResponse setHotGoodsShowNum(int showNum){
+    @PostMapping("setHotGoodsShowNum")
+    public AppResponse setHotGoodsShowNum(Integer showNum){
         try{
             return hotgoodsService.setHotGoodsShowNum(showNum);
         }catch (Exception e){
