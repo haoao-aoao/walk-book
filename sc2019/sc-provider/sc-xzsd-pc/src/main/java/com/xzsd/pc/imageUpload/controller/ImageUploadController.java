@@ -2,6 +2,7 @@ package com.xzsd.pc.imageUpload.controller;
 
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.imageUpload.service.ImageUploadService;
 import com.xzsd.pc.util.AppResponse;
 import org.slf4j.Logger;
@@ -27,11 +28,12 @@ public class ImageUploadController {
      * 上传头像
      */
     @PostMapping("upload")
-    public AppResponse upload(@RequestParam("file") MultipartFile multipartFile, @RequestParam("userCode") String userCode) throws Exception {
+    public AppResponse upload(@RequestParam("file") MultipartFile multipartFile) throws Exception {
         try{
-            return imageUploadService.upload(multipartFile, userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return imageUploadService.upload(multipartFile,currentUserId);
         }catch (Exception e){
-            logger.error("商品分类新增失败");
+            logger.error("上传图片异常");
             System.out.println(e.toString());
             throw e;
         }

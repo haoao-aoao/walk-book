@@ -17,6 +17,24 @@
         <result property="userName" column="name"/>
     </resultMap>
 
+    <!--查询有无重复数据-->
+    <select id="selectStoreRepeat" parameterType="com.xzsd.pc.store.entity.Store" resultType="Integer">
+        select
+            count(*)
+        from  t_store_manage
+        where
+              is_delete = 0
+        <if test="storePhone != null and storePhone != ''">
+            and (store_phone = #{storePhone}
+        </if>
+        <if test="invitationCode != null and invitationCode != ''">
+            or invitation_code = #{invitationCode}
+        </if>
+        <if test="business_license != null and business_license != ''">
+            or business_license = #{businessLicense}
+        </if>)
+    </select>
+
     <!--新增门店-->
     <insert id="addStore" parameterType="com.xzsd.pc.store.entity.Store">
         insert into t_store_manage
@@ -86,6 +104,9 @@
             city             =#{city},
             area             =#{area},
             province         =#{province},
+            province_code    =#{provinceCode},
+            city_code        =#{cityCode},
+            area_code        =#{areaCode}
             store_name       =#{storeName},
             store_phone      =#{storePhone},
             store_address    =#{storeAddress},
@@ -128,6 +149,40 @@
               t_sys_user t2
         where t1.is_delete = 0
         and t1.user_code = t2.user_code
+        <if test="storeName != null and storeName != ''">
+            and t1.store_name like concat('%', #{storeName}, '%')
+        </if>
+        <if test="storeCode != null and storeCode != ''">
+            and t1.store_code like concat('%', #{storeCode}, '%')
+        </if>
+        <if test="userName != null and userName != ''">
+            and t2.name like concat('%', #{userName}, '%')
+        </if>
+        <if test="city != null and city != ''">
+            and t1.city = #{city}
+        </if>
+        <if test="area != null and area != ''">
+            and t1.area = #{area}
+        </if>
+        <if test="province != null and province != ''">
+            and t1.province = #{province}
+        </if>
+        order by t1.create_time desc
+    </select>
+
+    <!--查询店长对应门店信息列表-->
+    <select id="listShopperStore" parameterType="com.xzsd.pc.store.entity.Store" resultMap="storeBaseMap">
+        select
+            t1.store_code,
+            t1.store_name,
+            t1.store_phone,
+            t1.invitation_code,
+            t2.user_acct,
+            t2.name
+        from  t_store_manage t1,
+              t_sys_user t2
+        where t1.is_delete = 0
+        and t1.user_code = #{userCode}
         <if test="storeName != null and storeName != ''">
             and t1.store_name like concat('%', #{storeName}, '%')
         </if>

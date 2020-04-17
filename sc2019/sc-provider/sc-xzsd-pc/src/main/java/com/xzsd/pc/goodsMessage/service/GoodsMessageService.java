@@ -8,6 +8,7 @@ import com.xzsd.pc.goodsMessage.dao.GoodsMessageDao;
 import com.xzsd.pc.goodsMessage.entity.GoodsMessage;
 import com.xzsd.pc.goodsMessage.entity.GoodsMessageVo;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.RandomUtil;
 import com.xzsd.pc.util.RedisOperator;
 import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +44,14 @@ public class GoodsMessageService {
     public AppResponse addGoods(GoodsMessage goodsMessage){
         //设置商品编号
         goodsMessage.setGoodsCode(StringUtil.getCommonCode(2));
-
+        //设置书号
+        goodsMessage.setGoodsNo("ISBN"+ RandomUtil.radmonkey(6));
+        //浏览量
+        goodsMessage.setGoodsView(0);
+        //销售量
+        goodsMessage.setSalesVolume(0);
+        //星数 初始3星
+        goodsMessage.setGoodsStar(3);
         int cnt = goodsMessageDao.addGoods(goodsMessage);
         if(0 == cnt) {
             return AppResponse.bizError("新增失败，请重试！");
@@ -92,9 +101,21 @@ public class GoodsMessageService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteGoods(String goodsCode, String userCode){
+        /**
+         * 删除之前检查所选的商品是否在热门位 或是 在轮播图的 如果是 则不允许删除
+         */
         AppResponse appResponse = AppResponse.success("删除成功！");
         List<String> listCode = Arrays.asList(goodsCode.split(","));
-        int count = goodsMessageDao.deleteGoods(listCode, userCode);
+        //新建一个list存放可被删除的商品code
+        ArrayList<String> newListCode = new ArrayList<>();
+        for (String goods : listCode) {
+            //cnt为0则不存在热门位 或是 在轮播图
+            int cnt = goodsMessageDao.selectGoods(goods);
+            if (cnt == 0){
+                newListCode.add(goods);
+            }
+        }
+        int count = goodsMessageDao.deleteGoods(newListCode, userCode);
         if(0 == count) {
             appResponse = AppResponse.bizError("删除失败，请重试！");
         }
@@ -108,44 +129,6 @@ public class GoodsMessageService {
      * @Author haoao
      * @Date 2020-03-25
      */
-    /*
-    public AppResponse listGoods(GoodsMessage goodsMessage){
-
-        //创建key值
-        String listGoodsKey =    goodsMessage.getGoodsName()
-                                +goodsMessage.getGoodsState()
-                                +goodsMessage.getGoodsPress()
-                                +goodsMessage.getGoodsAuthor()
-                                +goodsMessage.getPageNum()
-                                +goodsMessage.getPageSize();
-        //判断redis里是否有数据
-        if (redisOperator.ttl(listGoodsKey) > 0){
-            //Json字符串转列表
-            List<GoodsMessage> goodsMessages = JSON.parseArray(redisOperator.get(listGoodsKey), GoodsMessage.class);
-            //包装Page对象
-            PageInfo<GoodsMessage> pageDate = new PageInfo<GoodsMessage>(goodsMessages);
-            return AppResponse.success("从radis查询成功",pageDate);
-        }else{
-            PageInfo<GoodsMessage> pageDate = null;
-            //页码和条数不为空
-            if(goodsMessage.getPageSize() != null && goodsMessage.getPageNum() != null){
-                PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
-                //查询数据库
-                List<GoodsMessage> goodsMessages = goodsMessageDao.listGoods(goodsMessage);
-                //list转json
-                String toJson = JSON.toJSONString(goodsMessages);
-                //存入redis,存活时间为5分钟
-                redisOperator.set(listGoodsKey,toJson,300);
-                //包装Page对象
-                pageDate = new PageInfo<GoodsMessage>(goodsMessages);
-            }
-            if (pageDate == null){
-                return AppResponse.bizError("查询错误，PageSize与PageNum为null");
-            }else{
-                return AppResponse.success("从数据库查询成功！",pageDate);
-            }
-        }
-    }*/
     public AppResponse listGoods(GoodsMessage goodsMessage){
         PageHelper.startPage(goodsMessage.getPageNum(),goodsMessage.getPageSize());
         //查询数据库

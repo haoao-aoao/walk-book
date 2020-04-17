@@ -31,9 +31,6 @@ public class MenuService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addMenu(Menu menu){
-        //获取当前登录人id
-        String currentUserId = SecurityUtils.getCurrentUserId();
-        menu.setCreateUser(currentUserId);
         menu.setMenuCode(StringUtil.getCommonCode(2));
         menu.setIsMenu(1);
         int cnt = menuDao.addMenu(menu);
@@ -50,9 +47,6 @@ public class MenuService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateMenuById(Menu menu){
-        //获取当前登录人id
-        String currentUserId = SecurityUtils.getCurrentUserId();
-        menu.setLastModfiedBy(currentUserId);
         int cnt = menuDao.updateMenuById(menu);
         if (0 == cnt){
             return AppResponse.bizError("修改失败");

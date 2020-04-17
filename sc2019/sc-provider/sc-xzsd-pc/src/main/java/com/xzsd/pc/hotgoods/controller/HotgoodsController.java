@@ -1,6 +1,7 @@
 package com.xzsd.pc.hotgoods.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.hotgoods.entity.HotGoods;
 import com.xzsd.pc.hotgoods.service.HotgoodsService;
 import com.xzsd.pc.util.AppResponse;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/sys/hotGoods")
+@RequestMapping("hotGoods")
 public class HotgoodsController {
 
     private static final Logger logger = LoggerFactory.getLogger(HotgoodsController.class);
@@ -29,7 +30,8 @@ public class HotgoodsController {
     @PostMapping("addHotGoods")
     public AppResponse addHotGoods(HotGoods hotGoods){
         try{
-            hotGoods.setCreateUser("admin");
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            hotGoods.setCreateUser(currentUserId);
             return hotgoodsService.addHotGoods(hotGoods);
         }catch (Exception e){
             logger.error("新增热门位商品异常",e);
@@ -43,7 +45,7 @@ public class HotgoodsController {
      * @param
      * @return
      */
-    @RequestMapping(value = "listHotGoods")
+    @PostMapping("listHotGoods")
     public AppResponse listHotGoods(String goodsCode,String goodsName,HotGoods hotGoods){
         try{
             return hotgoodsService.listHotGoods(goodsCode,goodsName,hotGoods);
@@ -73,13 +75,13 @@ public class HotgoodsController {
     /**
      * 删除热门位商品
      * @param hotgoodsCode
-     * @param userCode
      * @return
      */
     @PostMapping("deleteHotGoods")
-    public AppResponse deleteHotGoods(String hotgoodsCode,String userCode){
+    public AppResponse deleteHotGoods(String hotgoodsCode){
         try{
-            return hotgoodsService.deleteHotGoods(hotgoodsCode,userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return hotgoodsService.deleteHotGoods(hotgoodsCode,currentUserId);
         }catch (Exception e){
             logger.error("修改热门位商品异常",e);
             System.out.println(e.toString());
@@ -114,6 +116,21 @@ public class HotgoodsController {
             return hotgoodsService.setHotGoodsShowNum(showNum);
         }catch (Exception e){
             logger.error("设置异常",e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 显示热门位商品展示数目
+     * @return
+     */
+    @PostMapping("selectHotGoodsShowNum")
+    public AppResponse selectHotGoodsShowNum(){
+        try{
+            return hotgoodsService.selectHotGoodsShowNum();
+        }catch (Exception e){
+            logger.error("查询异常",e);
             System.out.println(e.toString());
             throw e;
         }

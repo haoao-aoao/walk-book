@@ -2,11 +2,13 @@ package com.xzsd.pc.driver.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.driver.dao.DriverDao;
 import com.xzsd.pc.driver.entity.Driver;
 import com.xzsd.pc.driver.entity.DriverVo;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.User;
+import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -38,8 +40,9 @@ public class DriverService {
         if(cnt != 0){
             return AppResponse.bizError("账户已存在,请重新输入");
         }
-        //获取用户编号
+        //设置用户编号
         user.setUserCode(StringUtil.getCommonCode(2));
+        //设置角色编号
         user.setRole(3);
         //生成司机编号
         driver.setDriverCode(StringUtil.getCommonCode(2));
@@ -107,8 +110,20 @@ public class DriverService {
      */
     public AppResponse listDriver(Driver driver){
         PageHelper.startPage(driver.getPageNum(),driver.getPageSize());
-        List<Driver> drivers = driverDao.listDriver(driver);
-        PageInfo<Driver> driverPageInfo = new PageInfo<>(drivers);
-        return AppResponse.success("司机信息列表查询成功",driverPageInfo);
+        //获取当前登录人的id
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        UserVo user = userDao.getUserByUserCode(currentUserId);
+        Integer role = user.getRole();
+        //管理人显示全部 非管理员显示对应门店司机
+        if (role == 0){
+            List<Driver> drivers = driverDao.listDriver(driver);
+            PageInfo<Driver> driverPageInfo = new PageInfo<>(drivers);
+            return AppResponse.success("司机信息列表查询成功",driverPageInfo);
+        }else {
+            driver.setUserCode(currentUserId);
+            List<Driver> drivers = driverDao.listShopperDriver(driver);
+            PageInfo<Driver> driverPageInfo = new PageInfo<>(drivers);
+            return AppResponse.success("司机信息列表查询成功",driverPageInfo);
+        }
     }
 }

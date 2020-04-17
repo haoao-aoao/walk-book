@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@RequestMapping("/sys")
+@RequestMapping("/ProvinceAndCity")
 @RestController
 public class ProvinceAndCityController {
 

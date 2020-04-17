@@ -61,6 +61,7 @@
     <update id="updateShopCartBuyCount" parameterType="com.xzsd.app.shopcart.entity.ShopCart">
         update t_app_shopcart
         set
+            allmoney    =   #{allmoney},
             buy_count   =   #{buyCount},
             last_modfied_by = #{lastModfiedBy},
             gmt_modfied   =   now(),
@@ -111,5 +112,19 @@
         from  t_app_shopcart
         where is_delete = 0
         and goods_code = #{goodsCode}
+    </select>
+
+    <!--查询购物车列表（订单）-->
+    <select id="listShopCart" parameterType="String" resultType="com.xzsd.app.shopcart.entity.ShopCartVo">
+        select
+            shopcart_code shopcartCode,
+            goods_code goodsCode,
+            buy_count buyCount,
+            allmoney
+        from  t_app_shopcart
+        where shopcart_code in
+        <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

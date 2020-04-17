@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.goodsMessage.dao.GoodsMessageDao">
+
+    <!--商品信息列表-->
+    <select id="listGoods" parameterType="com.xzsd.app.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
+        select
+        a.goods_code          goodsCode,
+        a.goods_name          goodsName,
+        a.classify_one        classifyOne,
+        a.classify_two        classifyTwo,
+        a.goods_pricing       goodsPricing,
+        a.goods_price         goodsPrice,
+        a.sales_volume        salesVolume,
+        a.goods_stock         goodsStock,
+        a.goods_no            goodsNo,
+        a.goods_sketch        goodsSketch,
+        a.goods_state         goodsState,
+        a.goods_author        goodsAuthor,
+        a.goods_press         goodsPress,
+        a.goods_img           goodsImg,
+        a.vendor_name         vendorName,
+        a.goods_view          goodsView,
+        a.goods_star          goodsStar,
+        a.vendor_name         vendorName,
+        a.up_time             upTime,
+        a.version
+        from t_goods_message a
+        where a.is_delete = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsState != null">
+            and a.goods_state = #{goodsState}
+        </if>
+        <if test="goodsAuthor != null and goodsAuthor != ''">
+            and a.goods_author like concat('%', #{goodsAuthor}, '%')
+        </if>
+        <if test="goodsPress != null and goodsPress != ''">
+            and a.goods_press like concat('%', #{goodsPress}, '%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!--查询商品信息详情-->
+    <select id="findGoodsById" parameterType="java.lang.String" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
+        select
+            goods_name          goodsName,
+            goods_pricing       goodsPricing,
+            goods_price         goodsPrice,
+            goods_stock         goodsStock,
+            goods_no            goodsNo,
+            goods_sketch        goodsSketch,
+            goods_author        goodsAuthor,
+            goods_img           goodsImg,
+            goods_star          goodsStar,
+            sales_volume        salesVolume
+        from t_goods_message
+        where goods_code = #{goodsCode}
+        and is_delete = 0
+    </select>
+
+
+    <!--查询商品选择列表-->
+    <select id="goodsChoseList" parameterType="com.xzsd.app.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
+        select
+        a.goods_code          goodsCode,
+        a.goods_name          goodsName,
+        a.goods_state         goodsState,
+        classify_one          classifyOne,
+        classify_two          classifyTwo
+        from t_goods_message a
+        where a.is_delete = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and a.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!--更新商品销量-->
+    <update id="updateGoodsSalesVolume" parameterType="com.xzsd.app.order.entity.OrderDetailed">
+        update t_goods_message
+        set
+            sales_volume    =   sales_volume + #{param2}
+        where
+            goods_code    =   #{param1}
+    </update>
+
+    <!--更新商品浏览量-->
+    <update id="updateGoodsView" parameterType="String">
+        update t_goods_message
+        set
+            goods_view    =   goods_view + 1
+        where
+            goods_code    =   #{goodsCode}
+    </update>
+
+    <!--更新库存量-->
+    <update id="updateGoodsStock" parameterType="com.xzsd.app.order.entity.OrderDetailed">
+        update t_goods_message
+        set
+            goods_stock    =   goods_stock + #{param2}
+        where
+            goods_code    =   #{param1}
+    </update>
+
+    <!--查询商品库存-->
+    <select id="selectGoodsStock" parameterType="String" resultType="int">
+        select
+            goods_stock goodsStock
+        from  t_goods_message
+        where
+            is_delete = 0
+            and goods_code    =   #{goodsCode}
+    </select>
+
+    <!--更新商品星级-->
+    <update id="updateGoodsStar" parameterType="com.xzsd.app.goodsMessage.entity.GoodsMessage" >
+        update t_goods_message
+        set
+            goods_star = #{param2}
+        where
+            is_delete = 0
+            and goods_code    =   #{param1}
+    </update>
+</mapper>

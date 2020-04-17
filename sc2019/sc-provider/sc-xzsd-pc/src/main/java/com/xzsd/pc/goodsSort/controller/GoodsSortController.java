@@ -1,6 +1,7 @@
 package com.xzsd.pc.goodsSort.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.goodsSort.entity.GoodsSort;
 import com.xzsd.pc.goodsSort.service.GoodsSortService;
 import com.xzsd.pc.util.AppResponse;
@@ -20,7 +21,7 @@ import javax.annotation.Resource;
  * @date 2020-03-24
  */
 @RestController
-@RequestMapping("/sys/goodsSort")
+@RequestMapping("goodsSort")
 public class GoodsSortController {
 
     private static final Logger logger = LoggerFactory.getLogger(GoodsSortController.class);
@@ -40,12 +41,12 @@ public class GoodsSortController {
     @PostMapping("addGoodsSoft")
     public AppResponse addGoodsSoft(GoodsSort goodsSort){
         try{
-            goodsSort.setCreateUser("admin");
-            //sendMessage(this.queue,goodsSort);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            goodsSort.setCreateUser(currentUserId);
             AppResponse appResponse = goodsSortService.addGoodsSoft(goodsSort);
             return appResponse;
         }catch (Exception e) {
-            logger.error("商品分类新增失败");
+            logger.error("商品分类新增异常");
             System.out.println(e.toString());
             throw e;
         }
@@ -58,7 +59,7 @@ public class GoodsSortController {
      * @author haoao
      * @date 2020-03-24
      */
-    @RequestMapping(value = "listGoodsSort")
+    @PostMapping("listGoodsSort")
     public AppResponse listGoodsSort(){
         try{
             return goodsSortService.listGoodsSort();
@@ -79,6 +80,8 @@ public class GoodsSortController {
     @PostMapping("updateGoodsSort")
     public AppResponse updateGoodsSort(GoodsSort goodsSort){
         try{
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            goodsSort.setLastModfiedBy(currentUserId);
             return goodsSortService.updateGoodsSort(goodsSort);
         }catch (Exception e){
             logger.error("修改商品分类异常",e);
@@ -94,7 +97,7 @@ public class GoodsSortController {
      * @author haoao
      * @date 2020-03-24
      */
-    @RequestMapping(value = "selectGoodsSortById")
+    @PostMapping("selectGoodsSortById")
     public AppResponse selectGoodsSortById(String cateCode){
         try{
             return goodsSortService.selectGoodsSortById(cateCode);
@@ -108,13 +111,13 @@ public class GoodsSortController {
     /**
      * demo 删除商品分类
      * @param cateCode
-     * @param userCode
      * @return
      */
     @PostMapping("deleteGoodsSort")
-    public AppResponse deleteGoodsSort(String cateCode,String userCode){
+    public AppResponse deleteGoodsSort(String cateCode){
         try {
-            return goodsSortService.deleteGoodsSort(cateCode,userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return goodsSortService.deleteGoodsSort(cateCode,currentUserId);
         }catch (Exception e){
             logger.error("商品分类删除错误", e);
             System.out.println(e.toString());
@@ -126,7 +129,7 @@ public class GoodsSortController {
      * 商品一级分类列表查询
      * @return
      */
-    @RequestMapping(value = "listClassifyOne")
+    @PostMapping("listClassifyOne")
     public AppResponse listClassifyOne(){
         try{
             return goodsSortService.listClassifyOne();
@@ -142,12 +145,12 @@ public class GoodsSortController {
      * @param cateCode
      * @return
      */
-    @RequestMapping(value = "listClassifyTwo")
+    @PostMapping("listClassifyTwo")
     public AppResponse listClassifyTwo(String cateCode){
         try{
             return goodsSortService.listClassifyTwo(cateCode);
         }catch (Exception e){
-            logger.error("查询一级分类异常", e);
+            logger.error("查询二级分类异常", e);
             System.out.println(e.toString());
             throw e;
         }

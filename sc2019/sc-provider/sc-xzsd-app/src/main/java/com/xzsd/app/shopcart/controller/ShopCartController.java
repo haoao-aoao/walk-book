@@ -94,4 +94,20 @@ public class ShopCartController {
             throw e;
         }
     }
+
+    /**
+     * 购物车商品合计金额
+     * @param allmoney
+     * @return
+     */
+    @PostMapping("shopCartMoney")
+    public AppResponse shopCartMoney(String allmoney){
+        try{
+            return shopCartService.shopCartMoney(allmoney);
+        }catch (Exception e){
+            logger.error("新增异常");
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
 }

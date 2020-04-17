@@ -77,6 +77,19 @@ public class User {
      */
     private String invitationCode;
 
+    /**
+     * 用户头像
+     */
+    private String userImg;
+
+    public String getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
+    }
+
     public String getInvitationCode() {
         return invitationCode;
     }
@@ -116,8 +129,6 @@ public class User {
     public void setUserCode(String userCode) {
         this.userCode = userCode;
     }
-
-
 
     public String getUserAcct() {
         return userAcct;

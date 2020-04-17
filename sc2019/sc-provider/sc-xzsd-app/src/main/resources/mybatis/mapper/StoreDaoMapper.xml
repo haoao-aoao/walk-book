@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.store.dao.StoreDao">
+
+    <resultMap id="storeBaseMap" type="com.xzsd.app.store.entity.Store">
+        <id property="storeCode" column="store_code"/>
+        <result property="userCode" column="user_code"/>
+        <result property="storeName" column="store_name"/>
+        <result property="storeAddress" column="store_address"/>
+        <result property="storePhone" column="store_phone"/>
+        <result property="invitationCode" column="invitation_code"/>
+        <result property="area" column="area"/>
+        <result property="city" column="city"/>
+        <result property="province" column="province"/>
+        <result property="businessLicense" column="business_license"/>
+        <result property="userAcct" column="user_acct"/>
+        <result property="userName" column="name"/>
+    </resultMap>
+
+    <!--查询门店详情-->
+    <select id="findStoreById" parameterType="String" resultMap="storeBaseMap">
+        select
+            t1.store_code,
+            t1.store_name,
+            t1.store_phone,
+            t1.store_address,
+            t1.province,
+            t1.city,
+            t1.area
+        from  t_store_manage t1,
+              t_client t2
+        where t1.is_delete = 0
+        and t1.invitation_code = t2.invitation_code
+        and t2.user_code = #{userCode}
+    </select>
+
+    <!--修改门店信息-->
+    <update id="updateStore" parameterType="com.xzsd.app.store.entity.Store">
+        update t_store_manage
+        set
+            city             =#{city},
+            area             =#{area},
+            province         =#{province},
+            store_name       =#{storeName},
+            store_phone      =#{storePhone},
+            store_address    =#{storeAddress},
+            invitation_code  =#{invitationCode},
+            user_code        =#{userCode},
+            business_license =#{businessLicense},
+            gmt_modfied =        now(),
+            last_modfied_by   =  #{lastModfiedBy},
+            version      =       version + 1
+        where
+            is_delete = 0
+            and store_code = #{storeCode}
+            and version = #{version}
+    </update>
+
+    <!--查询门店信息列表-->
+    <select id="listStore" parameterType="com.xzsd.app.store.entity.Store" resultMap="storeBaseMap">
+        select
+            t1.store_code,
+            t1.store_name,
+            t1.store_phone,
+            t1.invitation_code,
+            t2.user_acct,
+            t2.name
+        from  t_store_manage t1,
+              t_sys_user t2
+        where t1.is_delete = 0
+        and t1.user_code = t2.user_code
+        <if test="storeName != null and storeName != ''">
+            and t1.store_name like concat('%', #{storeName}, '%')
+        </if>
+        <if test="storeCode != null and storeCode != ''">
+            and t1.store_code like concat('%', #{storeCode}, '%')
+        </if>
+        <if test="userName != null and userName != ''">
+            and t2.name like concat('%', #{userName}, '%')
+        </if>
+        <if test="city != null and city != ''">
+            and t1.city = #{city}
+        </if>
+        <if test="area != null and area != ''">
+            and t1.area = #{area}
+        </if>
+        <if test="province != null and province != ''">
+            and t1.province = #{province}
+        </if>
+        order by t1.create_time desc
+    </select>
+    
+    <!--店长编号查门店邀请码-->
+    <select id="selectInviteCode" parameterType="String" resultType="com.xzsd.app.store.entity.Store">
+        select
+            invitation_code
+        from
+            t_store_manage
+        where
+            is_delete = 0
+            and user_code = #{userCode}
+    </select>
+
+    <!--查询对应邀请码数量-->
+    <select id="findInviteCode" parameterType="String" resultType="Integer">
+        select
+            count(invitation_code)
+        from t_store_manage
+        where
+            is_delete = 0
+            and invitation_code = #{invitationCode}
+    </select>
+</mapper>

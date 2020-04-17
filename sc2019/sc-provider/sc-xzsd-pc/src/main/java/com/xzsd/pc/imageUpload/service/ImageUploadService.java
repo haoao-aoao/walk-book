@@ -49,6 +49,7 @@ public class ImageUploadService {
         //程序结束时，删除临时文件
         deleteFile(excelFile);
 
+        //存入数据库
         ImageUpload imageUpload = new ImageUpload();
         imageUpload.setImgId(StringUtil.getCommonCode(2));
         imageUpload.setImgPath(IMAGE_PATH + imageName);

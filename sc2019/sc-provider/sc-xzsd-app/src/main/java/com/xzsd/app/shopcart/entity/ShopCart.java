@@ -58,6 +58,19 @@ public class ShopCart {
      */
     private Integer version;
 
+    /**
+     * 商品售价
+     */
+    private double goodsPrice;
+
+    public double getGoodsPrice() {
+        return goodsPrice;
+    }
+
+    public void setGoodsPrice(double goodsPrice) {
+        this.goodsPrice = goodsPrice;
+    }
+
     public String getShopcartCode() {
         return shopcartCode;
     }

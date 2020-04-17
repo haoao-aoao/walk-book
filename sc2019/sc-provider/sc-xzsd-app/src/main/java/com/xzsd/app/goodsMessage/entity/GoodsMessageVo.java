@@ -50,27 +50,6 @@ public class GoodsMessageVo {
      */
     private int goodsStar;
     /**
-     * 上架时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date upTime;
-    /**
-     * 商品状态 0在售 1已下架 2未发布
-     */
-    private Integer goodsState;
-    /**
-     * 商家名称
-     */
-    private String vendorName;
-    /**
-     * 出版社
-     */
-    private String goodsPress;
-    /**
-     * 书号
-     */
-    private String goodsNo;
-    /**
      * 作者
      */
     private String goodsAuthor;
@@ -178,46 +157,6 @@ public class GoodsMessageVo {
 
     public void setGoodsStar(int goodsStar) {
         this.goodsStar = goodsStar;
-    }
-
-    public Date getUpTime() {
-        return upTime;
-    }
-
-    public void setUpTime(Date upTime) {
-        this.upTime = upTime;
-    }
-
-    public Integer getGoodsState() {
-        return goodsState;
-    }
-
-    public void setGoodsState(Integer goodsState) {
-        this.goodsState = goodsState;
-    }
-
-    public String getVendorName() {
-        return vendorName;
-    }
-
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
-
-    public String getGoodsPress() {
-        return goodsPress;
-    }
-
-    public void setGoodsPress(String goodsPress) {
-        this.goodsPress = goodsPress;
-    }
-
-    public String getGoodsNo() {
-        return goodsNo;
-    }
-
-    public void setGoodsNo(String goodsNo) {
-        this.goodsNo = goodsNo;
     }
 
     public String getGoodsAuthor() {

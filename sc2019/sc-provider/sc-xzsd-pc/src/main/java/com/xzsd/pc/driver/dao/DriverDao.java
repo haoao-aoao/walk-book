@@ -43,4 +43,11 @@ public interface DriverDao {
      * @return
      */
     List<Driver> listDriver(Driver driver);
+
+    /**
+     * 查询店长对应司机信息列表
+     * @param driver
+     * @return
+     */
+    List<Driver> listShopperDriver(Driver driver);
 }

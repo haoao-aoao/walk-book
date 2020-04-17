@@ -18,14 +18,6 @@ import java.util.List;
 public interface UserDao {
 
     /**
-     * 管理端登录
-     * @param userAcct
-     * @param userPassword
-     * @return
-     */
-    User sysLogin(@Param("userAcct") String userAcct, @Param("userPassword") String userPassword);
-
-    /**
      * 统计用户账号数量
      * @param user 用户信息
      * @return
@@ -81,4 +73,11 @@ public interface UserDao {
      * @return 所有用户信息
      */
     List<UserClient> listStoreClientByPage(User user);
+
+    /**
+     * 查询顶部栏信息
+     * @param userCode 用户编号
+     * @return
+     */
+    UserVo selectTop(@Param("userCode") String userCode);
 }

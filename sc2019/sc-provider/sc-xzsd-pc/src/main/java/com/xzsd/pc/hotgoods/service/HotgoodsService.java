@@ -44,7 +44,6 @@ public class HotgoodsService {
      * @param
      * @return
      */
-    @Transactional(rollbackFor = Exception.class)
     public AppResponse listHotGoods(String goodsCode,String goodsName,HotGoods hotGoods){
         PageHelper.startPage(hotGoods.getPageNum(),hotGoods.getPageSize());
         List<HotGoods> hotGoodsList = hotGoodsDao.listHotGoods(goodsCode,goodsName);
@@ -100,7 +99,7 @@ public class HotgoodsService {
     }
 
     /**
-     * 设置展示热门位商品
+     * 设置热门位商品展示数目
      * @param showNum
      * @return
      */
@@ -113,5 +112,14 @@ public class HotgoodsService {
         }else {
             return AppResponse.bizError("展示数目大于有效数目");
         }
+    }
+
+    /**
+     * 显示热门位商品展示数目
+     * @return
+     */
+    public AppResponse selectHotGoodsShowNum(){
+        Integer count = hotGoodsDao.selectCount();
+        return AppResponse.success("查询成功",count);
     }
 }

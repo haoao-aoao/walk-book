@@ -1,5 +1,6 @@
 package com.xzsd.pc.menu.controller;
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.menu.entity.Menu;
 import com.xzsd.pc.menu.service.MenuService;
 import com.xzsd.pc.util.AppResponse;
@@ -28,6 +29,9 @@ public class MenuController {
     @PostMapping("/addMenu")
     public AppResponse addMenu(Menu menu){
         try {
+            //获取当前登录人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            menu.setCreateUser(currentUserId);
             return menuService.addMenu(menu);
         }catch (Exception e){
             logger.error("新增异常", e);
@@ -44,6 +48,9 @@ public class MenuController {
     @PostMapping("/updateMenuById")
     public AppResponse updateMenuById(Menu menu){
         try {
+            //获取当前登录人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            menu.setLastModfiedBy(currentUserId);
             return menuService.updateMenuById(menu);
         }catch (Exception e){
             logger.error("修改异常", e);

@@ -1,6 +1,7 @@
 package com.xzsd.pc.goodsMessage.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.goodsMessage.entity.GoodsMessage;
 import com.xzsd.pc.goodsMessage.service.GoodsMessageService;
 import com.xzsd.pc.util.AppResponse;
@@ -20,7 +21,7 @@ import java.util.List;
  * @date 2020-03-25
  */
 @RestController
-@RequestMapping("/sys/goodsMessage")
+@RequestMapping("goodsMessage")
 public class GoodsMessageController {
 
     private static final Logger logger = LoggerFactory.getLogger(GoodsMessageController.class);
@@ -38,7 +39,8 @@ public class GoodsMessageController {
     @PostMapping("addGoods")
     public AppResponse addGoods(GoodsMessage goodsMessage){
         try{
-            goodsMessage.setCreateUser("admin");
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            goodsMessage.setCreateUser(currentUserId);
             AppResponse appResponse = goodsMessageService.addGoods(goodsMessage);
             return  appResponse;
         }catch (Exception e){
@@ -59,9 +61,8 @@ public class GoodsMessageController {
     public AppResponse updateGoodsById(GoodsMessage goodsMessage){
         try{
             //获取用户code
-            String userCode = AuthUtils.getCurrentUserId();
-            goodsMessage.setCreateUser(userCode);
-            goodsMessage.setLastModfiedBy(userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            goodsMessage.setLastModfiedBy(currentUserId);
             AppResponse appResponse = goodsMessageService.updateGoodsById(goodsMessage);
             return appResponse;
         }catch (Exception e){
@@ -74,15 +75,15 @@ public class GoodsMessageController {
     /**
      * demo 删除商品
      * @param goodsCode
-     * @param userCode
      * @return
      * @Author haoao
      * @Date 2020-03-25
      */
     @PostMapping("deleteGoods")
-    public AppResponse deleteGoods(String goodsCode,String userCode){
+    public AppResponse deleteGoods(String goodsCode){
         try{
-            AppResponse appResponse = goodsMessageService.deleteGoods(goodsCode, userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            AppResponse appResponse = goodsMessageService.deleteGoods(goodsCode, currentUserId);
             return appResponse;
         }catch (Exception e){
             logger.error("商品删除错误", e);
@@ -98,7 +99,7 @@ public class GoodsMessageController {
      * @author haoao
      * @date 2020-03-25
      */
-    @RequestMapping(value = "findGoodsById")
+    @PostMapping("findGoodsById")
     public AppResponse findGoodsById(String goodsCode){
         try{
             AppResponse goodsById = goodsMessageService.findGoodsById(goodsCode);
@@ -117,7 +118,7 @@ public class GoodsMessageController {
      * @author haoao
      * @date 2020-03-25
      */
-    @RequestMapping(value = "listGoods")
+    @PostMapping("listGoods")
     public AppResponse listGoods(GoodsMessage goodsMessage){
         try{
             AppResponse appResponse = goodsMessageService.listGoods(goodsMessage);
@@ -133,18 +134,18 @@ public class GoodsMessageController {
      * 修改商品状态
      * @param goodsCode
      * @param goodsState
-     * @param lastModfiedBy
      * @return
      * @author haoao
      * @date 2020-03-25
      **/
     @PostMapping("updateGoodsState")
-    public AppResponse updateGoodsState(String goodsCode, int goodsState,String lastModfiedBy){
+    public AppResponse updateGoodsState(String goodsCode, int goodsState){
         try{
-            AppResponse appResponse = goodsMessageService.updateGoodsState(goodsCode, goodsState,lastModfiedBy);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            AppResponse appResponse = goodsMessageService.updateGoodsState(goodsCode, goodsState,currentUserId);
             return  appResponse;
         }catch (Exception e){
-            logger.error("修改商品状态失败", e);
+            logger.error("修改商品状态异常", e);
             System.out.println(e.toString());
             throw e;
         }
@@ -157,7 +158,7 @@ public class GoodsMessageController {
      * @author haoao
      * @date 2020-03-25
      */
-    @RequestMapping(value = "goodsChoseList")
+    @PostMapping("goodsChoseList")
     public AppResponse goodsChoseList(GoodsMessage goodsMessage){
         try{
             AppResponse appResponse = goodsMessageService.goodsChoseList(goodsMessage);

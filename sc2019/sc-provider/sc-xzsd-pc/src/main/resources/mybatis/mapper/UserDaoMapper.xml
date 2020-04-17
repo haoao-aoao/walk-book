@@ -2,24 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.user.dao.UserDao">
 
-    <!--统计用户账号数量-->
-    <select id="countUserAcct" parameterType="com.xzsd.pc.user.dao.UserDao" resultType="int">
-        select count(user_acct)
+    <!--统计用户账号 电话 身份证数量-->
+    <select id="countUserAcct" parameterType="com.xzsd.pc.user.entity.User" resultType="int">
+        select count(*)
         from t_sys_user
         where is_delete = 0
-        and user_acct = #{userAcct}
-    </select>
-
-    <!--登录-->
-    <select id="sysLogin" parameterType="String" resultType="com.xzsd.pc.user.entity.User">
-        select
-              role
-        from
-              t_sys_user
-        where
-              is_delete = 0
-              and user_acct = #{userAcct}
-              and user_password = #{userPassword}
+        <if test="userAcct != null and userAcct != ''">
+            and (user_acct = #{userAcct}
+        </if>
+        <if test="phone != null and phone != ''">
+            or phone = #{phone}
+        </if>
+        <if test="idCard != null and idCard != ''">
+            or idcard = #{idCard}
+        </if>)
     </select>
 
     <!--新增用户-->
@@ -34,6 +30,7 @@
          phone,
          mail,
          role,
+         user_img,
          is_delete,
          create_time,
          create_user,
@@ -50,6 +47,7 @@
             #{phone},
             #{mail},
             #{role},
+            #{userImg},
             0,
             now(),
             #{createUser},
@@ -73,14 +71,15 @@
         a.version
         from t_sys_user a
         where a.is_delete = 0
+        and a.role != 2
+        <if test="role != null">
+            and a.role = #{role}
+        </if>
         <if test="userAcct != null and userAcct != ''">
             and a.user_acct like concat('%', #{userAcct}, '%')
         </if>
         <if test="name != null and name != ''">
             and a.name like concat('%', #{name}, '%')
-        </if>
-        <if test="role != null and role != ''">
-            and a.role like concat('%', #{role}, '%')
         </if>
         order by create_time desc
     </select>
@@ -110,6 +109,7 @@
             sex          = #{sex},
             phone        = #{phone},
             mail         = #{mail},
+            user_img     = #{userImg},
             gmt_modfied = now(),
             last_modfied_by   = #{lastModfiedBy},
             version      = version + 1
@@ -129,6 +129,7 @@
             phone,
             mail,
             role,
+            user_img userImg,
             version
         from t_sys_user
         where user_code = #{userCode}
@@ -176,5 +177,17 @@
         and b.user_code = a.user_code
         and b.invitation_code = #{invitationCode}
         order by a.create_time desc
+    </select>
+
+    <!--获取用户信息-->
+    <select id="selectTop" parameterType="java.lang.String" resultType="com.xzsd.pc.user.entity.UserVo">
+        select
+            name,
+            user_acct userAcct,
+            user_img userImg,
+            role
+        from t_sys_user
+        where user_code = #{userCode}
+        and is_delete = 0
     </select>
 </mapper>

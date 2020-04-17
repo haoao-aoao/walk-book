@@ -65,4 +65,11 @@ public interface GoodsMessageDao {
      * @return
      */
     List<GoodsMessageVo> goodsChoseList(GoodsMessage goodsMessage);
+
+    /**
+     * 查询商品是否在轮播图或热门商品
+     * @param goodsCode
+     * @return
+     */
+    int selectGoods(String goodsCode);
 }

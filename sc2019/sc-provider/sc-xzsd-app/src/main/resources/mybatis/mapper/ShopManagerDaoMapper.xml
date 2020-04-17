@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.shopManager.dao.ShopManagerDao">
+
+    <resultMap id="OrderAndOrderDetAndGoods" type="com.xzsd.app.order.entity.Order" >
+        <id property="orderCode" column="order_code" />
+        <result property="userCode" column="user_code"/>
+        <result property="orderState" column="order_state"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="createTime" column="create_time"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <collection property="orderDetList" select="selectOrderDet" column="{orderCode=order_code,goodsName=goodsName}" ofType="com.xzsd.app.order.entity.OrderDetailed">
+            <id property="orderCode" column="order_code"/>
+            <result property="goodsCode" column="goods_code"/>
+            <result property="goodsCnt" column="goods_cnt"/>
+            <result property="goodsAllPrice" column="goods_all_price"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="goodsPrice" column="goods_price"/>
+            <result property="goodsImg" column="goods_img"/>
+            <result property="goodsSketch" column="goods_sketch"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="StoreMerOrderDet" type="com.xzsd.app.order.entity.Order" >
+        <id property="orderCode" column="AorderCode" />
+        <result property="orderState" column="order_state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <association property="storeMsg" javaType="com.xzsd.app.store.entity.Store">
+            <result property="storeName" column="store_name"/>
+            <result property="province" column="province"/>
+            <result property="city" column="city"/>
+            <result property="area" column="area"/>
+            <result property="storeAddress" column="store_address"/>
+        </association>
+        <collection property="orderDetList" ofType="com.xzsd.app.order.entity.OrderDetailed">
+            <id property="orderCode" column="BorderCode"/>
+            <result property="goodsCode" column="goods_code"/>
+            <result property="goodsCnt" column="goods_cnt"/>
+            <result property="goodsAllPrice" column="goods_all_price"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="goodsPrice" column="goods_price"/>
+            <result property="goodsImg" column="goods_img"/>
+            <result property="goodsSketch" column="goods_sketch"/>
+        </collection>
+    </resultMap>
+
+    <!--查询订单列表-->
+    <select id="findOrderlistByPage" parameterType="com.xzsd.app.order.entity.Order" resultMap="OrderAndOrderDetAndGoods">
+        select
+           a.order_code,
+           a.order_state,
+           a.order_price,
+           c.name,
+           c.phone,
+           ifnull(#{goodsName},'') goodsName
+        from t_order a,t_client b,t_sys_user c
+        where
+            a.user_code = b.user_code
+            and b.invitation_code = #{invitationCode}
+            and b.user_code = c.user_code
+        <if test="orderState != null and orderState != ''">
+            <if test="orderState == 34">
+                and a.order_state in (3,4)
+            </if>
+            and a.order_state = #{orderState}
+        </if>
+
+        order by a.create_time desc
+    </select>
+    
+    <select id="selectOrderDet" resultType="com.xzsd.app.order.entity.OrderDetailed">
+        select
+            b.goods_code,
+            b.goods_cnt,
+            b.goods_all_price,
+            c.goods_name,
+            c.goods_price,
+            c.goods_img,
+            c.goods_sketch
+        from t_order_detailed b,t_goods_message c
+        where
+            b.order_code = #{orderCode}
+        and b.goods_code = c.goods_code
+        <if test="goodsName != null and goodsName != ''">
+            and c.goods_name like concat('%',#{goodsName}, '%')
+        </if>
+    </select>
+
+    <!--查询订单详情列表-->
+    <select id="OrderDetById" parameterType="String" resultMap="StoreMerOrderDet">
+        select
+            a.order_code AorderCode,
+            a.create_time,
+            a.order_state,
+            a.order_price,
+            b.goods_code,
+            b.goods_cnt,
+            b.goods_all_price,
+            c.goods_name,
+            c.goods_price,
+            c.goods_img,
+            c.goods_sketch,
+            d.store_name,
+            d.province,
+            d.city,
+            d.area,
+            d.store_address,
+            e.name,
+            e.phone
+        from t_order a,t_order_detailed b,t_goods_message c,t_store_manage d,t_sys_user e
+        where
+            a.order_code = b.order_code
+            and b.goods_code = c.goods_code
+            and a.store_code = d.store_code
+            and a.order_code = #{orderCode}
+            and a.user_code = e.user_code
+        order by a.create_time desc
+    </select>
+
+    <select id="findDriverManage" parameterType="String" resultType="com.xzsd.app.user.entity.UserVo">
+        select
+            t3.user_code userCode,
+            t3.name,
+            t3.phone
+        from
+            t_store_manage t1
+        left join
+            t_driver t2
+        on
+            t1.province_code = t2.province_code
+            and t1.city_code = t2.city_code
+            and t1.area_code = t2.area_code
+        left join
+            t_sys_user t3
+        on
+            t2.user_code = t3.user_code
+        where
+            t1.user_code = #{userCode}
+            and t2.is_delete = 0
+            and t3.is_delete = 0
+    </select>
+</mapper>

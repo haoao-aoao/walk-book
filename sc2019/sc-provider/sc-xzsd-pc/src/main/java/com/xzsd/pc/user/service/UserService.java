@@ -10,6 +10,7 @@ import com.xzsd.pc.user.entity.User;
 import com.xzsd.pc.user.entity.UserClient;
 import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.PasswordUtils;
 import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.neusoft.core.page.PageUtils.getPageInfo;
 
 /**
  * 业务逻辑实现层
@@ -33,24 +36,6 @@ public class UserService {
     private StoreDao storeDao;
 
     /**
-     * demo 管理端登录
-     * @param userAcct
-     * @param userPassword
-     * @return
-     */
-    public AppResponse sysLogin(String userAcct, String userPassword){
-        User user = userDao.sysLogin(userAcct, userPassword);
-        if (user == null){
-            return AppResponse.bizError("登录失败");
-        }
-        int role = user.getRole();
-        if (role > 1){
-            return AppResponse.bizError("登录失败，权限不够");
-        }
-        return AppResponse.success("登录成功",user);
-    }
-
-    /**
      * demo 新增用户
      * @param user
      * @return
@@ -61,10 +46,13 @@ public class UserService {
     public AppResponse addUser(User user){
         //获取用户编号
         user.setUserCode(StringUtil.getCommonCode(2));
-        //检验用户账户是否存在
+        //检验用户数据有无重复
         int cnt = userDao.countUserAcct(user);
+        //密码加密
+        String pwd = PasswordUtils.generatePassword(user.getUserPassword());
+        user.setUserPassword(pwd);
         if(cnt != 0){
-            return AppResponse.bizError("账户已存在,请重新输入");
+            return AppResponse.bizError("数据有重复,请重新输入");
         }
         int count = userDao.saveUser(user);
         if (count == 0){
@@ -93,10 +81,8 @@ public class UserService {
      * @Date 2020-03-24
      */
     public AppResponse listUsersByPage(User user){
-        PageHelper.startPage(user.getPageNum(),user.getPageSize());
         List<UserVo> users = userDao.listUsersByPage(user);
-        PageInfo<UserVo> userPageInfo = new PageInfo<>(users);
-        return AppResponse.success("用户信息列表查询成功",userPageInfo);
+        return AppResponse.success("用户信息列表查询成功",getPageInfo(users));
     }
 
     /**
@@ -113,6 +99,9 @@ public class UserService {
         if(cnt != 0){
             return AppResponse.bizError("账户已存在,请重新输入");
         }
+        //密码加密
+        String pwd = PasswordUtils.generatePassword(user.getUserPassword());
+        user.setUserPassword(pwd);
         int count = userDao.updateUser(user);
         if (count == 0){
             return AppResponse.bizError("数据有更新，请重试");
@@ -159,5 +148,15 @@ public class UserService {
         String invitationCode = store.getInvitationCode();
         user.setInvitationCode(invitationCode);
         return AppResponse.success("店长对应的客户",userDao.listStoreClientByPage(user));
+    }
+
+    /**
+     * 顶部栏信息
+     * @param userCode
+     * @return
+     */
+    public AppResponse selectTop(String userCode){
+        UserVo userVo = userDao.selectTop(userCode);
+        return AppResponse.success("查询成功",userVo);
     }
 }

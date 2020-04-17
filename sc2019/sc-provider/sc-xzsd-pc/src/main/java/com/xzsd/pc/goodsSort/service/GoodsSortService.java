@@ -66,12 +66,13 @@ public class GoodsSortService {
         int cnt = goodsSortDao.addGoodsSort(goodsSort);
         if(0 == cnt) {
             return AppResponse.bizError("新增失败，请重试！");
+        }else {
+            return AppResponse.success("新增成功！");
         }
         //生产者传消息
         //String goodsSortJson = JSON.toJSONString(goodsSort);
         //sendMessage(this.queue,goodsSortJson);
         //System.out.println("成功发送新增的商品实体类");
-        return AppResponse.success("新增成功！");
     }
 
     /**

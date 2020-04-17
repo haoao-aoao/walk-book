@@ -54,12 +54,18 @@ spring:
           statement-executable-sql-log-enable: false
           connection-log-enabled: false
           result-set-log-enabled: false
+  # 设置图片文件大小
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*Mapper.xml
   config-location: classpath:mybatis/mybatis-config.xml
 sc:
   cloud:
     dev: true
+    #debug: true
     task:
       core-pool-size: 20
       max-pool-size: 50

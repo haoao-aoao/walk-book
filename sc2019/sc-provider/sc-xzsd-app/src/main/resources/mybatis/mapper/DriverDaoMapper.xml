@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.driver.dao.DriverDao">
+    <resultMap id="BaseResultMap" type="com.xzsd.app.driver.entity.Driver">
+        <result column="driver_code" property="driverCode" />
+        <result column="user_code" property="userCode" />
+        <result column="city_code" property="cityCode" />
+        <result column="city_name" property="cityName" />
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+        <result column="province_code" property="provinceCode" />
+        <result column="province_name" property="provinceName" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modfied_by" property="lastModfiedBy" />
+        <result column="gmt_modfied" property="gmtModfied" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <resultMap id="DriverAndUser" type="com.xzsd.app.driver.entity.DriverVo">
+        <result column="driver_code" property="driverCode"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city_name" property="cityName"/>
+        <result column="area_name" property="areaName"/>
+        <association property="userInfo" javaType="com.xzsd.app.user.entity.UserVo">
+            <result column="user_code" property="userCode"/>
+            <result column="user_acct" property="userAcct"/>
+            <result column="name" property="name"/>
+            <result column="sex" property="sex"/>
+            <result column="phone" property="phone"/>
+            <result column="mail" property="mail"/>
+            <result column="idcard" property="idCard"/>
+            <result column="user_password" property="userPassword"/>
+            <result column="role" property="role"/>
+        </association>
+    </resultMap>
+
+    <!--查询司机详情接口-->
+    <select id="findDriverById" parameterType="com.xzsd.app.driver.entity.Driver" resultMap="DriverAndUser">
+        select
+            t1.driver_code,
+            t2.user_acct,
+            t2.name,
+            t2.sex,
+            t2.phone,
+            t2.mail,
+            t2.idcard,
+            t2.user_password,
+            t2.role,
+            t1.province_name,
+            t1.city_name,
+            t1.area_name
+        from t_driver t1,
+             t_sys_user t2
+        where t1.is_delete = 0
+        and t2.role = 3
+        and t1.user_code = t2.user_code
+    </select>
+
+    <!--查询司机信息列表-->
+    <select id="listDriver" parameterType="com.xzsd.app.driver.entity.Driver" resultMap="DriverAndUser">
+        select
+            t1.driver_code,
+            t2.user_code,
+            t2.name,
+            t2.phone,
+            t2.idcard,
+            t2.user_acct
+        from t_driver t1,
+             t_sys_user t2
+        where
+            t1.is_delete = 0
+            and t1.user_code = t2.user_code
+            <if test="driverCode != null and driverCode != ''">
+                and t1.driver_code like concat('%', #{driverCode}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                and t2.name like concat('%', #{name}, '%')
+            </if>
+            <if test="provinceName != null and provinceName != ''">
+                and t1.province_name like concat('%', #{provinceName}, '%')
+            </if>
+            <if test="cityName != null and cityName != ''">
+                and t1.city_name like concat('%', #{cityName}, '%')
+            </if>
+            <if test="areaName != null and areaName != ''">
+                and t1.area_name like concat('%', #{areaName}, '%')
+            </if>
+    </select>
+
+    <!--查询司机对应的门店信息-->
+    <select id="findStoreManage" parameterType="String" resultType="com.xzsd.app.store.entity.StoreVo">
+        select
+            t2.store_code storeCode,
+            t2.store_name storeName,
+            t2.province province,
+            t2.city city,
+            t2.area area,
+            t2.store_address storeAddress,
+            t3.name userName,
+            t3.phone userPhone
+        from  t_driver t1
+        left join  t_store_manage t2
+        on  t1.province_code = t2.province_code
+            and t1.city_code = t2.city_code
+            and t1.area_code = t2.area_code
+        left join  t_sys_user t3
+        on  t2.user_code = t3.user_code
+        where
+              t1.user_code = #{userCode}
+              and t1.is_delete = 0
+              and t2.is_delete = 0
+    </select>
+</mapper>

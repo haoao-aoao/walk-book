@@ -1,5 +1,6 @@
 package com.xzsd.pc.user.controller;
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.user.entity.User;
 import com.xzsd.pc.user.service.UserService;
 import com.xzsd.pc.util.AppResponse;
@@ -17,29 +18,12 @@ import javax.annotation.Resource;
  * @date 2020-03-24
  */
 @RestController
-@RequestMapping("/sys/user")
+@RequestMapping("/user")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Resource
     private UserService userService;
-
-    /**
-     * demo 管理端登录
-     * @param userAcct
-     * @param userPassword
-     * @return
-     */
-    @PostMapping("login")
-    public AppResponse sysLogin(String userAcct, String userPassword){
-        try{
-            return userService.sysLogin(userAcct,userPassword);
-        }catch (Exception e){
-            logger.error("登录异常", e);
-            System.out.println(e.toString());
-            throw e;
-        }
-    }
 
     /**
      * demo 新增用户
@@ -51,6 +35,9 @@ public class UserController {
     @PostMapping("addUser")
     public AppResponse addUser(User user){
         try{
+            //获取当前登陆人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            user.setCreateUser(currentUserId);
             return userService.addUser(user);
         }catch (Exception e){
             logger.error("用户新增异常", e);
@@ -105,6 +92,9 @@ public class UserController {
     @PostMapping("updateUser")
     public AppResponse updateUser(User user){
         try{
+            //获取当前登陆人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            user.setLastModfiedBy(currentUserId);
             return userService.updateUser(user);
         }catch (Exception e){
             logger.error("修改用户异常", e);
@@ -116,15 +106,16 @@ public class UserController {
     /**
      * demo 删除用户
      * @param userCode
-     * @param lastModfiedBy
      * @return
      * @Author haoao
      * @Date 2020-03-24
      */
     @PostMapping("deleteUser")
-    public AppResponse deleteUser(String userCode,String lastModfiedBy){
+    public AppResponse deleteUser(String userCode){
         try {
-            return userService.deleteUser(userCode,lastModfiedBy);
+            //获取当前登陆人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return userService.deleteUser(userCode,currentUserId);
         }catch (Exception e){
             logger.error("删除用户异常", e);
             System.out.println(e.toString());
@@ -145,6 +136,22 @@ public class UserController {
             return userService.listClientByPage(user);
         }catch (Exception e){
             logger.error("客户列表查询错误", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 查询顶部栏信息
+     * @return
+     */
+    @PostMapping("selectTop")
+    public AppResponse selectTop(){
+        try{
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return userService.selectTop(currentUserId);
+        }catch (Exception e){
+            logger.error("查询异常", e);
             System.out.println(e.toString());
             throw e;
         }

@@ -1,5 +1,6 @@
 package com.xzsd.pc.banner.controller;
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.banner.entity.Banner;
 import com.xzsd.pc.banner.service.BannerService;
 import com.xzsd.pc.util.AppResponse;
@@ -14,7 +15,7 @@ import javax.annotation.Resource;
 
 
 @RestController
-@RequestMapping("/sys/banner")
+@RequestMapping("banner")
 public class BannerController {
 
     private static final Logger logger = LoggerFactory.getLogger(BannerController.class);
@@ -32,7 +33,8 @@ public class BannerController {
     @PostMapping("addBanner")
     public AppResponse addBanner(Banner banner){
         try{
-            banner.setCreateUser("admin");
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            banner.setCreateUser(currentUserId);
             return bannerService.addBanner(banner);
         }catch (Exception e){
             logger.error("新增轮播图异常",e);
@@ -48,7 +50,7 @@ public class BannerController {
      * @author haoao
      * @date 2020-03-26
      */
-    @RequestMapping(value = "listBanner")
+    @PostMapping("listBanner")
     public AppResponse listBanner(Banner banner){
         try{
             return bannerService.listBanner(banner);
@@ -62,15 +64,15 @@ public class BannerController {
     /**
      * 删除轮播图
      * @param id
-     * @param userCode
      * @return
      * @author haoao
      * @date 2020-03-26
      */
     @PostMapping("deleteBanner")
-    public AppResponse deleteBanner(String id,String userCode){
+    public AppResponse deleteBanner(String id){
         try{
-            return bannerService.deleteBanner(id,userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return bannerService.deleteBanner(id,currentUserId);
         }catch (Exception e){
             logger.error("删除轮播图异常",e);
             System.out.println(e.toString());
@@ -81,17 +83,17 @@ public class BannerController {
     /**
      * 修改轮播图状态
      * @param id
-     * @param userCode
      * @return
      * @author haoao
      * @date 2020-03-26
      */
     @PostMapping("updateBannerState")
-    public AppResponse updateBannerState(String id,int state,String userCode,String version){
+    public AppResponse updateBannerState(String id,int state,String version){
         try{
-            return bannerService.updateBannerState(id,state,userCode,version);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return bannerService.updateBannerState(id,state,currentUserId,version);
         }catch (Exception e){
-            logger.error("删除轮播图异常",e);
+            logger.error("修改轮播图异常",e);
             System.out.println(e.toString());
             throw e;
         }

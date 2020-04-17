@@ -40,6 +40,19 @@ public class UserVo {
 
     private Integer version;
 
+    /**
+     * 用户头像
+     */
+    private String userImg;
+
+    public String getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
+    }
+
     public Integer getVersion() {
         return version;
     }

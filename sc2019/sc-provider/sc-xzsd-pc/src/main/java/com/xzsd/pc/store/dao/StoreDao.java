@@ -6,6 +6,14 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface StoreDao {
+
+    /**
+     * 查询重复的数据
+     * @param store
+     * @return
+     */
+    Integer selectStoreRepeat(Store store);
+
     /**
      * 新增门店
      * @param store
@@ -42,5 +50,17 @@ public interface StoreDao {
      */
     List<Store> listStore(Store store);
 
+    /**
+     * 查询店长对应门店信息列表
+     * @param store
+     * @return
+     */
+    List<Store> listShopperStore(Store store);
+
+    /**
+     * 店长编号查门店邀请码
+     * @param userCode
+     * @return
+     */
     Store selectInviteCode(@Param("userCode") String userCode);
 }

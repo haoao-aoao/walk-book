@@ -1,5 +1,6 @@
 package com.xzsd.pc.driver.controller;
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.driver.entity.Driver;
 import com.xzsd.pc.driver.service.DriverService;
 import com.xzsd.pc.user.entity.User;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping(value = "/sys/driver")
+@RequestMapping(value = "driver")
 public class DriverController {
 
     private static final Logger logger = LoggerFactory.getLogger(DriverController.class);
@@ -27,9 +28,12 @@ public class DriverController {
      * @param user
      * @return
      */
-    @PostMapping("/addDriver")
+    @PostMapping("addDriver")
     public AppResponse addDriver(Driver driver, User user){
         try{
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            user.setCreateUser(currentUserId);
+            driver.setCreateUser(currentUserId);
             return driverService.addDriver(driver,user);
         }catch (Exception e){
             logger.error("新增司机信息异常",e);
@@ -43,7 +47,7 @@ public class DriverController {
      * @param driverCode
      * @return
      */
-    @RequestMapping("/findDriverById")
+    @PostMapping("findDriverById")
     public AppResponse findDriverById(String driverCode){
         try{
             return driverService.findDriverById(driverCode);
@@ -60,9 +64,12 @@ public class DriverController {
      * @param user
      * @return
      */
-    @PostMapping("/updateDriver")
+    @PostMapping("updateDriver")
     public AppResponse updateDriver(Driver driver,User user){
         try{
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            driver.setLastModfiedBy(currentUserId);
+            user.setLastModfiedBy(currentUserId);
             return driverService.updateDriver(driver,user);
         }catch (Exception e){
             logger.error("修改司机信息异常",e);
@@ -74,13 +81,13 @@ public class DriverController {
     /**
      * 删除司机信息
      * @param userCode
-     * @param lastModfiedBy
      * @return
      */
-    @PostMapping("/deleteDriver")
-    public AppResponse deleteDriver(String userCode,String lastModfiedBy){
+    @PostMapping("deleteDriver")
+    public AppResponse deleteDriver(String userCode){
         try{
-            return driverService.deleteDriver(userCode,lastModfiedBy);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return driverService.deleteDriver(userCode,currentUserId);
         }catch (Exception e){
             logger.error("删除司机信息异常",e);
             System.out.println(e.toString());
@@ -93,7 +100,7 @@ public class DriverController {
      * @param driver
      * @return
      */
-    @RequestMapping("/listDriver")
+    @PostMapping("listDriver")
     public AppResponse listDriver(Driver driver){
         try{
             return driverService.listDriver(driver);

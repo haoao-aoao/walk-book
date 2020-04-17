@@ -154,4 +154,42 @@
                 and t1.area_name like concat('%', #{areaName}, '%')
             </if>
     </select>
+
+    <!--查询店长对应司机信息列表-->
+    <select id="listShopperDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
+        select
+            t1.driver_code,
+            t2.user_code,
+            t2.name,
+            t2.phone,
+            t2.idcard,
+            t2.user_acct
+        from
+             t_store_manage t3
+        left join t_driver t1
+        on  t3.province_code = t1.province_code
+            and t3.city_code = t1.city_code
+            and t3.area_code = t1.area_code
+        left join t_sys_user t2
+        on  t1.user_code = t2.user_code
+        where
+            t1.is_delete = 0
+        and t3.is_delete = 0
+        and t3.user_code = #{userCode}
+        <if test="driverCode != null and driverCode != ''">
+            and t1.driver_code like concat('%', #{driverCode}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and t2.name like concat('%', #{name}, '%')
+        </if>
+        <if test="provinceName != null and provinceName != ''">
+            and t1.province_name like concat('%', #{provinceName}, '%')
+        </if>
+        <if test="cityName != null and cityName != ''">
+            and t1.city_name like concat('%', #{cityName}, '%')
+        </if>
+        <if test="areaName != null and areaName != ''">
+            and t1.area_name like concat('%', #{areaName}, '%')
+        </if>
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.xzsd.app.shopcart.dao;
 
 import com.xzsd.app.shopcart.entity.ShopCart;
+import com.xzsd.app.shopcart.entity.ShopCartVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -38,4 +39,11 @@ public interface ShopCartDao {
      * @return
      */
     List<ShopCart> listShopCartByPage(String userCode);
+
+    /**
+     * 查询购物车列表（用于新增订单）
+     * @param listCode
+     * @return
+     */
+    List<ShopCartVo> listShopCart(@Param("listCode") List<String> listCode);
 }

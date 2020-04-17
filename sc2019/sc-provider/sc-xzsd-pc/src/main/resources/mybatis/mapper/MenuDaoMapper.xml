@@ -99,7 +99,7 @@
             menu_name menuName
         from t_sys_menu
         where is_delete = 0
-        and menu_comment = '1'
+        and menu_code in (2020040722102235615,2020040722103980901,2020040722093802408,2020040722081909676)
         order by create_time desc
     </select>
 </mapper>

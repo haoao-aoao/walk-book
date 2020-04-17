@@ -6,6 +6,7 @@ import com.xzsd.app.goodsMessage.entity.GoodsMessageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -13,31 +14,7 @@ import java.util.List;
  * @author haoao
  * @date 2020-03-25
  */
-@Mapper
 public interface GoodsMessageDao {
-
-    /**
-     * 新增商品
-     * @param goodsMessage 商品信息
-     * @return
-     */
-    int addGoods(GoodsMessage goodsMessage);
-
-    /**
-     * 修改商品信息
-     * @param goodsMessage
-     * @return
-     */
-    int updateGoodsById(GoodsMessage goodsMessage);
-
-    /**
-     * 删除商品
-     * @param listCode
-     * @param userCode
-     * @return
-     */
-    int deleteGoods(@Param("listCode") List<String> listCode, @Param("userCode") String userCode);
-
     /**
      * 查询商品详情
      * @param goodsCode
@@ -52,17 +29,45 @@ public interface GoodsMessageDao {
     List<GoodsMessageVo> listGoods(GoodsMessage goodsMessage);
 
     /**
-     * 修改商品状态
-     * @param listCode 商品编号
-     * @param goodsState 商品状态
-     * @return
-     */
-    int updateGoodsState(@Param("listCode") List<String> listCode, @Param("goodsState") int goodsState, @Param("lastModfiedBy") String lastModfiedBy);
-
-    /**
      * 查询商品选择列表
      * @param goodsMessage
      * @return
      */
     List<GoodsMessageVo> goodsChoseList(GoodsMessage goodsMessage);
+
+    /**
+     * 更新商品销量
+     * @param count
+     * @return
+     */
+    int updateGoodsSalesVolume(String goodsCode,int count);
+
+    /**
+     * 更新商品浏览量
+     * @param goodsCode
+     * @return
+     */
+    int updateGoodsView(String goodsCode);
+
+    /**
+     * 更新商品库存
+     * @param goodsCode
+     * @param count
+     * @return
+     */
+    int updateGoodsStock(String goodsCode,int count);
+
+    /**
+     * 查询商品库存
+     * @param goodsCode
+     * @return
+     */
+    int selectGoodsStock(String goodsCode);
+
+    /**
+     * 更新商品星级
+     * @param goodsStar
+     * @return
+     */
+    int updateGoodsStar(String goodsCode, BigDecimal goodsStar);
 }

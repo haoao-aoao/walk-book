@@ -2,9 +2,13 @@ package com.xzsd.pc.store.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.store.dao.StoreDao;
 import com.xzsd.pc.store.entity.Store;
+import com.xzsd.pc.user.dao.UserDao;
+import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.RandomUtil;
 import com.xzsd.pc.util.StringUtil;
 import com.xzsd.pc.util.UUIDUtils;
 import org.springframework.stereotype.Service;
@@ -14,11 +18,17 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 门店Service实现层
+ */
 @Service
 public class StoreService {
 
     @Resource
     private StoreDao storeDao;
+
+    @Resource
+    private UserDao userDao;
 
     /**
      * 新增门店
@@ -27,8 +37,14 @@ public class StoreService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addStore(Store store){
-        store.setStoreCode("SC"+ StringUtil.getCommonCode(1));
-        store.setInvitationCode(UUIDUtils.getUUID());
+        store.setStoreCode(StringUtil.getCommonCode(2));
+        //设置邀请码
+        store.setInvitationCode("SC"+ RandomUtil.radmonkey(4));
+        //校验信息是否存在重复
+        Integer count = storeDao.selectStoreRepeat(store);
+        if (count != 0){
+            return AppResponse.bizError("数据有重复,请重试");
+        }
         int cnt = storeDao.addStore(store);
         if (cnt == 0){
             return AppResponse.bizError("新增失败");
@@ -53,6 +69,11 @@ public class StoreService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateStore(Store store){
+        //校验信息是否存在重复
+        Integer count = storeDao.selectStoreRepeat(store);
+        if (count != 0){
+            return AppResponse.bizError("数据有重复,请重试");
+        }
         int cnt = storeDao.updateStore(store);
         if (cnt == 0){
             return AppResponse.bizError("修改失败,数据有更新");
@@ -83,9 +104,21 @@ public class StoreService {
      */
     public AppResponse listStore(Store store){
         PageHelper.startPage(store.getPageNum(),store.getPageSize());
-        List<Store> stores = storeDao.listStore(store);
-        PageInfo<Store> storePageInfo = new PageInfo<>(stores);
-        return AppResponse.success("门店列表查询成功",storePageInfo);
+        //获取当前登录人的id
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        UserVo user = userDao.getUserByUserCode(currentUserId);
+        Integer role = user.getRole();
+        if (role == 0){
+            //管理员数据
+            List<Store> stores = storeDao.listStore(store);
+            PageInfo<Store> storePageInfo = new PageInfo<>(stores);
+            return AppResponse.success("门店列表查询成功",storePageInfo);
+        }else{
+            //店长数据
+            List<Store> stores = storeDao.listShopperStore(store);
+            PageInfo<Store> storePageInfo = new PageInfo<>(stores);
+            return AppResponse.success("门店列表查询成功",storePageInfo);
+        }
     }
 }
 

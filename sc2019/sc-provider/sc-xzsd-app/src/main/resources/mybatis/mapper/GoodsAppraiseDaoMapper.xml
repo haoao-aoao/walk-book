@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.goodsAppraise.dao.GoodsAppraiseDao">
+
+    <resultMap id="AppraiseAndPicMap" type="com.xzsd.app.goodsAppraise.entity.GoodsAppraiseVo" >
+        <result column="goods_appraise" property="goodsAppraise" />
+        <result column="goods_star" property="goodsStar" />
+        <result column="create_time" property="createTime" />
+        <result column="name" property="name"/>
+        <collection property="appraisePicList" select="selectAppraisePic" column="appraise_code" ofType="com.xzsd.app.goodsAppraise.entity.GoodsAppraisePic">
+            <result column="pic_url" property="picUrl"/>
+        </collection>
+    </resultMap>
+
+    <!--新增商品评论-->
+    <insert id="addGoodsAppraise" parameterType="com.xzsd.app.goodsAppraise.entity.GoodsAppraise">
+        insert into t_goods_appraise
+        (appraise_code,
+                goods_code,
+                goods_appraise,
+                goods_star,
+                user_code,
+                sore_no,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+        values
+            (#{appraiseCode},
+             #{goodsCode},
+             #{goodsAppraise},
+             #{goodsStar},
+             #{userCode},
+             #{soreNo},
+             0,
+             #{createUser},
+             now(),
+             #{lastModfiedBy},
+             now(),
+             0)
+    </insert>
+
+    <!--新增商品评价图片-->
+    <insert id="addGoodsAppraisePic" parameterType="com.xzsd.app.goodsAppraise.entity.GoodsAppraisePic">
+        insert into t_app_appraise_pic
+                (id,
+                appraise_code,
+                pic_url,
+                sort_no,
+                is_delete,
+                create_user,
+                create_time,
+                last_modfied_by,
+                gmt_modfied,
+                version)
+        values 
+                (#{id},
+                 #{appraiseCode},
+                 #{picUrl},
+                 #{sortNo},
+                 0,
+                 #{createUser},
+                 now(),
+                 #{lastModfiedBy},
+                 now(),
+                 0)
+    </insert>
+    
+    <!--列表查询商品评价-->
+    <select id="listGoodsAppraiseByPage" parameterType="com.xzsd.app.goodsAppraise.entity.GoodsAppraise" resultMap="AppraiseAndPicMap">
+        select
+	        t1.appraise_code,
+            t1.goods_appraise,
+            t1.goods_star,
+            t1.create_time,
+            t3.name
+        from t_goods_appraise t1
+        left join t_sys_user t3
+        on t1.user_code = t3.user_code
+        where t1.goods_code = #{goodsCode}
+        <if test="goodsStar != null and goodsStar != ''">
+             and t1.goods_star in
+             <if test="goodsStar == 1">
+                 (1)
+             </if>
+             <if test="goodsStar == 23">
+                 (2,3)
+             </if>
+             <if test="goodsStar == 45">
+                 (4,5)
+             </if>
+        </if>
+        order by t1.create_time desc
+    </select>
+
+    <select id="selectAppraisePic" resultType="com.xzsd.app.goodsAppraise.entity.GoodsAppraisePic">
+        select
+            pic_url
+        from  t_app_appraise_pic
+        where
+            appraise_code = #{appraise_code}
+    </select>
+
+    <select id="goodsAvgStar" parameterType="String" resultType="double">
+        SELECT
+            AVG(goods_star)
+        FROM
+            t_goods_appraise
+        WHERE goods_code = #{goodsCode}
+    </select>
+</mapper>

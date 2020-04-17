@@ -1,5 +1,6 @@
 package com.xzsd.pc.order.controller;
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.order.entity.Order;
 import com.xzsd.pc.order.entity.OrderDetailed;
 import com.xzsd.pc.order.service.OrderService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/sys/Order")
+@RequestMapping("/order")
 public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -28,7 +29,7 @@ public class OrderController {
      * @author haoao
      * @date 2020-03-30
      */
-    @RequestMapping(value = "listsOrder")
+    @PostMapping("listsOrder")
     public AppResponse listsOrder(Order order){
         try {
             return orderService.listsOrderByPage(order);
@@ -46,30 +47,12 @@ public class OrderController {
      * @author haoao
      * @date 2020-03-30
      */
-    @RequestMapping(value = "listOrderDetById")
+    @PostMapping("listOrderDetById")
     public AppResponse listOrderDetById(String orderCode){
         try {
             return orderService.listOrderDetById(orderCode);
         }catch (Exception e){
             logger.error("查询异常",e);
-            System.out.println(e.toString());
-            throw e;
-        }
-    }
-
-    /**
-     * demo 添加订单（商品详情页）
-     * @param order
-     * @return
-     * @author haoao
-     * @date 2020-03-30
-     */
-    @PostMapping("addOrder")
-    public AppResponse addOrderAndAddOrderDetailed(Order order, OrderDetailed orderDetailed){
-        try {
-            return orderService.addOrderAndAddOrderDetailed(order,orderDetailed);
-        }catch (Exception e){
-            logger.error("新增订单异常",e);
             System.out.println(e.toString());
             throw e;
         }
@@ -83,9 +66,10 @@ public class OrderController {
      * @date 2020-03-30
      */
     @PostMapping("updateOrderState")
-    public AppResponse updateOrderState(int orderState,String orderCode,String userCode,int version){
+    public AppResponse updateOrderState(int orderState,String orderCode,int version){
         try {
-            return orderService.updateOrderState(orderState,orderCode,userCode,version);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return orderService.updateOrderState(orderState,orderCode,currentUserId,version);
         }catch (Exception e){
             logger.error("修改订单状态异常",e);
             System.out.println(e.toString());

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.user.dao.UserDao">
+
+    <resultMap id="UserInfoMap" type="com.xzsd.app.user.entity.UserVo">
+        <id property="userCode" column="user_code"/>
+        <result property="userAcct" column="user_acct"/>
+        <result property="name" column="name"/>
+        <result property="userImg" column="user_img"/>
+        <result property="role" column="role"/>
+        <result property="storeCode" column="store_code"/>
+        <result property="storeName" column="store_name"/>
+        <result property="invitationCode" column="invitation_code"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="area" column="area"/>
+        <result property="address" column="store_address"/>
+    </resultMap>
+
+    <!--统计用户账号数量-->
+    <select id="countUserAcct" parameterType="com.xzsd.app.user.dao.UserDao" resultType="int">
+        select count(user_acct)
+        from t_sys_user
+        where is_delete = 0
+        and user_acct = #{userAcct}
+    </select>
+
+    <!--新增用户-->
+    <insert id="saveUser" parameterType="com.xzsd.app.user.entity.User">
+        insert into t_sys_user
+        (user_code,
+         name,
+         user_acct,
+         user_password,
+         idcard,
+         sex,
+         phone,
+         mail,
+         role,
+         user_img,
+         is_delete,
+         create_time,
+         create_user,
+         gmt_modfied,
+         last_modfied_by,
+         version)
+        values
+           (#{userCode},
+            #{name},
+            #{userAcct},
+            #{userPassword},
+            #{idCard},
+            #{sex},
+            #{phone},
+            #{mail},
+            #{role},
+            #{userImg},
+            0,
+            now(),
+            #{createUser},
+            now(),
+            #{lastModfiedBy},
+            0)
+    </insert>
+
+    <!--新增客户+绑定店铺的邀请码-->
+    <insert id="addClient" parameterType="String">
+        insert into t_client
+            (user_code,
+             invitation_code,
+             is_delete,
+             create_time,
+             create_user,
+             gmt_modfied,
+             last_modfied_by,
+             version)
+            values
+            (#{userCode},
+             #{invitationCode},
+             0,
+             now(),
+             #{userCode},
+             now(),
+             #{userCode},
+             0)
+    </insert>
+    <!--用户列表-->
+    <select id="listUsersByPage" parameterType="com.xzsd.app.user.entity.User" resultType="com.xzsd.app.user.entity.UserVo">
+        select
+        a.user_code userCode,
+        a.name,
+        a.user_acct userAcct,
+        a.user_password userPassword,
+        a.idcard,
+        a.sex,
+        a.phone,
+        a.mail,
+        a.role,
+        a.version
+        from t_sys_user a
+        where a.is_delete = 0
+        <if test="userAcct != null and userAcct != ''">
+            and a.user_acct like concat('%', #{userAcct}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
+        </if>
+        <if test="role != null and role != ''">
+            and a.role like concat('%', #{role}, '%')
+        </if>
+        order by create_time desc
+    </select>
+
+    <!--修改用户密码-->
+    <update id="updateUserPwd" parameterType="com.xzsd.app.user.entity.User">
+        update t_sys_user
+        set
+            user_password= #{newPassWord},
+            gmt_modfied = now(),
+            last_modfied_by   = #{lastModfiedBy},
+            version      = version + 1
+        where user_code = #{userCode}
+    </update>
+
+    <!--修改用户绑定的店铺邀请码-->
+    <update id="updateClientInvCode" parameterType="com.xzsd.app.user.entity.User">
+        update t_client
+        set
+            invitation_code = #{invitationCode},
+            gmt_modfied = now(),
+            last_modfied_by   = #{userCode},
+            version      = version + 1
+        where
+            user_code = #{userCode}
+    </update>
+
+    <!--获取用户信息-->
+    <select id="getUserByUserCode" parameterType="java.lang.String" resultType="com.xzsd.app.user.entity.UserVo">
+        select
+            user_code userCode,
+            name,
+            user_acct userAcct,
+            user_password userPassword,
+            idcard idCard,
+            sex,
+            phone,
+            mail,
+            role,
+            version
+        from t_sys_user
+        where user_code = #{userCode}
+        and is_delete = 0
+    </select>
+
+    <!--查询客户列表-->
+    <select id="listClientByPage" parameterType="com.xzsd.app.user.entity.User" resultType="com.xzsd.app.user.entity.UserClient">
+        select
+            a.name,
+            a.user_acct userAcct,
+            a.idcard,
+            a.sex,
+            a.phone,
+            a.mail
+        from t_sys_user a
+        where a.is_delete = 0
+        <if test="userAcct != null and userAcct != ''">
+            and a.user_acct like concat('%', #{userAcct}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
+        </if>
+        and a.role = 2
+        order by create_time desc
+    </select>
+
+    <!--对应门店邀请码获取客户信息-->
+    <select id="listStoreClientByPage" parameterType="com.xzsd.app.user.entity.User" resultType="com.xzsd.app.user.entity.UserClient">
+        select
+        a.name,
+        a.user_acct userAcct,
+        a.idcard,
+        a.sex,
+        a.phone,
+        a.mail
+        from t_sys_user a,
+             t_client b
+        where a.is_delete = 0
+        <if test="userAcct != null and userAcct != ''">
+            and a.user_acct like concat('%', #{userAcct}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like concat('%', #{name}, '%')
+        </if>
+        and b.user_code = a.user_code
+        and b.invitation_code = #{invitationCode}
+        order by a.create_time desc
+    </select>
+
+    <!--根据客户绑定的邀请码查询店铺编号-->
+    <select id="findStoreCode" parameterType="String" resultType="String">
+        select
+            t2.store_code
+        from t_client t1,t_store_manage t2
+        where
+            t1.invitation_code = t2.invitation_code
+            and t1.user_code = #{userCode}
+    </select>
+
+    <!--公用查询个人信息-->
+    <select id="selectInfo" parameterType="String" resultMap="UserInfoMap">
+        select
+            t1.user_code,
+            t1.user_acct,
+            t1.name,
+            t1.phone,
+            t1.user_img,
+            t1.role,
+            t2.store_name,
+            t2.province,
+            t2.city,
+            t2.area,
+            t2.store_address,
+            t2.invitation_code
+        from t_sys_user t1
+        left join t_store_manage t2
+        on t1.user_code = t2.user_code
+        where
+            t1.user_code = #{userCode}
+            and t1.is_delete = 0
+    </select>
+</mapper>
