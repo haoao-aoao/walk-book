@@ -23,6 +23,7 @@
         <result column="province_name" property="provinceName"/>
         <result column="city_name" property="cityName"/>
         <result column="area_name" property="areaName"/>
+        <result column="version" property="version"/>
         <association property="userInfo" javaType="com.xzsd.pc.user.entity.UserVo">
             <result column="user_code" property="userCode"/>
             <result column="user_acct" property="userAcct"/>
@@ -128,6 +129,7 @@
     <select id="listDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
         select
             t1.driver_code,
+            t1.version,
             t2.user_code,
             t2.name,
             t2.phone,
@@ -159,6 +161,7 @@
     <select id="listShopperDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
         select
             t1.driver_code,
+            t1.version
             t2.user_code,
             t2.name,
             t2.phone,

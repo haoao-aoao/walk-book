@@ -10,7 +10,6 @@ import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.RandomUtil;
 import com.xzsd.pc.util.StringUtil;
-import com.xzsd.pc.util.UUIDUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +44,17 @@ public class StoreService {
         if (count != 0){
             return AppResponse.bizError("数据有重复,请重试");
         }
+        //校验是否是店长
+        String userCode = store.getUserCode();
+        int isStorer = storeDao.selectIsStorer(userCode);
+        if (isStorer == 0){
+            return AppResponse.bizError("该用户不是店长,请重试");
+        }
+        //校验该店长是否已经绑定店铺
+        int storerCount = storeDao.selectStorerCount(userCode);
+        if (storerCount != 0){
+            return AppResponse.bizError("该店长已绑定了店铺,请重试");
+        }
         int cnt = storeDao.addStore(store);
         if (cnt == 0){
             return AppResponse.bizError("新增失败");
@@ -73,6 +83,23 @@ public class StoreService {
         Integer count = storeDao.selectStoreRepeat(store);
         if (count != 0){
             return AppResponse.bizError("数据有重复,请重试");
+        }
+        String userCode = store.getUserCode();
+        //查询店铺的店长编号
+        Store storeById = storeDao.findStoreById(store.getStoreCode());
+        String rowUserCode = storeById.getUserCode();
+        //如果店长编号有变化则要检验是否为店长 是否已绑定店铺
+        if (!rowUserCode.equals(userCode)){
+            //校验是否是店长
+            int isStorer = storeDao.selectIsStorer(userCode);
+            if (isStorer == 0){
+                return AppResponse.bizError("该用户不是店长,请重试");
+            }
+            //校验该店长是否已经绑定店铺
+            int storerCount = storeDao.selectStorerCount(userCode);
+            if (storerCount != 0){
+                return AppResponse.bizError("该店长已绑定了店铺,请重试");
+            }
         }
         int cnt = storeDao.updateStore(store);
         if (cnt == 0){
@@ -112,12 +139,12 @@ public class StoreService {
             //管理员数据
             List<Store> stores = storeDao.listStore(store);
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);
-            return AppResponse.success("门店列表查询成功",storePageInfo);
+            return AppResponse.success("门店列表查询成功(管理员数据)",storePageInfo);
         }else{
             //店长数据
             List<Store> stores = storeDao.listShopperStore(store);
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);
-            return AppResponse.success("门店列表查询成功",storePageInfo);
+            return AppResponse.success("门店列表查询成功(店长数据)",storePageInfo);
         }
     }
 }

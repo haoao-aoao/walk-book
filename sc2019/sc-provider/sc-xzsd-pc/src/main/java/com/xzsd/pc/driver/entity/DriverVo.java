@@ -27,6 +27,18 @@ public class DriverVo {
      * 用户信息
      */
     private UserVo userInfo;
+    /**
+     * 版本号
+     */
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getDriverCode() {
         return driverCode;

@@ -22,6 +22,14 @@ public class GoodsMessageVo {
      */
     private String classifyTwo;
     /**
+     * 商品一级分类编号
+     */
+    private String classifyOneCode;
+    /**
+     * 商品二级分类编号
+     */
+    private String classifyTwoCode;
+    /**
      * 商品定价
      */
     private double goodsPricing;
@@ -83,6 +91,22 @@ public class GoodsMessageVo {
      * 版本号
      */
     private Integer version;
+
+    public String getClassifyOneCode() {
+        return classifyOneCode;
+    }
+
+    public void setClassifyOneCode(String classifyOneCode) {
+        this.classifyOneCode = classifyOneCode;
+    }
+
+    public String getClassifyTwoCode() {
+        return classifyTwoCode;
+    }
+
+    public void setClassifyTwoCode(String classifyTwoCode) {
+        this.classifyTwoCode = classifyTwoCode;
+    }
 
     public Integer getVersion() {
         return version;

@@ -153,8 +153,12 @@
         <foreach item="item" index="index" collection="listCode" open="(" separator="," close=")">
             #{item}
         </foreach>
+        and version in
+        <foreach item="item" index="index" collection="listVersion" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         and is_delete = 0
-        and version = #{version}
+
     </update>
 
     <!--查询订单列表-->
@@ -188,7 +192,7 @@
         <if test="phone != null and phone != ''">
             and t2.phone like concat('%', #{phone}, '%')
         </if>
-        <if test="orderState != null and orderState != ''">
+        <if test="orderState != null">
             and t1.order_state = #{orderState}
         </if>
         <if test="invitationCode != null and invitationCode != ''">

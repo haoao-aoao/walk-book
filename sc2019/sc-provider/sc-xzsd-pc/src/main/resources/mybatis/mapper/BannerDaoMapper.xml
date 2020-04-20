@@ -73,8 +73,8 @@
             end_time
         from t_app_banner
         where is_delete = 0
-        <if test="state != null and state != ''">
-            and state like concat('%', #{state}, '%')
+        <if test="state != null">
+            and state = #{state}
         </if>
         order by sort_no
     </select>

@@ -78,6 +78,7 @@
         LEFT JOIN goods_sort t1
         ON    t1.cate_code = t2.classify_two_Code
         AND   t2.is_delete = 0
+        and   t2.goods_state = 0
         WHERE t2.classify_one_Code = #{cateCode}
         AND   t1.is_delete = 0
         ORDER BY t1.create_time DESC;

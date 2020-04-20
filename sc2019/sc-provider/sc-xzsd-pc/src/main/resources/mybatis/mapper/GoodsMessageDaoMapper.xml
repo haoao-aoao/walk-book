@@ -146,7 +146,7 @@
             goods_sketch      =  #{goodsSketch},
             goods_author      =  #{goodsAuthor},
             goods_press       =  #{goodsPress},
-            good_img          =  #{goodImg},
+            goods_img         =  #{goodsImg},
             gmt_modfied =        now(),
             last_modfied_by   =  #{lastModfiedBy},
             version      =       version + 1
@@ -161,6 +161,8 @@
             goods_name          goodsName,
             classify_one        classifyOne,
             classify_two        classifyTwo,
+            classify_one_Code   classifyOneCode,
+            classify_two_Code   classifyTwoCode,
             goods_pricing       goodsPricing,
             goods_price         goodsPrice,
             goods_stock         goodsStock,

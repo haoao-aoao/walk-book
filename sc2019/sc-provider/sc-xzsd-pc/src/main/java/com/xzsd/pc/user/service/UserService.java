@@ -141,13 +141,15 @@ public class UserService {
         UserVo iuser = userDao.getUserByUserCode(currentUserId);
         Integer role = iuser.getRole();
         if (role == 0){
-            return AppResponse.success("管理员显示全部客户",userDao.listClientByPage(user));
+            List<UserClient> userClients = userDao.listClientByPage(user);
+            return AppResponse.success("管理员显示全部客户",getPageInfo(userClients));
         }
         //获取当前人门店邀请码
         Store store = storeDao.selectInviteCode(currentUserId);
         String invitationCode = store.getInvitationCode();
         user.setInvitationCode(invitationCode);
-        return AppResponse.success("店长对应的客户",userDao.listStoreClientByPage(user));
+        List<UserClient> userClients = userDao.listStoreClientByPage(user);
+        return AppResponse.success("店长对应的客户",getPageInfo(userClients));
     }
 
     /**

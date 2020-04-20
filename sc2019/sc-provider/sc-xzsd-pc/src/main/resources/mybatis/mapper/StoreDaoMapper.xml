@@ -30,9 +30,29 @@
         <if test="invitationCode != null and invitationCode != ''">
             or invitation_code = #{invitationCode}
         </if>
-        <if test="business_license != null and business_license != ''">
+        <if test="businessLicense != null and businessLicense != ''">
             or business_license = #{businessLicense}
         </if>)
+    </select>
+
+    <!--查询是否是店长-->
+    <select id="selectIsStorer" parameterType="String" resultType="int">
+        select
+            count(user_code)
+        from t_sys_user
+        where user_code = #{userCode}
+        and role = 1
+        and is_delete = 0
+    </select>
+
+    <!--查询店长绑定的店铺数-->
+    <select id="selectStorerCount" parameterType="String" resultType="int">
+        select
+            count(user_code)
+        from t_store_manage
+        where
+            is_delete = 0
+            and user_code = #{userCode}
     </select>
 
     <!--新增门店-->
@@ -106,7 +126,7 @@
             province         =#{province},
             province_code    =#{provinceCode},
             city_code        =#{cityCode},
-            area_code        =#{areaCode}
+            area_code        =#{areaCode},
             store_name       =#{storeName},
             store_phone      =#{storePhone},
             store_address    =#{storeAddress},

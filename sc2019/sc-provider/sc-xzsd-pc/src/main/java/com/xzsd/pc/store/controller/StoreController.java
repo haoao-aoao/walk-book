@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * 门店Controller层
  */
 @RestController
-@RequestMapping("/store")
+@RequestMapping("store")
 public class StoreController {
 
     public static final Logger logger = LoggerFactory.getLogger(StoreController.class);
@@ -47,7 +47,7 @@ public class StoreController {
      * @param storeCode
      * @return
      */
-    @RequestMapping("findStoreById")
+    @PostMapping("findStoreById")
     public AppResponse findStoreById(String storeCode){
         try{
             return storeService.findStoreById(storeCode);
@@ -98,7 +98,7 @@ public class StoreController {
      * @param store
      * @return
      */
-    @RequestMapping("listStore")
+    @PostMapping("listStore")
     public AppResponse listStore(Store store){
         try{
             return storeService.listStore(store);

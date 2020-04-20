@@ -15,6 +15,18 @@ public interface StoreDao {
     Integer selectStoreRepeat(Store store);
 
     /**
+     * 用户查询是否是店长
+     * @return
+     */
+    int selectIsStorer(String userCode);
+
+    /**
+     * 查询店长绑定的店铺数
+     * @return
+     */
+    int selectStorerCount(String userCode);
+
+    /**
      * 新增门店
      * @param store
      * @return

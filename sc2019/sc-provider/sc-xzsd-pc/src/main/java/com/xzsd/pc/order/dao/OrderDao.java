@@ -31,7 +31,7 @@ public interface OrderDao {
      * @param userCode
      * @return
      */
-    int updateOrderState(@Param("orderState") int orderState, @Param("listCode") List<String> listCode, @Param("lastModfiedBy") String userCode, @Param("version") int version);
+    int updateOrderState(@Param("orderState") int orderState, @Param("listCode") List<String> listCode, @Param("lastModfiedBy") String userCode, @Param("listVersion") List<String> version);
 
     /**
      * 查询订单详情列表

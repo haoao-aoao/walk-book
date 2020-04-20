@@ -66,7 +66,7 @@ public class OrderController {
      * @date 2020-03-30
      */
     @PostMapping("updateOrderState")
-    public AppResponse updateOrderState(int orderState,String orderCode,int version){
+    public AppResponse updateOrderState(int orderState,String orderCode,String version){
         try {
             String currentUserId = SecurityUtils.getCurrentUserId();
             return orderService.updateOrderState(orderState,orderCode,currentUserId,version);

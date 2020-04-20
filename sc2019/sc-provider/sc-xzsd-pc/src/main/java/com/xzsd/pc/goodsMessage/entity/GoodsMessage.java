@@ -69,8 +69,8 @@ public class GoodsMessage {
     /**
      * 上架时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date upTime;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String upTime;
     /**
      * 商品状态 0在售 1已下架 2未发布
      */
@@ -265,11 +265,11 @@ public class GoodsMessage {
         this.goodsStar = goodsStar;
     }
 
-    public Date getUpTime() {
+    public String getUpTime() {
         return upTime;
     }
 
-    public void setUpTime(Date upTime) {
+    public void setUpTime(String upTime) {
         this.upTime = upTime;
     }
 

@@ -41,6 +41,8 @@
         from t_app_hotgoods t1,
              t_goods_message t2
         where t1.is_delete = 0
+        and t2.is_delete = 0
+        and t2.goods_state = 0
         and t1.goods_code = t2.goods_code
         order by t1.sort_no
         limit #{showNum}

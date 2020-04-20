@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @date 2020-03-24
  */
 @RestController
-@RequestMapping("/goodsSort")
+@RequestMapping("goodsSort")
 public class GoodsSortController {
 
     private static final Logger logger = LoggerFactory.getLogger(GoodsSortController.class);
@@ -33,7 +33,7 @@ public class GoodsSortController {
      * @author haoao
      * @date 2020-03-24
      */
-    @RequestMapping(value = "listGoodsSort")
+    @PostMapping(value = "listGoodsSort")
     public AppResponse listGoodsSort(){
         try{
             return goodsSortService.listGoodsSort();
@@ -48,7 +48,7 @@ public class GoodsSortController {
      * 商品一级分类列表查询
      * @return
      */
-    @RequestMapping(value = "listClassifyOne")
+    @PostMapping(value = "listClassifyOne")
     public AppResponse listClassifyOne(){
         try{
             return goodsSortService.listClassifyOne();
@@ -64,7 +64,7 @@ public class GoodsSortController {
      * @param cateCode
      * @return
      */
-    @RequestMapping(value = "listClassifyTwo")
+    @PostMapping(value = "listClassifyTwo")
     public AppResponse listClassifyTwo(String cateCode){
         try{
             return goodsSortService.listClassifyTwo(cateCode);
