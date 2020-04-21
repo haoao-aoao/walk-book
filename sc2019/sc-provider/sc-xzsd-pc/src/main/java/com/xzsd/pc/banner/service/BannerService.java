@@ -29,9 +29,15 @@ public class BannerService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addBanner(Banner banner){
         //校验轮播图序号是否唯一
-        int count = bannerDao.selectBannerSortNo(banner.getSortNo());
+        int sortNo = banner.getSortNo();
+        int count = bannerDao.selectBannerSortNo(sortNo);
         if (count == 1){
             return AppResponse.bizError("新增错误,序号重复");
+        }
+        //校验商品是否已存在轮播图
+        int goodsCnt = bannerDao.selectGoodsCnt(banner.getGoodsCode());
+        if (goodsCnt != 0){
+            return AppResponse.bizError("新增错误,商品已存在轮播图中");
         }
         //设置轮播图ID
         banner.setId(StringUtil.getCommonCode(2));

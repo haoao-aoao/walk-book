@@ -1,5 +1,7 @@
 package com.xzsd.pc.order.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.order.dao.OrderDao;
 import com.xzsd.pc.order.entity.Order;
@@ -36,21 +38,26 @@ public class OrderService {
      * @author haoao
      * @date 2020-03-30
      */
-    public AppResponse listsOrderByPage(Order order){
+    public AppResponse listsOrder(Order order){
         //获取当前登录人id
         String currentUserId = SecurityUtils.getCurrentUserId();
         UserVo iuser = userDao.getUserByUserCode(currentUserId);
         Integer role = iuser.getRole();
-        List<Order> orderList = orderDao.listsOrder(order);
         if (role == 0){
-            return AppResponse.success("管理员显示全部订单",getPageInfo(orderList));
+            PageHelper.startPage(order.getPageNum(),order.getPageSize());
+            List<Order> orderList = orderDao.listsOrder(order);
+            PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);
+            return AppResponse.success("管理员显示全部订单",orderPageInfo);
+        }else {
+            //获取当前人门店邀请码
+            Store store = storeDao.selectInviteCode(currentUserId);
+            String invitationCode = store.getInvitationCode();
+            order.setInvitationCode(invitationCode);
+            PageHelper.startPage(order.getPageNum(),order.getPageSize());
+            List<Order> orderList = orderDao.listsOrder(order);
+            PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);
+            return AppResponse.success("店长订单",orderPageInfo);
         }
-        //获取当前人门店邀请码
-        Store store = storeDao.selectInviteCode(currentUserId);
-        String invitationCode = store.getInvitationCode();
-        order.setInvitationCode(invitationCode);
-        List<Order> orderList1 = orderDao.listsOrder(order);
-        return AppResponse.success("店长订单",getPageInfo(orderList1));
     }
 
     /**

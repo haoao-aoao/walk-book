@@ -27,6 +27,4 @@ public class HotgoodsService {
         List<HotGoods> hotGoodsList = hotGoodsDao.listHotGoodsByPage(Integer.valueOf(showNum));
         return AppResponse.success("查询成功！",hotGoodsList);
     }
-
-
 }

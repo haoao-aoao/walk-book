@@ -20,13 +20,21 @@
     </resultMap>
 
     <!--校验轮播图序号是否为一-->
-    <select id="selectBannerSortNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    <select id="selectBannerSortNo" parameterType="int" resultType="int">
         select count(*)
         from t_app_banner
         where is_delete = 0
         <if test="sortNo != null and sortNo != ''">
             and sort_no = #{sortNo}
         </if>
+    </select>
+
+    <!--查询商品数量-->
+    <select id="selectGoodsCnt" parameterType="String" resultType="int">
+        select count(goods_code)
+        from t_app_banner
+        where is_delete = 0
+              and goods_code = #{goodsCode}
     </select>
     <!--新增轮播图-->
     <insert id="addBanner" parameterType="com.xzsd.pc.banner.entity.Banner">
@@ -70,7 +78,8 @@
             image_url,
             state,
             start_time,
-            end_time
+            end_time,
+            version
         from t_app_banner
         where is_delete = 0
         <if test="state != null">

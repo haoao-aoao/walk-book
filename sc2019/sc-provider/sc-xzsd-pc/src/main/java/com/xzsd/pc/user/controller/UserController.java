@@ -131,9 +131,9 @@ public class UserController {
      * @Date 2020-03-27
      */
     @RequestMapping(value = "listClientByPage")
-    public AppResponse listClientByPage(User user){
+    public AppResponse listClient(User user){
         try{
-            return userService.listClientByPage(user);
+            return userService.listClient(user);
         }catch (Exception e){
             logger.error("客户列表查询错误", e);
             System.out.println(e.toString());

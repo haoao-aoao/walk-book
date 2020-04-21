@@ -51,30 +51,12 @@ public class UserController {
      * @author haoao
      * @Date 2020-03-24
      */
-    @RequestMapping(value = "findUserById")
+    @PostMapping("findUserById")
     public AppResponse getUserByUserCode(String userCode) {
         try {
             return userService.getUserByUserCode(userCode);
         } catch (Exception e) {
             logger.error("用户查询异常", e);
-            System.out.println(e.toString());
-            throw e;
-        }
-    }
-
-    /**
-     * demo 查询用户信息（分页）
-     * @param user
-     * @return
-     * @Author haoao
-     * @Date 2020-03-24
-     */
-    @RequestMapping(value = "listUsersByPage",method = RequestMethod.GET)
-    public AppResponse listUsersByPage(User user){
-        try{
-            return userService.listUsersByPage(user);
-        }catch (Exception e){
-            logger.error("用户列表查询错误", e);
             System.out.println(e.toString());
             throw e;
         }

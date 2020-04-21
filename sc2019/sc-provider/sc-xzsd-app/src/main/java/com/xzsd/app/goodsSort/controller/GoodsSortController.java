@@ -69,7 +69,7 @@ public class GoodsSortController {
         try{
             return goodsSortService.listClassifyTwo(cateCode);
         }catch (Exception e){
-            logger.error("查询一级分类异常", e);
+            logger.error("查询二级分类异常", e);
             System.out.println(e.toString());
             throw e;
         }

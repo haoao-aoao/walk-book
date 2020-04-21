@@ -86,20 +86,6 @@ public class UserService {
     }
 
     /**
-     * demo 查询用户信息（分页）
-     * @param user
-     * @return
-     * @Author haoao
-     * @Date 2020-03-24
-     */
-    public AppResponse listUsersByPage(User user){
-        PageHelper.startPage(user.getPageNum(),user.getPageSize());
-        List<UserVo> users = userDao.listUsersByPage(user);
-        PageInfo<UserVo> userPageInfo = new PageInfo<>(users);
-        return AppResponse.success("用户信息列表查询成功",userPageInfo);
-    }
-
-    /**
      * demo 修改用户密码
      * @param user
      * @return

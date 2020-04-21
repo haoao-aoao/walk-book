@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("order")
 public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -32,7 +32,7 @@ public class OrderController {
     @PostMapping("listsOrder")
     public AppResponse listsOrder(Order order){
         try {
-            return orderService.listsOrderByPage(order);
+            return orderService.listsOrder(order);
         }catch (Exception e){
             logger.error("查询异常",e);
             System.out.println(e.toString());

@@ -131,7 +131,7 @@ public class UserService {
      * @Author haoao
      * @Date 2020-03-24
      */
-    public AppResponse listClientByPage(User user){
+    public AppResponse listClient(User user){
 //        PageHelper.startPage(user.getPageNum(),user.getPageSize());
 //        List<UserClient> users = userDao.listClientByPage(user);
 //        PageInfo<UserClient> userPageInfo = new PageInfo<>(users);
@@ -141,15 +141,20 @@ public class UserService {
         UserVo iuser = userDao.getUserByUserCode(currentUserId);
         Integer role = iuser.getRole();
         if (role == 0){
+            PageHelper.startPage(user.getPageNum(),user.getPageSize());
             List<UserClient> userClients = userDao.listClientByPage(user);
-            return AppResponse.success("管理员显示全部客户",getPageInfo(userClients));
+            PageInfo<UserClient> userPageInfo = new PageInfo<>(userClients);
+            return AppResponse.success("管理员显示全部客户",userPageInfo);
+        }else {
+            //获取当前人门店邀请码
+            Store store = storeDao.selectInviteCode(currentUserId);
+            String invitationCode = store.getInvitationCode();
+            user.setInvitationCode(invitationCode);
+            PageHelper.startPage(user.getPageNum(),user.getPageSize());
+            List<UserClient> userClients = userDao.listStoreClientByPage(user);
+            PageInfo<UserClient> userPageInfo = new PageInfo<>(userClients);
+            return AppResponse.success("店长对应的客户",userPageInfo);
         }
-        //获取当前人门店邀请码
-        Store store = storeDao.selectInviteCode(currentUserId);
-        String invitationCode = store.getInvitationCode();
-        user.setInvitationCode(invitationCode);
-        List<UserClient> userClients = userDao.listStoreClientByPage(user);
-        return AppResponse.success("店长对应的客户",getPageInfo(userClients));
     }
 
     /**

@@ -39,15 +39,14 @@ public class Banner {
     /**
      * 有效期起
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd",timezone = "GMT+8")
-    private Date startTime;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private String startTime;
 
     /**
      * 有效期止
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd",timezone = "GMT+8")
-
-    private Date endTime;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private String endTime;
 
     /**
      * id
@@ -57,7 +56,7 @@ public class Banner {
     /**
      * 序号
      */
-    private Integer sortNo;
+    private int sortNo;
 
     /**
      * 作废标记 0未删 1已删
@@ -152,19 +151,19 @@ public class Banner {
         this.state = state;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -176,11 +175,11 @@ public class Banner {
         this.id = id;
     }
 
-    public Integer getSortNo() {
+    public int getSortNo() {
         return sortNo;
     }
 
-    public void setSortNo(Integer sortNo) {
+    public void setSortNo(int sortNo) {
         this.sortNo = sortNo;
     }
 

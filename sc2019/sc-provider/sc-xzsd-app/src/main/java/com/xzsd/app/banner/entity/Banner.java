@@ -14,6 +14,18 @@ public class Banner {
      * 序号
      */
     private Integer sortNo;
+    /**
+     * 商品编号
+     */
+    private String goodsCode;
+
+    public String getGoodsCode() {
+        return goodsCode;
+    }
+
+    public void setGoodsCode(String goodsCode) {
+        this.goodsCode = goodsCode;
+    }
 
     public String getImageUrl() {
         return imageUrl;
