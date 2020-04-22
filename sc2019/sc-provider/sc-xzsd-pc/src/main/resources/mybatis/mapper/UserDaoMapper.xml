@@ -8,14 +8,8 @@
         from t_sys_user
         where is_delete = 0
         <if test="userAcct != null and userAcct != ''">
-            and (user_acct = #{userAcct}
+            and user_acct = #{userAcct}
         </if>
-        <if test="phone != null and phone != ''">
-            or phone = #{phone}
-        </if>
-        <if test="idCard != null and idCard != ''">
-            or idcard = #{idCard}
-        </if>)
     </select>
 
     <!--新增用户-->
@@ -72,6 +66,7 @@
         from t_sys_user a
         where a.is_delete = 0
         and a.role != 2
+        and a.role != 3
         <if test="role != null">
             and a.role = #{role}
         </if>

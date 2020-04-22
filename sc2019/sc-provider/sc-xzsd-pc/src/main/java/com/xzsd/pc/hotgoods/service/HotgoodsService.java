@@ -31,6 +31,10 @@ public class HotgoodsService {
         if (cnt == 1){
             return AppResponse.bizError("序号重复，请重试");
         }
+        int goodsCnt = hotGoodsDao.selectHotGoodsCnt(hotGoods.getGoodsCode());
+        if (goodsCnt != 0){
+            return AppResponse.bizError("商品已存在热门位");
+        }
         hotGoods.setHotgoodsCode(StringUtil.getCommonCode(2));
         int count = hotGoodsDao.addHotGoods(hotGoods);
         if (count == 0){
@@ -59,11 +63,22 @@ public class HotgoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateHotGoodsById(HotGoods hotGoods){
+        //校验商品是否有改变 若没有则跳过 若有 则判断商品是否已存在热门位 判断序号是否重复
+        HotGoods oldHotGoods = hotGoodsDao.selectHotGoods(hotGoods.getHotgoodsCode());
+        String oldGoodsCode = oldHotGoods.getGoodsCode();
+        Integer oldSortNo = oldHotGoods.getSortNo();
         //检测序号是否重复
         Integer sortNo = hotGoods.getSortNo();
-        Integer cnt = hotGoodsDao.selectHotGoodsSortNo(sortNo);
-        if (cnt == 1){
-            return AppResponse.bizError("序号重复，请重试");
+        if (!oldSortNo.equals(sortNo)){
+            Integer cnt = hotGoodsDao.selectHotGoodsSortNo(sortNo);
+            if (cnt != 0){
+                return AppResponse.bizError("序号重复，请重试");
+            }
+        }else if (!oldGoodsCode.equals(hotGoods.getGoodsCode())){
+            int goodsCnt = hotGoodsDao.selectHotGoodsCnt(hotGoods.getGoodsCode());
+            if (goodsCnt != 0){
+                return AppResponse.bizError("商品已存在热门位");
+            }
         }
         int count = hotGoodsDao.updateHotGoodsById(hotGoods);
         if (count == 0){
@@ -119,7 +134,7 @@ public class HotgoodsService {
      * @return
      */
     public AppResponse selectHotGoodsShowNum(){
-        Integer count = hotGoodsDao.selectCount();
+        Integer count = hotGoodsDao.selectShowNum();
         return AppResponse.success("查询成功",count);
     }
 }

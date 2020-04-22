@@ -22,7 +22,18 @@ public class DriverVo {
      * 区
      */
     private String areaName;
-
+    /**
+     * 省编号
+     */
+    private String provinceCode;
+    /**
+     * 市编号
+     */
+    private String cityCode;
+    /**
+     * 区编号
+     */
+    private String areaCode;
     /**
      * 用户信息
      */
@@ -31,6 +42,40 @@ public class DriverVo {
      * 版本号
      */
     private Integer version;
+
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getProvinceCode() {
+        return provinceCode;
+    }
+
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
 
     public Integer getVersion() {
         return version;

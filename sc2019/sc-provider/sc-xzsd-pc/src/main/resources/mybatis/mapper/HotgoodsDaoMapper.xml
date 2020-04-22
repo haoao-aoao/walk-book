@@ -93,7 +93,8 @@
         update t_app_hotgoods
         set
             sort_no       =#{sortNo},
-            goods_code    =#{goodsCode}
+            goods_code    =#{goodsCode},
+            version = version + 1
         where
             hotgoods_code =#{hotgoodsCode}
             and version   =#{version}
@@ -120,6 +121,14 @@
         where id = '1'
     </update>
 
+    <!--查询热门位展示数目-->
+    <select id="selectShowNum" resultType="int">
+        select
+            dict_value
+        from  sys_dictionaries
+        where id = '1'
+    </select>
+
     <!--查询热门位商品详情-->
     <select id="selectHotGoods" parameterType="String" resultMap="HotGoodsResultMap">
         select
@@ -138,5 +147,15 @@
         from t_app_hotgoods
         where
             is_delete = 0
+    </select>
+
+    <!--查询热门位对应商品数-->
+    <select id="selectHotGoodsCnt" parameterType="String" resultType="int">
+        select
+            count(goods_code)
+        from t_app_hotgoods
+        where
+            is_delete = 0
+            and goods_code = #{goodsCode}
     </select>
 </mapper>

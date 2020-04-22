@@ -12,7 +12,7 @@ public interface HotGoodsDao {
      * @param sortNo
      * @return
      */
-    Integer selectHotGoodsSortNo(int sortNo);
+    Integer selectHotGoodsSortNo(@Param("sortNo") int sortNo);
 
     /**
      * 新增热门位商品
@@ -52,6 +52,12 @@ public interface HotGoodsDao {
     boolean setHotGoodsShowNum(@Param("showNum") int showNum);
 
     /**
+     * 查询热门位展示数目
+     * @return
+     */
+    int selectShowNum();
+
+    /**
      * 查询热门位商品详情
      * @param hotgoodsCode
      * @return
@@ -63,4 +69,9 @@ public interface HotGoodsDao {
      * @return
      */
     Integer selectCount();
+
+    /**
+     * 查询热门位对应商品数
+     */
+    int selectHotGoodsCnt(@Param("goodsCode") String goodsCode);
 }

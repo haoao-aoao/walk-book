@@ -19,7 +19,7 @@ public interface UserDao {
 
     /**
      * 统计用户账号数量
-     * @param user 用户信息
+     * @param  user 用户信息
      * @return
      */
     int countUserAcct(User user);

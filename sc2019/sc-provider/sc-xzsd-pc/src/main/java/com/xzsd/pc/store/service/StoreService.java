@@ -79,11 +79,6 @@ public class StoreService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateStore(Store store){
-        //校验信息是否存在重复
-        Integer count = storeDao.selectStoreRepeat(store);
-        if (count != 0){
-            return AppResponse.bizError("数据有重复,请重试");
-        }
         String userCode = store.getUserCode();
         //查询店铺的店长编号
         Store storeById = storeDao.findStoreById(store.getStoreCode());
@@ -130,18 +125,19 @@ public class StoreService {
      * @return
      */
     public AppResponse listStore(Store store){
-        PageHelper.startPage(store.getPageNum(),store.getPageSize());
         //获取当前登录人的id
         String currentUserId = SecurityUtils.getCurrentUserId();
         UserVo user = userDao.getUserByUserCode(currentUserId);
         Integer role = user.getRole();
         if (role == 0){
             //管理员数据
+            PageHelper.startPage(store.getPageNum(),store.getPageSize());
             List<Store> stores = storeDao.listStore(store);
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);
             return AppResponse.success("门店列表查询成功(管理员数据)",storePageInfo);
         }else{
             //店长数据
+            PageHelper.startPage(store.getPageNum(),store.getPageSize());
             List<Store> stores = storeDao.listShopperStore(store);
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);
             return AppResponse.success("门店列表查询成功(店长数据)",storePageInfo);

@@ -10,6 +10,7 @@ import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.User;
 import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.PasswordUtils;
 import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +36,10 @@ public class DriverService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addDriver(Driver driver, User user){
-        //检验用户账户是否存在
+        //检验用户数据有无重复
         int cnt = userDao.countUserAcct(user);
         if(cnt != 0){
-            return AppResponse.bizError("账户已存在,请重新输入");
+            return AppResponse.bizError("该账号已被注册,请重新输入");
         }
         //设置用户编号
         user.setUserCode(StringUtil.getCommonCode(2));
@@ -73,11 +74,17 @@ public class DriverService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateDriver(Driver driver,User user){
-        //检验用户账户是否存在
-        int cnt = userDao.countUserAcct(user);
-        if(cnt != 0){
-            return AppResponse.bizError("账户已存在,请重新输入");
+        UserVo rowUser = userDao.getUserByUserCode(user.getUserCode());
+        //判断账号是否有改变 如果有 则校验
+        if (!(rowUser.getUserAcct().equals(user.getUserAcct()))){
+            int cnt = userDao.countUserAcct(user);
+            if(cnt != 0){
+                return AppResponse.bizError("该账号已注册,请重新输入");
+            }
         }
+        //密码加密
+        String pwd = PasswordUtils.generatePassword(user.getUserPassword());
+        user.setUserPassword(pwd);
         int driverCnt = driverDao.updateDriver(driver);
         int userCnt = userDao.updateUser(user);
         if (userCnt == 0 || driverCnt == 0){
@@ -109,17 +116,18 @@ public class DriverService {
      * @return
      */
     public AppResponse listDriver(Driver driver){
-        PageHelper.startPage(driver.getPageNum(),driver.getPageSize());
         //获取当前登录人的id
         String currentUserId = SecurityUtils.getCurrentUserId();
         UserVo user = userDao.getUserByUserCode(currentUserId);
         Integer role = user.getRole();
         //管理人显示全部 非管理员显示对应门店司机
         if (role == 0){
+            PageHelper.startPage(driver.getPageNum(),driver.getPageSize());
             List<Driver> drivers = driverDao.listDriver(driver);
             PageInfo<Driver> driverPageInfo = new PageInfo<>(drivers);
             return AppResponse.success("司机信息列表查询成功",driverPageInfo);
         }else {
+            PageHelper.startPage(driver.getPageNum(),driver.getPageSize());
             driver.setUserCode(currentUserId);
             List<Driver> drivers = driverDao.listShopperDriver(driver);
             PageInfo<Driver> driverPageInfo = new PageInfo<>(drivers);

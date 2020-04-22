@@ -12,6 +12,7 @@
         <result property="area" column="area"/>
         <result property="city" column="city"/>
         <result property="province" column="province"/>
+        <result property="provinceCode" column="province_code"/>
         <result property="businessLicense" column="business_license"/>
         <result property="userAcct" column="user_acct"/>
         <result property="userName" column="name"/>
@@ -25,14 +26,14 @@
         where
               is_delete = 0
         <if test="storePhone != null and storePhone != ''">
-            and (store_phone = #{storePhone}
+            and store_phone = #{storePhone}
         </if>
         <if test="invitationCode != null and invitationCode != ''">
             or invitation_code = #{invitationCode}
         </if>
         <if test="businessLicense != null and businessLicense != ''">
             or business_license = #{businessLicense}
-        </if>)
+        </if>
     </select>
 
     <!--查询是否是店长-->
@@ -111,7 +112,10 @@
             business_license,
             province,
             city,
-            area
+            area,
+            province_code,
+            city_code,
+            area_code
         from  t_store_manage
         where is_delete = 0
         and store_code = #{storeCode}
@@ -130,7 +134,6 @@
             store_name       =#{storeName},
             store_phone      =#{storePhone},
             store_address    =#{storeAddress},
-            invitation_code  =#{invitationCode},
             user_code        =#{userCode},
             business_license =#{businessLicense},
             gmt_modfied =        now(),
@@ -162,9 +165,11 @@
             t1.store_code,
             t1.store_name,
             t1.store_phone,
+            concat(t1.province,t1.city,t1.area,t1.store_address) store_address,
             t1.invitation_code,
             t2.user_acct,
-            t2.name
+            t2.name,
+            t1.version
         from  t_store_manage t1,
               t_sys_user t2
         where t1.is_delete = 0
@@ -178,14 +183,14 @@
         <if test="userName != null and userName != ''">
             and t2.name like concat('%', #{userName}, '%')
         </if>
-        <if test="city != null and city != ''">
-            and t1.city = #{city}
+        <if test="provinceCode != null and provinceCode != ''">
+            and t1.province_code = #{provinceCode}
         </if>
-        <if test="area != null and area != ''">
-            and t1.area = #{area}
+        <if test="cityCode != null and cityCode != ''">
+            and t1.city_code = #{cityCode}
         </if>
-        <if test="province != null and province != ''">
-            and t1.province = #{province}
+        <if test="areaCode != null and areaCode != ''">
+            and t1.area_code = #{areaCode}
         </if>
         order by t1.create_time desc
     </select>
@@ -196,9 +201,11 @@
             t1.store_code,
             t1.store_name,
             t1.store_phone,
+            concat(t1.province,t1.city,t1.area,t1.store_address) store_address,
             t1.invitation_code,
             t2.user_acct,
-            t2.name
+            t2.name,
+            t1.version
         from  t_store_manage t1,
               t_sys_user t2
         where t1.is_delete = 0
@@ -212,14 +219,14 @@
         <if test="userName != null and userName != ''">
             and t2.name like concat('%', #{userName}, '%')
         </if>
-        <if test="city != null and city != ''">
-            and t1.city = #{city}
+        <if test="provinceCode != null and provinceCode != ''">
+            and t1.province_code = #{provinceCode}
         </if>
-        <if test="area != null and area != ''">
-            and t1.area = #{area}
+        <if test="cityCode != null and cityCode != ''">
+            and t1.city_code = #{cityCode}
         </if>
-        <if test="province != null and province != ''">
-            and t1.province = #{province}
+        <if test="areaCode != null and areaCode != ''">
+            and t1.area_code = #{areaCode}
         </if>
         order by t1.create_time desc
     </select>

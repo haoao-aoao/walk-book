@@ -23,7 +23,11 @@
         <result column="province_name" property="provinceName"/>
         <result column="city_name" property="cityName"/>
         <result column="area_name" property="areaName"/>
+        <result column="province_code" property="provinceCode"/>
+        <result column="city_code" property="cityCode"/>
+        <result column="area_code" property="areaCode"/>
         <result column="version" property="version"/>
+        <result column="address" property="address"/>
         <association property="userInfo" javaType="com.xzsd.pc.user.entity.UserVo">
             <result column="user_code" property="userCode"/>
             <result column="user_acct" property="userAcct"/>
@@ -84,11 +88,15 @@
             t2.user_password,
             t2.role,
             t1.province_name,
+            t1.province_code,
             t1.city_name,
-            t1.area_name
+            t1.city_code,
+            t1.area_name,
+            t1.area_code
         from t_driver t1,
              t_sys_user t2
         where t1.is_delete = 0
+        and t1.driver_code = #{driverCode}
         and t2.role = 3
         and t1.user_code = t2.user_code
     </select>
@@ -130,6 +138,7 @@
         select
             t1.driver_code,
             t1.version,
+            concat(t1.province_name,t1.city_name,t1.area_name) address,
             t2.user_code,
             t2.name,
             t2.phone,
@@ -146,14 +155,14 @@
             <if test="name != null and name != ''">
                 and t2.name like concat('%', #{name}, '%')
             </if>
-            <if test="provinceName != null and provinceName != ''">
-                and t1.province_name like concat('%', #{provinceName}, '%')
+            <if test="provinceCode != null and provinceCode != ''">
+                and t1.province_code = #{provinceCode}
             </if>
-            <if test="cityName != null and cityName != ''">
-                and t1.city_name like concat('%', #{cityName}, '%')
+            <if test="cityCode != null and cityCode != ''">
+                and t1.city_code = #{cityCode}
             </if>
-            <if test="areaName != null and areaName != ''">
-                and t1.area_name like concat('%', #{areaName}, '%')
+            <if test="areaCode != null and areaCode != ''">
+                and t1.area_code = #{areaCode}
             </if>
     </select>
 
@@ -161,7 +170,8 @@
     <select id="listShopperDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
         select
             t1.driver_code,
-            t1.version
+            t1.version,
+            concat(t1.province_name,t1.city_name,t1.area_name) address,
             t2.user_code,
             t2.name,
             t2.phone,
@@ -185,14 +195,14 @@
         <if test="name != null and name != ''">
             and t2.name like concat('%', #{name}, '%')
         </if>
-        <if test="provinceName != null and provinceName != ''">
-            and t1.province_name like concat('%', #{provinceName}, '%')
+        <if test="provinceCode != null and provinceCode != ''">
+            and t1.province_code = #{provinceCode}
         </if>
-        <if test="cityName != null and cityName != ''">
-            and t1.city_name like concat('%', #{cityName}, '%')
+        <if test="cityCode != null and cityCode != ''">
+            and t1.city_code = #{cityCode}
         </if>
-        <if test="areaName != null and areaName != ''">
-            and t1.area_name like concat('%', #{areaName}, '%')
+        <if test="areaCode != null and areaCode != ''">
+            and t1.area_code = #{areaCode}
         </if>
     </select>
 </mapper>

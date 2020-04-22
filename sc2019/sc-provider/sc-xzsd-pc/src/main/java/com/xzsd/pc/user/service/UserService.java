@@ -48,12 +48,12 @@ public class UserService {
         user.setUserCode(StringUtil.getCommonCode(2));
         //检验用户数据有无重复
         int cnt = userDao.countUserAcct(user);
+        if(cnt != 0){
+            return AppResponse.bizError("该账号已被注册,请重新输入");
+        }
         //密码加密
         String pwd = PasswordUtils.generatePassword(user.getUserPassword());
         user.setUserPassword(pwd);
-        if(cnt != 0){
-            return AppResponse.bizError("数据有重复,请重新输入");
-        }
         int count = userDao.saveUser(user);
         if (count == 0){
             return AppResponse.bizError("新增失败");
@@ -94,10 +94,13 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateUser(User user){
-        //检验用户账户是否存在
-        int cnt = userDao.countUserAcct(user);
-        if(cnt != 0){
-            return AppResponse.bizError("账户已存在,请重新输入");
+        UserVo rowUser = userDao.getUserByUserCode(user.getUserCode());
+        //判断账号是否有改变 如果有 则校验
+        if (!(rowUser.getUserAcct().equals(user.getUserAcct()))){
+            int cnt = userDao.countUserAcct(user);
+            if(cnt != 0){
+                return AppResponse.bizError("该账号已注册,请重新输入");
+            }
         }
         //密码加密
         String pwd = PasswordUtils.generatePassword(user.getUserPassword());
@@ -132,11 +135,6 @@ public class UserService {
      * @Date 2020-03-24
      */
     public AppResponse listClient(User user){
-//        PageHelper.startPage(user.getPageNum(),user.getPageSize());
-//        List<UserClient> users = userDao.listClientByPage(user);
-//        PageInfo<UserClient> userPageInfo = new PageInfo<>(users);
-//        return AppResponse.success("客户信息列表查询成功",userPageInfo);
-        //获取当前登录人id
         String currentUserId = SecurityUtils.getCurrentUserId();
         UserVo iuser = userDao.getUserByUserCode(currentUserId);
         Integer role = iuser.getRole();
