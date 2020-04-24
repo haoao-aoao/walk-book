@@ -7,6 +7,7 @@ import com.xzsd.app.goodsAppraise.dao.GoodsAppraiseDao;
 import com.xzsd.app.goodsAppraise.entity.GoodsAppraise;
 import com.xzsd.app.goodsAppraise.entity.GoodsAppraisePic;
 import com.xzsd.app.goodsMessage.dao.GoodsMessageDao;
+import com.xzsd.app.goodsMessage.entity.GoodsMessageVo;
 import com.xzsd.app.order.dao.OrderDao;
 import com.xzsd.app.order.entity.Order;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,7 @@ public class GoodsAppraiseService {
      * @return
      */
     public AppResponse enterGoodsAppraise(String orderCode){
-        Order orderPic = orderDao.OrderPic(orderCode);
-        return AppResponse.success("查询成功",orderPic);
+        List<GoodsMessageVo> goodsMessageVos = orderDao.OrderPic(orderCode);
+        return AppResponse.success("查询成功",goodsMessageVos);
     }
 }

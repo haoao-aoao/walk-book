@@ -12,6 +12,7 @@ import com.xzsd.pc.user.entity.UserVo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.PasswordUtils;
 import com.xzsd.pc.util.StringUtil;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,13 +104,22 @@ public class UserService {
             }
         }
         //密码加密
-        String pwd = PasswordUtils.generatePassword(user.getUserPassword());
-        user.setUserPassword(pwd);
-        int count = userDao.updateUser(user);
-        if (count == 0){
-            return AppResponse.bizError("数据有更新，请重试");
+        String userPassword = user.getUserPassword();
+        if(userPassword == null || "".equals(userPassword)){
+            int count = userDao.updateUser(user);
+            if (count == 0){
+                return AppResponse.bizError("数据有更新，请重试");
+            }
+            return AppResponse.success("修改成功");
+        }else {
+            String pwd = PasswordUtils.generatePassword(userPassword);
+            user.setUserPassword(pwd);
+            int count = userDao.updateUser(user);
+            if (count == 0){
+                return AppResponse.bizError("数据有更新，请重试");
+            }
+            return AppResponse.success("修改成功");
         }
-        return AppResponse.success("修改成功");
     }
 
     /**

@@ -17,6 +17,8 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.neusoft.core.page.PageUtils.getPageInfo;
+
 /**
  * 门店Service实现层
  */
@@ -142,6 +144,15 @@ public class StoreService {
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);
             return AppResponse.success("门店列表查询成功(店长数据)",storePageInfo);
         }
+    }
+
+    /**
+     * 店长选择列表
+     * @return
+     */
+    public AppResponse choseStorerByPage(String name){
+        List<UserVo> listStorer = storeDao.choseStorer(name);
+        return AppResponse.success("查询成功",getPageInfo(listStorer));
     }
 }
 

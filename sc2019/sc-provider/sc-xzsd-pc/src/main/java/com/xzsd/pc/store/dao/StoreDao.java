@@ -1,6 +1,7 @@
 package com.xzsd.pc.store.dao;
 
 import com.xzsd.pc.store.entity.Store;
+import com.xzsd.pc.user.entity.UserVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -75,4 +76,10 @@ public interface StoreDao {
      * @return
      */
     Store selectInviteCode(@Param("userCode") String userCode);
+
+    /**
+     * 查询店长列表
+     * @return
+     */
+    List<UserVo> choseStorer(@Param("name") String name);
 }

@@ -85,6 +85,23 @@ public class UserController {
     }
 
     /**
+     * 查询用户绑定的店铺邀请码
+     * @return
+     */
+    @PostMapping("selectCliIncCode")
+    public AppResponse selectCliIncCode(){
+        try{
+            //获取登陆人id
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return userService.selectCliIncCode(currentUserId);
+        }catch (Exception e){
+            logger.error("查询用户邀请码异常", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
      * 修改用户绑定店铺邀请码
      * @param user
      * @return

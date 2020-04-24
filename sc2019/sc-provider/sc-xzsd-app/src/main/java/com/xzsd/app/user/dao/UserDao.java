@@ -54,6 +54,13 @@ public interface UserDao {
     int updateUserPwd(User user);
 
     /**
+     * 查询用户的邀请码
+     * @param userCode
+     * @return
+     */
+    String selectCliIncCode(@Param("userCode") String userCode);
+
+    /**
      * 修改用户绑定的门店邀请码
      * @param userCode
      * @param invitationCode

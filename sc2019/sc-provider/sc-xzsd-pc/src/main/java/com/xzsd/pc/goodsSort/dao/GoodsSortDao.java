@@ -68,4 +68,11 @@ public interface GoodsSortDao {
      * @return
      */
     List<GoodsSort> listClassifyTwo(@Param("cateCode") String cateCode);
+
+    /**
+     * 查询商品里有无该分类的商品
+     * @param cateCode
+     * @return
+     */
+    int selectGoodsSort(@Param("cateCode") String cateCode);
 }

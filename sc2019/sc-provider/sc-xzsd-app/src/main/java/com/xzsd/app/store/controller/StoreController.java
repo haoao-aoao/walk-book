@@ -1,6 +1,7 @@
 package com.xzsd.app.store.controller;
 
 import com.neusoft.core.restful.AppResponse;
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.app.store.entity.Store;
 import com.xzsd.app.store.service.StoreService;
 import org.slf4j.Logger;
@@ -22,13 +23,13 @@ public class StoreController {
 
     /**
      * 查询门店详情
-     * @param userCode
      * @return
      */
     @RequestMapping("findStoreById")
-    public AppResponse findStoreById(String userCode){
+    public AppResponse findStoreById(){
         try{
-            return storeService.findStoreById(userCode);
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            return storeService.findStoreById(currentUserId);
         }catch (Exception e){
             logger.error("查询异常", e);
             System.out.println(e.toString());

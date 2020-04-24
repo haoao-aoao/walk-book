@@ -38,7 +38,7 @@ public class GoodsSortController {
      * @author haoao
      * @date 2020-03-24
      */
-    @PostMapping("addGoodsSoft")
+    @PostMapping("addGoodsSort")
     public AppResponse addGoodsSoft(GoodsSort goodsSort){
         try{
             String currentUserId = SecurityUtils.getCurrentUserId();

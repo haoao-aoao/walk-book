@@ -48,6 +48,10 @@ public class DriverService {
         //生成司机编号
         driver.setDriverCode(StringUtil.getCommonCode(2));
         driver.setUserCode(user.getUserCode());
+        //密码加密
+        String userPassword = user.getUserPassword();
+        String pwd = PasswordUtils.generatePassword(userPassword);
+        user.setUserPassword(pwd);
         int userCnt = userDao.saveUser(user);
         int driverCnt = driverDao.addDriver(driver);
         if (userCnt == 0 || driverCnt == 0){

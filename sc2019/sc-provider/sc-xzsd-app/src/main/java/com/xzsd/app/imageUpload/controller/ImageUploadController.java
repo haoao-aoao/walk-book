@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("image")
 public class ImageUploadController {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageUploadController.class);

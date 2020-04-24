@@ -99,7 +99,9 @@
         set
             name         = #{name},
             user_acct    = #{userAcct},
-            user_password= #{userPassword},
+            <if test="userPassword != null and userPassword != ''">
+                user_password= #{userPassword},
+            </if>
             idcard       = #{idCard},
             sex          = #{sex},
             phone        = #{phone},

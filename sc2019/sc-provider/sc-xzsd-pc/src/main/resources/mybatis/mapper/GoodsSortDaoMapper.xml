@@ -143,4 +143,15 @@
         and   is_delete = 0
         order by create_time desc
     </select>
+
+    <!--查询商品里有无该分类的商品-->
+    <select id="selectGoodsSort" parameterType="String" resultType="int">
+        select
+            count(goods_code)
+        from  t_goods_message
+        where
+            is_delete = 0
+            and classify_one_Code = #{cateCode}
+            or  classify_two_Code = #{cateCode}
+    </select>
 </mapper>

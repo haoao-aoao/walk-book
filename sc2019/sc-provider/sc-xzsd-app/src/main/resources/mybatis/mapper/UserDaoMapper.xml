@@ -122,6 +122,15 @@
         where user_code = #{userCode}
     </update>
 
+    <!--查询用户邀请码-->
+    <select id="selectCliIncCode" parameterType="String" resultType="String">
+        select
+            invitation_code
+        from  t_client
+        where user_code = #{userCode}
+              and is_delete = 0
+    </select>
+
     <!--修改用户绑定的店铺邀请码-->
     <update id="updateClientInvCode" parameterType="com.xzsd.app.user.entity.User">
         update t_client

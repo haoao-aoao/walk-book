@@ -244,11 +244,11 @@
     </select>
 
     <!--查询评价页图片-->
-    <select id="OrderPic" parameterType="String" resultMap="OrderDet">
+    <select id="OrderPic" parameterType="String" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
         select
-            b.goods_code,
-            c.goods_name,
-            c.goods_img
+            b.goods_code goodsCode,
+            c.goods_name goodsName,
+            c.goods_img goodsImg
         from t_order a,t_order_detailed b,t_goods_message c
         where
             a.order_code = b.order_code

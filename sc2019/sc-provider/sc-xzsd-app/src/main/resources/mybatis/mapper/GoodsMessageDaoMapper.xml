@@ -45,6 +45,7 @@
     <!--查询商品信息详情-->
     <select id="findGoodsById" parameterType="java.lang.String" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
         select
+            goods_code          goodsCode,
             goods_name          goodsName,
             goods_pricing       goodsPricing,
             goods_price         goodsPrice,

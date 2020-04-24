@@ -116,7 +116,6 @@
             version = version + 1
         where
             driver_code = #{driverCode}
-            and version = #{version}
     </update>
 
     <!--删除司机信息-->
@@ -137,7 +136,7 @@
     <select id="listDriver" parameterType="com.xzsd.pc.driver.entity.Driver" resultMap="DriverAndUser">
         select
             t1.driver_code,
-            t1.version,
+            t2.version,
             concat(t1.province_name,t1.city_name,t1.area_name) address,
             t2.user_code,
             t2.name,

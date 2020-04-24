@@ -241,4 +241,21 @@
             is_delete = 0
             and user_code = #{userCode}
     </select>
+
+    <!--查询店长列表-->
+    <select id="choseStorer" parameterType="String" resultType="com.xzsd.pc.user.entity.UserVo">
+        select
+            user_code userCode,
+            user_acct userAcct,
+            name,
+            phone
+        from  t_sys_user
+        where
+            is_delete = 0
+            and role = 1
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+        order by create_time desc
+    </select>
 </mapper>

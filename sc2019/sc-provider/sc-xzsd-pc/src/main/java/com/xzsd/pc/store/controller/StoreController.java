@@ -108,4 +108,19 @@ public class StoreController {
             throw e;
         }
     }
+
+    /**
+     * 店长选择列表
+     * @return
+     */
+    @PostMapping("choseStorer")
+    public AppResponse choseStorerByPage(String name){
+        try{
+            return storeService.choseStorerByPage(name);
+        }catch (Exception e){
+            logger.error("修改门店异常", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
 }

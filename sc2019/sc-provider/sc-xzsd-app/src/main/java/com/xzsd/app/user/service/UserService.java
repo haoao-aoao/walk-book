@@ -113,6 +113,16 @@ public class UserService {
     }
 
     /**
+     * 查询用户绑定的店铺邀请码
+     * @param userCode
+     * @return
+     */
+    public AppResponse selectCliIncCode(String userCode){
+        String cliInvCode = userDao.selectCliIncCode(userCode);
+        return AppResponse.success("查询用户邀请码成功",cliInvCode);
+    }
+
+    /**
      * 修改用户绑定店铺邀请码
      * @param user
      * @return

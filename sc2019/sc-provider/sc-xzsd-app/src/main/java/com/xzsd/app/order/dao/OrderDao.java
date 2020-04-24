@@ -1,5 +1,6 @@
 package com.xzsd.app.order.dao;
 
+import com.xzsd.app.goodsMessage.entity.GoodsMessageVo;
 import com.xzsd.app.order.entity.Order;
 import com.xzsd.app.order.entity.OrderDetailed;
 import org.apache.ibatis.annotations.Param;
@@ -41,7 +42,7 @@ public interface OrderDao {
      * @param orderCode
      * @return
      */
-    Order OrderPic(@Param("orderCode") String orderCode);
+    List<GoodsMessageVo> OrderPic(@Param("orderCode") String orderCode);
 
     /**
      * 查询订单列表

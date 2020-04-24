@@ -55,7 +55,6 @@ public class GoodsSortService {
             return AppResponse.bizError("商品分类已存在，请重新输入！");
         }
         goodsSort.setCateCode(StringUtil.getCommonCode(2));
-        //goodsSort.setIsDelete(0);
         //分配商品分类等级
         if(goodsSort.getCateCodeParent() == null){
             goodsSort.setLevel("1");
@@ -96,11 +95,6 @@ public class GoodsSortService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateGoodsSort(GoodsSort goodsSort){
         AppResponse appResponse = AppResponse.success("修改成功");
-        //校验分类是否存在
-        int count = goodsSortDao.countGoodsSort(goodsSort);
-        if(0 != count) {
-            return AppResponse.bizError("商品分类已存在，请重新输入！");
-        }
         // 修改用户信息
         int cnt = goodsSortDao.updateGoodsSort(goodsSort);
         if (0 == cnt) {
@@ -136,9 +130,13 @@ public class GoodsSortService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteGoodsSort(String cateCode,String userCode){
-        //List<GoodsSort> goodsSorts = goodsSortDao.listClassifyTwo(cateCode);
-
         List<String> listCode = Arrays.asList(cateCode.split(","));
+        for (String cate : listCode) {
+            int cnt = goodsSortDao.selectGoodsSort(cate);
+            if (cnt != 0){
+                return AppResponse.bizError("还存在该分类下的商品,无法删除");
+            }
+        }
         AppResponse appResponse = AppResponse.success("删除成功");
         //删除商品分类
         int count = goodsSortDao.deleteGoodsSort(listCode,userCode);
