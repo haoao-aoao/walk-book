@@ -28,18 +28,20 @@
                 gmt_modfied,
                 version)
         values
-            (#{appraiseCode},
-             #{goodsCode},
-             #{goodsAppraise},
-             #{goodsStar},
-             #{userCode},
-             #{soreNo},
-             0,
-             #{createUser},
-             now(),
-             #{lastModfiedBy},
-             now(),
-             0)
+        <foreach collection="goodsAppraiseList" item="item" index="index" separator=",">
+            (#{item.appraiseCode},
+            #{item.goodsCode},
+            #{item.goodsAppraise},
+            #{item.goodsStar},
+            #{item.userCode},
+            null,
+            0,
+            #{item.createUser},
+            now(),
+            null,
+            now(),
+            0)
+        </foreach>
     </insert>
 
     <!--新增商品评价图片-->

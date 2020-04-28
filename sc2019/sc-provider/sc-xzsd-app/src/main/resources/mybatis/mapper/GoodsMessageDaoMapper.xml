@@ -83,11 +83,13 @@
 
     <!--更新商品销量-->
     <update id="updateGoodsSalesVolume" parameterType="com.xzsd.app.order.entity.OrderDetailed">
-        update t_goods_message
-        set
-            sales_volume    =   sales_volume + #{param2}
-        where
-            goods_code    =   #{param1}
+        <foreach collection="orderDetList" item="item" index="index">
+            update t_goods_message
+            set
+                sales_volume    =   sales_volume + #{item.goodsCnt}
+            where
+                goods_code    =   #{item.goodsCode}
+        </foreach>
     </update>
 
     <!--更新商品浏览量-->
@@ -99,13 +101,23 @@
             goods_code    =   #{goodsCode}
     </update>
 
-    <!--更新库存量-->
+    <!--更新库存与销量(正常)-->
     <update id="updateGoodsStock" parameterType="com.xzsd.app.order.entity.OrderDetailed">
-        update t_goods_message
-        set
-            goods_stock    =   goods_stock + #{param2}
-        where
-            goods_code    =   #{param1}
+            update t_goods_message
+            set
+                sales_volume   =   sales_volume + #{goodsCnt},
+                goods_stock   =   goods_stock - #{goodsCnt}
+            where  goods_code  =    #{goodsCode};
+    </update>
+
+    <!--更新库存与销量(取消订单)-->
+    <update id="updateReGoodsStock" parameterType="com.xzsd.app.order.entity.OrderDetailed">
+            update t_goods_message
+            <set>
+                goods_stock    =   goods_stock + #{goodsCnt},
+                sales_volume   =   sales_volume - #{goodsCnt}
+            </set>
+            where  goods_code  =    #{goodsCode}
     </update>
 
     <!--查询商品库存-->

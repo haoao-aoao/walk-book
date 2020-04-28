@@ -12,7 +12,7 @@ public interface ShopCartDao {
      * @param goodsCode
      * @return
      */
-    Integer selectgoods(String goodsCode);
+    Integer selectgoods(@Param("goodsCode") String goodsCode,@Param("userCode") String userCode);
     /**
      * 新增购物车
      * @param shopCart

@@ -57,7 +57,6 @@ public class GoodsAppraise {
      * 更新者(登陆)
      */
     private String lastModfiedBy;
-
     /**
      * 更新时间
      */
@@ -67,11 +66,20 @@ public class GoodsAppraise {
      * 版本号
      */
     private Integer version;
-
     /**
      * 订单编号
      */
     private String orderCode;
+
+    private List<GoodsAppraise> goodsAppraiseList;
+
+    public List<GoodsAppraise> getGoodsAppraiseList() {
+        return goodsAppraiseList;
+    }
+
+    public void setGoodsAppraiseList(List<GoodsAppraise> goodsAppraiseList) {
+        this.goodsAppraiseList = goodsAppraiseList;
+    }
 
     private List<GoodsAppraisePic> goodsAppraisePic;
 

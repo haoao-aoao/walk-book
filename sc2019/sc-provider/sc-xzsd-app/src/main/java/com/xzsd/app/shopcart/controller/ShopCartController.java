@@ -32,7 +32,6 @@ public class ShopCartController {
             //获取当前登录人id
             String currentUserId = SecurityUtils.getCurrentUserId();
             shopCart.setUserCode(currentUserId);
-
             return shopCartService.addShopCart(shopCart);
         }catch (Exception e){
             logger.error("新增异常");

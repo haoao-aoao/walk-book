@@ -209,6 +209,7 @@
         from  t_store_manage t1,
               t_sys_user t2
         where t1.is_delete = 0
+        and t1.user_code = t2.user_code
         and t1.user_code = #{userCode}
         <if test="storeName != null and storeName != ''">
             and t1.store_name like concat('%', #{storeName}, '%')

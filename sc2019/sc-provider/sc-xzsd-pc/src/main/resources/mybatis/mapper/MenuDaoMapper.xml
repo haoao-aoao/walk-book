@@ -53,6 +53,7 @@
             menu_route  =   #{menuRoute},
             menu_comment=   #{menuComment},
             last_modfied_by = #{lastModfiedBy},
+            gmt_modfied = now(),
             version = version + 1
         where menu_code = #{menuCode}
         and version = #{version}

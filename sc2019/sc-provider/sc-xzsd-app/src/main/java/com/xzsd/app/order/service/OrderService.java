@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -125,11 +126,14 @@ public class OrderService {
             //分配订单详情编号
             orderDetailed.setOrderDetCode(StringUtil.getCommonCode(2));
             orderDetailed.setGoodsAllPrice(payPrice);
-            orderDao.addOrderDetailed(orderDetailed);
-            //修改商品库存
-            goodsMessageDao.updateGoodsStock(orderDetailed.getGoodsCode(),-orderDetailed.getGoodsCnt());
+            //创建列表
+            ArrayList<OrderDetailed> orderDetaileds = new ArrayList<>();
+            orderDetaileds.add(orderDetailed);
+            orderDao.addOrderDetailed(orderDetaileds);
+            //修改商品库与销量
+            goodsMessageDao.updateGoodsStock(orderDetaileds.get(0));
             //修改商品销量
-            goodsMessageDao.updateGoodsSalesVolume(orderDetailed.getGoodsCode(),orderDetailed.getGoodsCnt());
+            //goodsMessageDao.updateGoodsSalesVolume(orderDetaileds);
             return AppResponse.success("订单新增成功");
         }
         else {
@@ -145,7 +149,7 @@ public class OrderService {
      * @date 2020-04-10
      */
     @Transactional(rollbackFor = Exception.class)
-    public AppResponse addOrderAndAddOrderDetailed2(String shopcartCode,double sum){
+    public AppResponse addOrderAndAddOrderDetailed2(String shopcartCode,String sum){
         List<String> listShopCart = Arrays.asList(shopcartCode.split(","));
         //新增订单
         Order order = new Order();
@@ -160,36 +164,45 @@ public class OrderService {
         //初始化订单状态为0：已付款
         order.setOrderState(0);
         //注入订单总价
-        order.setPaymentMoney(sum);
-        order.setOrderPrice(sum);
+        Double Sum = Double.valueOf(sum);
+        order.setPaymentMoney(Sum);
+        order.setOrderPrice(Sum);
         //查询店铺编号
         String storeCode = userDao.findStoreCode(currentUserId);
         order.setStoreCode(storeCode);
-        //新增订单
-        orderDao.addOrder(order);
-        //删除购物车商品
-        shopCartDao.deleteShopCartById(listShopCart,currentUserId);
-        OrderDetailed orderDetailed = new OrderDetailed();
         //查询查购物车列表
         List<ShopCartVo> shopCartVos = shopCartDao.listShopCart(listShopCart);
+        //存放订单明细对象，批量存入表中
+        ArrayList<OrderDetailed> orderDetList = new ArrayList<>();
         for (ShopCartVo shopCartVo : shopCartVos) {
             int stock = goodsMessageDao.selectGoodsStock(shopCartVo.getGoodsCode());
             //判断商品库存
             if (stock >= shopCartVo.getBuyCount()){
+                OrderDetailed orderDetailed = new OrderDetailed();
                 orderDetailed.setOrderCode(order.getOrderCode());
                 orderDetailed.setOrderDetCode(StringUtil.getCommonCode(2));
                 orderDetailed.setGoodsCode(shopCartVo.getGoodsCode());
                 orderDetailed.setGoodsCnt(shopCartVo.getBuyCount());
                 orderDetailed.setGoodsAllPrice(shopCartVo.getAllmoney());
-                orderDao.addOrderDetailed(orderDetailed);
-                //修改商品库存
-                goodsMessageDao.updateGoodsStock(orderDetailed.getGoodsCode(),-orderDetailed.getGoodsCnt());
-                //修改商品销量
-                goodsMessageDao.updateGoodsSalesVolume(orderDetailed.getGoodsCode(),orderDetailed.getGoodsCnt());
+                //存放到list中
+                orderDetList.add(orderDetailed);
             }else {
                 return AppResponse.bizError("库存不足,购买失败");
             }
         }
+        System.out.println(orderDetList);
+        //新增订单
+        orderDao.addOrder(order);
+        //新增订单明细
+        orderDao.addOrderDetailed(orderDetList);
+        //修改商品库存与销量
+        for (OrderDetailed orderDetailed : orderDetList) {
+            goodsMessageDao.updateGoodsStock(orderDetailed);
+        }
+        //修改商品销量
+        //goodsMessageDao.updateGoodsSalesVolume(orderDetList);
+        //删除购物车商品
+        shopCartDao.deleteShopCartById(listShopCart,currentUserId);
         return AppResponse.success("购买成功");
     }
 
@@ -202,8 +215,15 @@ public class OrderService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateOrderState(Order order){
-        //设置订单状态 3:已完成未评论
-        order.setOrderState(3);
+        Integer orderState = order.getOrderState();
+        //取消订单时 要把对应的商品库存 销售量 补回
+        if (orderState == 5){
+            String orderCode = order.getOrderCode();
+            List<OrderDetailed> orderDetList = orderDao.findOderDetList(orderCode);
+            for (OrderDetailed orderDetailed : orderDetList) {
+                goodsMessageDao.updateReGoodsStock(orderDetailed);
+            }
+        }
         int cnt = orderDao.updateOrderState(order);
         if (cnt == 0){
             return AppResponse.bizError("修改失败");

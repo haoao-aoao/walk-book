@@ -27,7 +27,7 @@ public class GoodsAppraiseController {
      * @return
      */
     @PostMapping("addGoodsAppraise")
-    public AppResponse addGoodsAppraise(@RequestBody GoodsAppraise goodsAppraise){
+    public AppResponse addGoodsAppraise(@RequestBody String goodsAppraise){
         try{
             return goodsAppraiseService.addGoodsAppraise(goodsAppraise);
         }catch (Exception e){

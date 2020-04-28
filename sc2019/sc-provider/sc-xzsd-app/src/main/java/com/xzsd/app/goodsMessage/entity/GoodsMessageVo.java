@@ -48,7 +48,7 @@ public class GoodsMessageVo {
     /**
      * 商品评价星级 01差评 23中评 45好评
      */
-    private int goodsStar;
+    private float goodsStar;
     /**
      * 作者
      */
@@ -151,11 +151,11 @@ public class GoodsMessageVo {
         this.goodsView = goodsView;
     }
 
-    public int getGoodsStar() {
+    public float getGoodsStar() {
         return goodsStar;
     }
 
-    public void setGoodsStar(int goodsStar) {
+    public void setGoodsStar(float goodsStar) {
         this.goodsStar = goodsStar;
     }
 

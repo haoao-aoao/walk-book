@@ -18,10 +18,10 @@ public interface OrderDao {
 
     /**
      * 新增订单详情
-     * @param orderDetailed
+     * @param orderDetList
      * @return
      */
-    int addOrderDetailed(OrderDetailed orderDetailed);
+    int addOrderDetailed(@Param("orderDetList") List<OrderDetailed> orderDetList);
 
     /**
      * 修改订单状态
@@ -56,4 +56,6 @@ public interface OrderDao {
      * @return
      */
     OrderDetailed selectOrderDet();
+
+    List<OrderDetailed> findOderDetList(@Param("orderCode") String orderCode);
 }

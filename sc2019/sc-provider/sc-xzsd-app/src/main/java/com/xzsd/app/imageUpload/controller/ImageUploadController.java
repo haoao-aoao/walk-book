@@ -32,10 +32,9 @@ public class ImageUploadController {
     @PostMapping("upload")
     public AppResponse upload(@RequestParam("file") MultipartFile multipartFile) throws Exception {
         try{
-            String currentUserId = SecurityUtils.getCurrentUserId();
-            return imageUploadService.upload(multipartFile,currentUserId);
+            return imageUploadService.upload(multipartFile,"unkown");
         }catch (Exception e){
-            logger.error("商品分类新增失败");
+            logger.error("图片上传异常");
             System.out.println(e.toString());
             throw e;
         }

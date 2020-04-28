@@ -8,6 +8,5 @@ public interface ImageUploadDao {
      * 添加图片地址
      * @return
      */
-
     int addImage(ImageUpload imageUpload);
 }

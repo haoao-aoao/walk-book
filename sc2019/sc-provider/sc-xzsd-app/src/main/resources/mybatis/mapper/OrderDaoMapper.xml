@@ -125,8 +125,8 @@
            (#{orderCode},
             #{orderState},
             #{payState},
-            #{payTime},
-            #{receiveTime},
+            now(),
+            now(),
             #{userCode},
             #{storeCode},
             #{orderPrice},
@@ -136,7 +136,7 @@
             #{createUser},
             now(),
             #{lastModfiedBy},
-            #{gmtModfied},
+            now(),
             0)
     </insert>
 
@@ -155,17 +155,19 @@
                 gmt_modfied,
                 version)
             values
-                (#{orderDetCode},
-                 #{orderCode},
-                 #{goodsCode},
-                 #{goodsCnt},
-                 #{goodsAllPrice},
-                 0,
-                 #{createUser},
-                 now(),
-                 #{lastModfiedBy},
-                 now(),
-                 0)
+            <foreach collection="orderDetList" index="index" item="item" separator=",">
+                (#{item.orderDetCode},
+                #{item.orderCode},
+                #{item.goodsCode},
+                #{item.goodsCnt},
+                #{item.goodsAllPrice},
+                0,
+                #{item.createUser},
+                now(),
+                #{item.lastModfiedBy},
+                now(),
+                0)
+            </foreach>
     </insert>
     
     <!--修改订单状态-->
@@ -255,5 +257,15 @@
             and b.goods_code = c.goods_code
             and a.order_code = #{orderCode}
         order by c.create_time desc
+    </select>
+
+    <select id="findOderDetList" parameterType="String" resultType="com.xzsd.app.order.entity.OrderDetailed">
+        select
+            goods_cnt goodsCnt,
+            goods_code goodsCode
+        from
+            t_order_detailed
+        where
+            order_code = #{orderCode}
     </select>
 </mapper>

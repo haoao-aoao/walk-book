@@ -139,6 +139,7 @@ public class StoreService {
             return AppResponse.success("门店列表查询成功(管理员数据)",storePageInfo);
         }else{
             //店长数据
+            store.setUserCode(currentUserId);
             PageHelper.startPage(store.getPageNum(),store.getPageSize());
             List<Store> stores = storeDao.listShopperStore(store);
             PageInfo<Store> storePageInfo = new PageInfo<>(stores);

@@ -3,6 +3,7 @@ package com.xzsd.app.goodsMessage.dao;
 
 import com.xzsd.app.goodsMessage.entity.GoodsMessage;
 import com.xzsd.app.goodsMessage.entity.GoodsMessageVo;
+import com.xzsd.app.order.entity.OrderDetailed;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -37,10 +38,10 @@ public interface GoodsMessageDao {
 
     /**
      * 更新商品销量
-     * @param count
+     * @param orderDetList
      * @return
      */
-    int updateGoodsSalesVolume(String goodsCode,int count);
+    int updateGoodsSalesVolume(@Param("orderDetList") List<OrderDetailed> orderDetList);
 
     /**
      * 更新商品浏览量
@@ -50,12 +51,18 @@ public interface GoodsMessageDao {
     int updateGoodsView(String goodsCode);
 
     /**
-     * 更新商品库存
-     * @param goodsCode
-     * @param count
+     * 更新商品库存(正常)
+     * @param orderDetList
      * @return
      */
-    int updateGoodsStock(String goodsCode,int count);
+    int updateGoodsStock(OrderDetailed orderDetList);
+
+    /**
+     * 更新商品库存(取消订单)
+     * @param orderDetList
+     * @return
+     */
+    int updateReGoodsStock(OrderDetailed orderDetList);
 
     /**
      * 查询商品库存

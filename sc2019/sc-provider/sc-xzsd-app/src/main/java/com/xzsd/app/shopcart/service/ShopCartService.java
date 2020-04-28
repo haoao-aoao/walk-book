@@ -32,7 +32,7 @@ public class ShopCartService {
     public AppResponse addShopCart(ShopCart shopCart){
         shopCart.setShopcartCode(StringUtil.getCommonCode(2));
         //检测购物车是否已存在该商品
-        Integer cnt = shopCartDao.selectgoods(shopCart.getGoodsCode());
+        Integer cnt = shopCartDao.selectgoods(shopCart.getGoodsCode(),shopCart.getUserCode());
         if (cnt == 0){
             //计算商品的价格
             GoodsMessageVo goodsMsg = goodsMessageDao.findGoodsById(shopCart.getGoodsCode());
@@ -111,6 +111,6 @@ public class ShopCartService {
             Double mon = Double.valueOf(money);
             sum = sum + mon;
         }
-        return AppResponse.success("合计金额","sum : " + sum);
+        return AppResponse.success("合计金额",sum);
     }
 }

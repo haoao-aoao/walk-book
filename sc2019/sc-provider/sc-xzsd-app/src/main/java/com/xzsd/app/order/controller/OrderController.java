@@ -91,7 +91,7 @@ public class OrderController {
      * @date 2020-04-10
      */
     @PostMapping("addOrderTwo")
-    public AppResponse addOrderAndAddOrderDetailed2(String shopcartCode,double sum){
+    public AppResponse addOrderAndAddOrderDetailed2(String shopcartCode,String sum){
         try {
             return orderService.addOrderAndAddOrderDetailed2(shopcartCode,sum);
         }catch (Exception e){
@@ -102,13 +102,13 @@ public class OrderController {
     }
 
     /**
-     * demo 修改订单状态(确认收货)
+     * demo 修改订单状态(确认收货/取消订单)
      * @param
      * @return
      * @author haoao
      * @date 2020-03-30
      */
-    @PostMapping("updateOrderState3")
+    @PostMapping("updateCliOrderState")
     public AppResponse updateOrderState(Order order){
         try {
             //获取当前登录人id
