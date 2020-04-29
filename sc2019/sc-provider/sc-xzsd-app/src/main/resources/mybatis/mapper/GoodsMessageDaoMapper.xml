@@ -5,26 +5,26 @@
     <!--商品信息列表-->
     <select id="listGoods" parameterType="com.xzsd.app.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
         select
-        a.goods_code          goodsCode,
-        a.goods_name          goodsName,
-        a.classify_one        classifyOne,
-        a.classify_two        classifyTwo,
-        a.goods_pricing       goodsPricing,
-        a.goods_price         goodsPrice,
-        a.sales_volume        salesVolume,
-        a.goods_stock         goodsStock,
-        a.goods_no            goodsNo,
-        a.goods_sketch        goodsSketch,
-        a.goods_state         goodsState,
-        a.goods_author        goodsAuthor,
-        a.goods_press         goodsPress,
-        a.goods_img           goodsImg,
-        a.vendor_name         vendorName,
-        a.goods_view          goodsView,
-        a.goods_star          goodsStar,
-        a.vendor_name         vendorName,
-        a.up_time             upTime,
-        a.version
+            a.goods_code          goodsCode,
+            a.goods_name          goodsName,
+            a.classify_one        classifyOne,
+            a.classify_two        classifyTwo,
+            a.goods_pricing       goodsPricing,
+            a.goods_price         goodsPrice,
+            a.sales_volume        salesVolume,
+            a.goods_stock         goodsStock,
+            a.goods_no            goodsNo,
+            a.goods_sketch        goodsSketch,
+            a.goods_state         goodsState,
+            a.goods_author        goodsAuthor,
+            a.goods_press         goodsPress,
+            a.goods_img           goodsImg,
+            a.vendor_name         vendorName,
+            a.goods_view          goodsView,
+            a.goods_star          goodsStar,
+            a.vendor_name         vendorName,
+            a.up_time             upTime,
+            a.version
         from t_goods_message a
         where a.is_delete = 0
         <if test="goodsName != null and goodsName != ''">
@@ -55,7 +55,8 @@
             goods_author        goodsAuthor,
             goods_img           goodsImg,
             goods_star          goodsStar,
-            sales_volume        salesVolume
+            sales_volume        salesVolume,
+            goods_view          goodsView
         from t_goods_message
         where goods_code = #{goodsCode}
         and is_delete = 0
@@ -65,11 +66,11 @@
     <!--查询商品选择列表-->
     <select id="goodsChoseList" parameterType="com.xzsd.app.goodsMessage.entity.GoodsMessage" resultType="com.xzsd.app.goodsMessage.entity.GoodsMessageVo">
         select
-        a.goods_code          goodsCode,
-        a.goods_name          goodsName,
-        a.goods_state         goodsState,
-        classify_one          classifyOne,
-        classify_two          classifyTwo
+            a.goods_code          goodsCode,
+            a.goods_name          goodsName,
+            a.goods_state         goodsState,
+            classify_one          classifyOne,
+            classify_two          classifyTwo
         from t_goods_message a
         where a.is_delete = 0
         <if test="goodsName != null and goodsName != ''">
@@ -81,17 +82,6 @@
         order by a.create_time desc
     </select>
 
-    <!--更新商品销量-->
-    <update id="updateGoodsSalesVolume" parameterType="com.xzsd.app.order.entity.OrderDetailed">
-        <foreach collection="orderDetList" item="item" index="index">
-            update t_goods_message
-            set
-                sales_volume    =   sales_volume + #{item.goodsCnt}
-            where
-                goods_code    =   #{item.goodsCode}
-        </foreach>
-    </update>
-
     <!--更新商品浏览量-->
     <update id="updateGoodsView" parameterType="String">
         update t_goods_message
@@ -102,32 +92,52 @@
     </update>
 
     <!--更新库存与销量(正常)-->
-    <update id="updateGoodsStock" parameterType="com.xzsd.app.order.entity.OrderDetailed">
-            update t_goods_message
-            set
-                sales_volume   =   sales_volume + #{goodsCnt},
-                goods_stock   =   goods_stock - #{goodsCnt}
-            where  goods_code  =    #{goodsCode};
+    <update id="updateGoodsStock" parameterType="java.util.List">
+        update t_goods_message
+        set
+            sales_volume   =   sales_volume +
+        <foreach collection="orderDetList" open="case goods_code" close="end," index="index" item="item">
+            when #{item.goodsCode} then #{item.goodsCnt}
+        </foreach>
+            goods_stock   =   goods_stock -
+        <foreach collection="orderDetList" open="case goods_code" close="end" index="index" item="item">
+            when #{item.goodsCode} then #{item.goodsCnt}
+        </foreach>
+        where  goods_code  in
+        <foreach collection="orderDetList" open="(" separator="," close=")" index="index" item="item">
+            #{item.goodsCode}
+        </foreach>
     </update>
 
     <!--更新库存与销量(取消订单)-->
     <update id="updateReGoodsStock" parameterType="com.xzsd.app.order.entity.OrderDetailed">
-            update t_goods_message
-            <set>
-                goods_stock    =   goods_stock + #{goodsCnt},
-                sales_volume   =   sales_volume - #{goodsCnt}
-            </set>
-            where  goods_code  =    #{goodsCode}
+        update t_goods_message
+        set
+        sales_volume   =   sales_volume -
+        <foreach collection="orderDetList" open="case goods_code" close="end," index="index" item="item">
+            when #{item.goodsCode} then #{item.goodsCnt}
+        </foreach>
+        goods_stock   =   goods_stock +
+        <foreach collection="orderDetList" open="case goods_code" close="end" index="index" item="item">
+            when #{item.goodsCode} then #{item.goodsCnt}
+        </foreach>
+        where  goods_code  in
+        <foreach collection="orderDetList" open="(" separator="," close=")" index="index" item="item">
+            #{item.goodsCode}
+        </foreach>
     </update>
 
     <!--查询商品库存-->
-    <select id="selectGoodsStock" parameterType="String" resultType="int">
+    <select id="selectGoodsStock" parameterType="java.util.List" resultType="java.lang.Integer">
         select
             goods_stock goodsStock
         from  t_goods_message
         where
             is_delete = 0
-            and goods_code    =   #{goodsCode}
+            and goods_code  in
+            <foreach collection="goodsCodeList" open="(" separator="," close=")" item="item" index="index">
+                #{item}
+            </foreach>
     </select>
 
     <!--更新商品星级-->

@@ -192,12 +192,17 @@
         from t_order a
         where
             a.user_code = #{userCode}
-        <if test="orderState != null and orderState != ''">
-            <if test="orderState == 34">
-                and a.order_state in (3,4)
+            <if test="orderState != null">
+                <if test="orderState == 0">
+                    and a.order_state = #{orderState}
+                </if>
+                <if test="orderState == 1">
+                    and a.order_state = #{orderState}
+                </if>
+                <if test="orderState == 34">
+                    and a.order_state in (3,4)
+                </if>
             </if>
-            and a.order_state = #{orderState}
-        </if>
         order by a.create_time desc
     </select>
 

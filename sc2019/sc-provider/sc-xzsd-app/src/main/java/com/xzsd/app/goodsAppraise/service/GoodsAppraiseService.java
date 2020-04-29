@@ -46,7 +46,7 @@ public class GoodsAppraiseService {
         //获取当前登录人id
         String currentUserId = SecurityUtils.getCurrentUserId();
         //取出订单编号
-        String orderCode = goodsAppraiseList.get(1).getOrderCode();
+        String orderCode = goodsAppraiseList.get(0).getOrderCode();
         for (GoodsAppraise goodsAppraise : goodsAppraiseList) {
             //设置评价编号
             goodsAppraise.setAppraiseCode(StringUtil.getCommonCode(2));
@@ -60,9 +60,9 @@ public class GoodsAppraiseService {
             return AppResponse.bizError("新增失败");
         }
         for (GoodsAppraise goodsAppraise : goodsAppraiseList) {
-            //商品评分重新统计 1.从评论表里查出该商品的所有评论星数 2.星数的总数除以评论条数得到评价星数 3.化成两位小数 更新到商品表里
+            //商品评分重新统计 1.从评论表里查出该商品的所有评论星数 2.星数的总数除以评论条数得到评价星数 3.化成一位小数 更新到商品表里
             double avgStar = goodsAppraiseDao.goodsAvgStar(goodsAppraise.getGoodsCode());
-            //使用bigDecimal保留两位小数
+            //使用bigDecimal保留一位小数
             BigDecimal bigDecimal = new BigDecimal(avgStar);
             BigDecimal goodsStarStar = bigDecimal.setScale(1, RoundingMode.HALF_UP);
             //更新商品星级

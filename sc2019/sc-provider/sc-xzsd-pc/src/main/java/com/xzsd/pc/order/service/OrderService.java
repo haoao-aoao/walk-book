@@ -51,8 +51,8 @@ public class OrderService {
         }else {
             //获取当前人门店邀请码
             Store store = storeDao.selectInviteCode(currentUserId);
-            String invitationCode = store.getInvitationCode();
-            order.setInvitationCode(invitationCode);
+            String storeCode = store.getStoreCode();
+            order.setStoreCode(storeCode);
             PageHelper.startPage(order.getPageNum(),order.getPageSize());
             List<Order> orderList = orderDao.listsOrder(order);
             PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);

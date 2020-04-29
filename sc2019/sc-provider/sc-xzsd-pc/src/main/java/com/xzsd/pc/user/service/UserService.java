@@ -133,6 +133,15 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteUser(String userCode,String lastModfiedBy){
         List<String> listCode = Arrays.asList(userCode.split(","));
+        for (String code : listCode) {
+            int isStorer = storeDao.selectIsStorer(code);
+            if (1 == isStorer){
+                int storerCount = storeDao.selectStorerCount(code);
+                if (0 != storerCount){
+                    return AppResponse.bizError("该用户已绑定店铺，无法删除");
+                }
+            }
+        }
         userDao.deleteUser(listCode,lastModfiedBy);
         return AppResponse.success("删除成功");
     }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neusoft.core.restful.AppResponse;
+import com.xzsd.app.goodsMessage.dao.GoodsMessageDao;
 import com.xzsd.app.order.dao.OrderDao;
 import com.xzsd.app.order.entity.Order;
 import com.xzsd.app.order.entity.OrderDetailed;
@@ -31,6 +32,9 @@ public class ShopManagerService {
     @Resource
     private StoreDao storeDao;
 
+    @Resource
+    private GoodsMessageDao goodsMessageDao;
+
     /**
      * 查询店长订单列表
      * @param order
@@ -38,7 +42,7 @@ public class ShopManagerService {
      */
     public AppResponse findOrderlistByPage(Order order){
         Store store = storeDao.selectInviteCode(order.getUserCode());
-        order.setInvitationCode(store.getInvitationCode());
+        order.setStoreCode(store.getStoreCode());
         List<Order> orderlist = shopManagerDao.findOrderlistByPage(order);
         //创建一个新list
         List<Order> newList = new ArrayList<Order>();
@@ -97,6 +101,13 @@ public class ShopManagerService {
      * @return
      */
     public AppResponse updateOrderStateShopMr(Order order){
+        Integer orderState = order.getOrderState();
+        //取消订单时 要把对应的商品库存 销售量 补回
+        if (orderState == 5){
+            String orderCode = order.getOrderCode();
+            List<OrderDetailed> orderDetList = orderDao.findOderDetList(orderCode);
+            goodsMessageDao.updateReGoodsStock(orderDetList);
+        }
         int cnt = orderDao.updateOrderState(order);
         if (cnt == 0){
             return AppResponse.bizError("修改失败");

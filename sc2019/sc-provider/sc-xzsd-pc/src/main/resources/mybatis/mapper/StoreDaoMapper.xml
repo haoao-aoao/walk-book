@@ -235,7 +235,8 @@
     <!--店长编号查门店邀请码-->
     <select id="selectInviteCode" parameterType="String" resultType="com.xzsd.pc.store.entity.Store">
         select
-            invitation_code
+            invitation_code invitationCode,
+            store_code storeCode
         from
             t_store_manage
         where

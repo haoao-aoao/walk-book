@@ -195,8 +195,8 @@
         <if test="orderState != null">
             and t1.order_state = #{orderState}
         </if>
-        <if test="invitationCode != null and invitationCode != ''">
-            and t3.invitation_code = #{invitationCode}
+        <if test="storeCode != null and storeCode != ''">
+            and t1.store_code = #{storeCode}
         </if>
         order by t1.create_time desc
     </select>

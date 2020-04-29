@@ -163,6 +163,7 @@
             <if test="areaCode != null and areaCode != ''">
                 and t1.area_code = #{areaCode}
             </if>
+        order by t1.create_time desc
     </select>
 
     <!--查询店长对应司机信息列表-->
@@ -203,5 +204,6 @@
         <if test="areaCode != null and areaCode != ''">
             and t1.area_code = #{areaCode}
         </if>
+        order by t1.create_time desc
     </select>
 </mapper>

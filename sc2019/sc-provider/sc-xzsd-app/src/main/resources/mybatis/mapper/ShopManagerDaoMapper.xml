@@ -60,7 +60,7 @@
         from t_order a,t_client b,t_sys_user c
         where
             a.user_code = b.user_code
-            and b.invitation_code = #{invitationCode}
+            and a.store_code = #{storeCode}
             and b.user_code = c.user_code
         <if test="orderState != null and orderState != ''">
             <if test="orderState == 34">

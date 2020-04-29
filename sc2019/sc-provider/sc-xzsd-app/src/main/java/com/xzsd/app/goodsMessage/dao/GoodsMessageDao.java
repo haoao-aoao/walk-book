@@ -37,13 +37,6 @@ public interface GoodsMessageDao {
     List<GoodsMessageVo> goodsChoseList(GoodsMessage goodsMessage);
 
     /**
-     * 更新商品销量
-     * @param orderDetList
-     * @return
-     */
-    int updateGoodsSalesVolume(@Param("orderDetList") List<OrderDetailed> orderDetList);
-
-    /**
      * 更新商品浏览量
      * @param goodsCode
      * @return
@@ -55,21 +48,21 @@ public interface GoodsMessageDao {
      * @param orderDetList
      * @return
      */
-    int updateGoodsStock(OrderDetailed orderDetList);
+    int updateGoodsStock(@Param("orderDetList") List<OrderDetailed> orderDetList);
 
     /**
      * 更新商品库存(取消订单)
      * @param orderDetList
      * @return
      */
-    int updateReGoodsStock(OrderDetailed orderDetList);
+    int updateReGoodsStock(@Param("orderDetList") List<OrderDetailed> orderDetList);
 
     /**
      * 查询商品库存
-     * @param goodsCode
+     * @param goodsCodeList
      * @return
      */
-    int selectGoodsStock(String goodsCode);
+    List<Integer> selectGoodsStock(@Param("goodsCodeList") List<String> goodsCodeList);
 
     /**
      * 更新商品星级
